@@ -922,7 +922,7 @@
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .msg-av {
@@ -977,7 +977,7 @@
 
 .act-btn {
   border: none;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--text-primary);
   min-width: 36px;
   height: 36px;
@@ -986,9 +986,6 @@
   font-size: 13px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: all var(--transition);
-}
   justify-content: center;
   transition: all var(--transition);
 }
