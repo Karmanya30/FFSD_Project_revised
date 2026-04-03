@@ -9,6 +9,11 @@
   <link href="../css/global.css" rel="stylesheet" />
   <link href="../css/pages/rbac-nav.css" rel="stylesheet" />
   <link href="../css/pages/community-manager.css" rel="stylesheet" />
+
+  <style>
+    .left-nav { display: none !important; }
+    .main-content { margin-left: 0 !important; }
+  </style>
 </head>
 
 <body>
@@ -35,6 +40,7 @@
   </div>
 
   <div class="body-wrap">
+
     <div class="main-content">
       <div class="view active" id="view-settings">
         <div class="section-title">⚙️ Community Settings</div>
@@ -175,7 +181,7 @@
             </div>
 
             <div class="settings-actions" id="settingsActions">
-              <button class="btn-sm" onclick="window.location.reload()">Discard Changes</button>
+              <button class="btn-sm" onclick="discardSettings()">Discard Changes</button>
               <button class="btn-sm accent" onclick="saveSettings()">Save All Changes</button>
             </div>
 

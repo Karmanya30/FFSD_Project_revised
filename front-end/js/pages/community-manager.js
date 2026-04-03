@@ -1,12 +1,12 @@
 /**
  * Gameunity — Complete CRUD State Manager (v2)
- * Features: Global Sync Simulation, Banner Uploads, Advanced Moderation, Custom Event Fields
+ * Features: Global Sync, Revert Settings, Role Protection
  */
 
 const GLOBAL_STATE_KEY = "nexus_global_community_state";
 
 // ==========================================
-// 1. STATE (The Source of Truth)
+// 1. STATE & SNAPSHOT
 // ==========================================
 let state = {
   communityName: "Pro Gamers",
@@ -41,7 +41,6 @@ let state = {
     { id: 4, icon: "📅", name: "upcoming-events", type: "📅 Event", members: 2450 },
   ],
 
-  // 15 Demo Members
   members: [
     { id: 101, av: "JK", name: "Jake Kim", handle: "@jakekim", role: "👑 Community Owner", roleLevel: 5, date: "Mar 1, 2022", status: "Online" },
     { id: 102, av: "SL", name: "Sara Lee", handle: "@saralee", role: "🛡 Community Manager", roleLevel: 4, date: "Jun 12, 2022", status: "Away" },
@@ -85,17 +84,24 @@ let state = {
   ],
 };
 
+let savedStateSnapshot = null;
+
 // ==========================================
-// 2. GLOBAL SYNC & STORAGE LOGIC
+// 2. GLOBAL SYNC & SNAPSHOT LOGIC
 // ==========================================
 function loadGlobalState() {
   const stored = localStorage.getItem(GLOBAL_STATE_KEY);
   if (stored) state = JSON.parse(stored);
-  else saveGlobalState(); // Initialize first time
+  else saveGlobalState();
 }
 
 function saveGlobalState() {
   localStorage.setItem(GLOBAL_STATE_KEY, JSON.stringify(state));
+}
+
+function takeSnapshot() {
+  // Save an exact clone of the state so we can revert back if needed
+  savedStateSnapshot = JSON.parse(JSON.stringify(state));
 }
 
 // ==========================================
@@ -136,9 +142,13 @@ function renderAll() {
   document.getElementById("modWordFilter").value = state.autoMod.wordFilter;
   document.getElementById("modLinkBlock").checked = state.autoMod.linkBlock;
 
+  const bannerEl = document.getElementById("bannerPreview");
   if(state.bannerImage) {
-      document.getElementById("bannerPreview").style.backgroundImage = `url(${state.bannerImage})`;
-      document.getElementById("bannerPreview").innerText = "";
+      bannerEl.style.backgroundImage = `url(${state.bannerImage})`;
+      bannerEl.innerText = "";
+  } else {
+      bannerEl.style.backgroundImage = "none";
+      bannerEl.innerText = "No Banner Uploaded";
   }
 }
 
@@ -156,10 +166,7 @@ function renderMembers() {
   const roleOptions = state.roles.map(r => `<option value="${r.name}">${r.name}</option>`).join("");
 
   list.innerHTML = state.members.map(m => {
-    // Determine if logged in user can edit this member based on hierarchy level
     const canEdit = state.currentUser.roleLevel > m.roleLevel || state.currentUser.id === m.id;
-    
-    // Removed the "Profile" button from this block entirely
     return `
         <div class="member-item">
             <div class="member-avatar">${m.av}</div>
@@ -234,17 +241,20 @@ function renderModHistory() {
 
 function renderRoles() {
   const list = document.getElementById("settingsRolesList");
-  list.innerHTML = state.roles.map(r => `
+  list.innerHTML = state.roles.map(r => {
+    // Determine if role can be deleted. Level 4 (Manager) and Level 5 (Owner) are protected.
+    const canDelete = r.level < 4 && r.level < state.currentUser.roleLevel;
+    return `
       <div class="role-item-settings">
           <div class="role-info">
               <div class="role-name">${r.name} (Level ${r.level})</div>
           </div>
           <div class="role-color" style="background:${r.color};"></div>
           <div class="role-actions">
-              ${r.level < state.currentUser.roleLevel ? `<button class="btn-sm danger" onclick="toast('Role deleted')">🗑️</button>` : ''}
+              ${canDelete ? `<button class="btn-sm danger" onclick="deleteRole(${r.id})">🗑️</button>` : ''}
           </div>
       </div>
-  `).join("");
+  `}).join("");
 }
 
 function renderEvents() {
@@ -266,35 +276,24 @@ function renderEvents() {
 // ==========================================
 // 5. ACTIONS, VALIDATION & SAVING
 // ==========================================
-// --- Create Channel Logic ---
-window.submitCreateChannel = function () {
-  console.log("1. Starting channel creation..."); // Helps us debug if needed
 
+// Channel Creation Logic
+window.submitCreateChannel = function () {
   const nameInputEl = document.getElementById("chNameInput");
   const typeInputEl = document.getElementById("chTypeInput");
 
-  // Safety check: ensure the modal elements exist
-  if (!nameInputEl || !typeInputEl) {
-    console.error("Could not find the channel input fields in the HTML!");
-    return;
-  }
-
+  if (!nameInputEl || !typeInputEl) return;
   const nameInput = nameInputEl.value.trim();
   const typeInput = typeInputEl.value;
 
-  if (!nameInput) {
-    return toast("⚠️ Channel name cannot be empty");
-  }
+  if (!nameInput) return toast("⚠️ Channel name cannot be empty");
 
-  // Determine the correct icon
   let icon = "#";
   if (typeInput.includes("Voice")) icon = "🔊";
   if (typeInput.includes("Announcement")) icon = "📣";
 
-  // Safeguard: Fallback to 0 if state.members is ever corrupted
   const memberCount = (state.members && state.members.length) ? state.members.length : 0;
 
-  // Build the new channel object
   const newChannel = {
     id: Date.now(),
     icon: icon,
@@ -303,26 +302,37 @@ window.submitCreateChannel = function () {
     members: memberCount
   };
 
-  console.log("2. New channel built:", newChannel);
-
-  // Add to state
-  if (!state.channels) state.channels = []; // Safety check
+  if (!state.channels) state.channels = [];
   state.channels.push(newChannel);
   
-  // Save to our simulated backend
   saveGlobalState();
-  console.log("3. Saved to global state.");
-
-  // Force the UI to re-render the list
+  takeSnapshot(); // Take snapshot so discard doesn't remove it
   renderChannels();
-  console.log("4. UI Re-rendered.");
-
-  // Close modal, show toast, and reset input
+  
   closeModal('modalBg');
   toast(`✅ Channel #${newChannel.name} created!`);
   nameInputEl.value = "";
 };
-// Banner Upload Reader
+
+// Role Deletion Logic
+window.deleteRole = function (id) {
+  const role = state.roles.find((r) => r.id === id);
+  if (!role) return;
+  
+  // Hard restriction to prevent deleting core management
+  if (role.level >= 4) {
+      return toast("⚠️ Core management roles cannot be deleted.");
+  }
+
+  if (confirm(`Are you sure you want to delete the ${role.name} role?`)) {
+    state.roles = state.roles.filter((r) => r.id !== id);
+    saveGlobalState();
+    takeSnapshot();
+    renderRoles();
+    toast("🗑️ Role deleted");
+  }
+};
+
 window.handleBannerUpload = function(event) {
   const file = event.target.files[0];
   if (file) {
@@ -330,14 +340,13 @@ window.handleBannerUpload = function(event) {
     reader.onload = function(e) {
       document.getElementById("bannerPreview").style.backgroundImage = `url(${e.target.result})`;
       document.getElementById("bannerPreview").innerText = "";
-      state.bannerImage = e.target.result; // Save base64
+      state.bannerImage = e.target.result;
       document.getElementById("settingsActions").classList.add("show");
     };
     reader.readAsDataURL(file);
   }
 };
 
-// Global Save Button
 window.saveSettings = function () {
   const nameInput = document.getElementById("communityNameInput").value.trim();
   const descInput = document.getElementById("communityDescInput").value.trim();
@@ -350,7 +359,6 @@ window.saveSettings = function () {
   }
   errorMsg.style.display = "none";
 
-  // Update State Values
   state.communityName = nameInput;
   state.communityDesc = descInput;
   state.appearance.theme = document.getElementById("themeSelect").value;
@@ -358,15 +366,25 @@ window.saveSettings = function () {
   state.autoMod.wordFilter = document.getElementById("modWordFilter").value;
   state.autoMod.linkBlock = document.getElementById("modLinkBlock").checked;
   
-  saveGlobalState(); // Persist changes
-  applyAppearance(); // Instantly apply styling updates
+  saveGlobalState(); 
+  takeSnapshot(); // Update our snapshot point
+  applyAppearance(); 
   
   document.getElementById("topBarCommunityName").innerText = state.communityName;
   document.getElementById("settingsActions").classList.remove("show");
   toast("✅ All community settings saved globally!");
 };
 
-// Event Custom Fields Logic
+// Discard Revert Logic
+window.discardSettings = function () {
+  if (savedStateSnapshot) {
+    state = JSON.parse(JSON.stringify(savedStateSnapshot)); // Restore clone
+    renderAll(); // Re-sync the inputs and UI
+    document.getElementById("settingsActions").classList.remove("show");
+    toast("❌ Unsaved changes have been reverted.");
+  }
+};
+
 window.addCustomEventFieldUI = function() {
   const container = document.getElementById("customFieldsContainer");
   const id = Date.now();
@@ -399,12 +417,12 @@ window.submitCreateEvent = function () {
   });
 
   saveGlobalState();
+  takeSnapshot();
   renderEvents();
   closeModal('eventModalBg');
   toast(`🎉 Event "${title}" published globally!`);
 };
 
-// Channel Navigation (Now successfully redirects)
 window.openChannelChat = function(channelName) {
   toast(`Redirecting to Chat: #${channelName}...`);
   setTimeout(() => {
@@ -412,21 +430,21 @@ window.openChannelChat = function(channelName) {
   }, 800);
 };
 
-// Report Status Management
 window.resolveReport = function(id) {
   const r = state.reports.find(x => x.id === id);
   if(r) {
     r.status = "Resolved";
     r.resolvedBy = state.currentUser.fullName;
-    saveGlobalState(); renderReports(); toast("✅ Report resolved.");
+    saveGlobalState(); takeSnapshot(); renderReports(); toast("✅ Report resolved.");
   }
 };
+
 window.reopenReport = function(id) {
   const r = state.reports.find(x => x.id === id);
   if(r) {
     r.status = "Pending";
     delete r.resolvedBy;
-    saveGlobalState(); renderReports(); toast("🔄 Report reopened.");
+    saveGlobalState(); takeSnapshot(); renderReports(); toast("🔄 Report reopened.");
   }
 };
 
@@ -435,9 +453,9 @@ window.reopenReport = function(id) {
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
   loadGlobalState();
+  takeSnapshot(); // Anchor the initial state for the discard function
   renderAll();
 
-  // Watch inputs to show the "Save Changes" bar
   document.querySelectorAll("#view-settings input, #view-settings textarea, #view-settings select").forEach((el) => {
     el.addEventListener("input", () => document.getElementById("settingsActions").classList.add("show"));
     el.addEventListener("change", () => document.getElementById("settingsActions").classList.add("show"));
