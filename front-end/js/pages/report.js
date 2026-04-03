@@ -145,6 +145,9 @@ window.submitReport = function() {
         if (stepper) stepper.style.opacity = '0'; // Hide progress bar on success
         
         if (window.toast) window.toast(`Report successfully logged. ID: ${newReport.id}`);
+
+        // Keep success view active until user chooses to navigate explicitly
+        // (button click: Return to #general via chat.html)
     }, 1200);
 };
 
