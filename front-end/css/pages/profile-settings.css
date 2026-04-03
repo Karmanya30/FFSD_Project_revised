@@ -311,3 +311,33 @@ body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after 
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
 }
+/* Feedback for the Save Button */
+#btnSaveAll.pulse {
+    background: #6366f1; /* Indigo accent */
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7);
+    animation: pulse-blue 2s infinite;
+    cursor: pointer;
+    opacity: 1;
+}
+
+@keyframes pulse-blue {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
+    70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+}
+
+/* Toast styling */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #10b981; /* Success Green */
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    display: none;
+    z-index: 1000;
+}
+.toast.show { display: block; animation: slideIn 0.3s ease; }
+@keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+

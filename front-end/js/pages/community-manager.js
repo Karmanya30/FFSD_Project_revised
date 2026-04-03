@@ -126,7 +126,46 @@ window.toast = function (msg) {
 // ==========================================
 // 4. RENDER FUNCTIONS
 // ==========================================
+function loadCurrentUserProfile() {
+  const currentUser = getCurrentUser();
+  const profileAvatar = document.getElementById("topBarProfileAvatar");
+  
+  if (profileAvatar && currentUser) {
+    // Create initials based on the actual logged-in user
+    let initials = "GU";
+    
+    switch(currentUser.username) {
+      case 'rajat':
+        initials = "RJ";
+        break;
+      case 'karmanya':
+        initials = "KB";
+        break;
+      case 'awadhesh':
+        initials = "AW";
+        break;
+      case 'anant':
+        initials = "AG";
+        break;
+      case 'sanidhya':
+        initials = "SJ";
+        break;
+      default:
+        initials = currentUser.username ? currentUser.username.substring(0, 2).toUpperCase() : "GU";
+    }
+    
+    profileAvatar.textContent = initials;
+    
+    // Apply custom avatar if exists from profile settings
+    if (currentUser.avatarUrl && currentUser.avatarUrl !== "removed") {
+      profileAvatar.style.backgroundImage = `url(${currentUser.avatarUrl})`;
+      profileAvatar.textContent = '';
+    }
+  }
+}
+
 function renderAll() {
+  loadCurrentUserProfile();
   renderMembers();
   renderChannels();
   renderEvents();

@@ -19,10 +19,11 @@ const ROLE_REDIRECTS = {
 
 // Mock registered users for prototype
 const MOCK_USERS = [
-    { email: 'admin01', username: 'Admin', password: 'Admin@123', role: 'superuser' },
-    { email: 'moderator01', username: 'SaraLee', password: 'Moderator@123', role: 'mod' },
-    { email: 'gamer01', username: 'Alex Morgan', password: 'Gamer@123', role: 'gamer' },
-    { email: 'user01', username: 'Viewer', password: 'User@123', role: 'audience' }
+    { email: 'rajat', username: 'rajat', password: 'Rajat@123', role: 'superuser' },
+    { email: 'karmanya', username: 'karmanya', password: 'Karmanya@123', role: 'mod' },
+    { email: 'awadhesh', username: 'awadhesh', password: 'Awadhesh@123', role: 'gamer' },
+    { email: 'anant', username: 'anant', password: 'Anant@123', role: 'gamer' },
+    { email: 'sanidhya', username: 'sanidhya', password: 'Sanidhya@123', role: 'audience' }
 ];
 
 // ==========================================

@@ -23,7 +23,7 @@
     <a href="#" class="rail-item rail-comm grad-orange" data-tooltip="RPG Tavern">🎨<div class="rail-dot bg-dot-green"></div></a>
     <a href="create-community.html" class="rail-item" data-tooltip="Create Community" style="background:rgba(255,255,255,0.05);color:var(--text-1);font-weight:600;border-radius:14px;">✚</a>
     <div class="rail-footer">
-      <div class="rail-avatar" id="sidebarBottomAvatar" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">AM<div class="rail-dot bg-dot-green" style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-sidebar);"></div></div>
+      <div class="rail-avatar" id="sidebarBottomAvatar" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">Loading<div class="rail-dot bg-dot-green" style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-sidebar);"></div></div>
     </div>
   </aside>
 
@@ -37,7 +37,7 @@
       <div class="tb-right">
         <div class="tb-btn" onclick="location.reload()">Discard</div>
         <button class="tb-btn save" id="btnSaveAll" onclick="saveAllChanges()" disabled>Save Changes</button>
-        <div class="tb-av" id="topBarAvatar">AM</div>
+        <div class="tb-av" id="topBarAvatar">Loading</div>
         <button class="logout-btn" onclick="logout()" data-tooltip="Logout">🚪</button>
       </div>
     </div>
@@ -46,12 +46,12 @@
       <nav class="left-nav">
         <div class="nav-profile" onclick="switchView('profile', document.querySelector('.ln-item'))">
           <div class="profile-av-wrap">
-            <div class="profile-av" id="navMainAvatar">AM</div>
+            <div class="profile-av" id="navMainAvatar">Loading</div>
             <div class="profile-av-edit" onclick="openPhotoModal(event)">📷</div>
           </div>
           <div style="text-align:center;">
-            <div class="profile-name" id="navName">Alex Morgan</div>
-            <div class="profile-handle" id="navHandle">@alexmorgan</div>
+            <div class="profile-name" id="navName">Loading...</div>
+            <div class="profile-handle" id="navHandle">@loading</div>
             <div class="profile-status" style="justify-content: center; margin-top: 4px;">Online</div>
           </div>
         </div>
@@ -82,7 +82,7 @@
             <div class="card-sub">This is how other members see you across Gameunity.</div>
             
             <div class="avatar-picker" style="margin-bottom: 24px;">
-              <div class="av-preview" id="mainAvatarPreview">AM</div>
+              <div class="av-preview" id="mainAvatarPreview">Loading</div>
               <div class="av-actions">
                 <div class="btn-sm accent" onclick="openPhotoModal()">📷 Upload Photo</div>
                 <div class="btn-sm" onclick="removePhoto()">Remove Photo</div>
@@ -95,12 +95,12 @@
             <div class="field-row" style="margin-bottom: 16px;">
               <div class="field">
                 <label>First Name *</label>
-                <input id="inpFirstName" type="text" value="Alex" oninput="validateInput(this)" />
+                <input id="inpFirstName" type="text" value="" oninput="validateInput(this)" />
                 <span class="error-text" id="err-inpFirstName">First Name is required.</span>
               </div>
               <div class="field">
                 <label>Last Name *</label>
-                <input id="inpLastName" type="text" value="Morgan" oninput="validateInput(this)" />
+                <input id="inpLastName" type="text" value="" oninput="validateInput(this)" />
                 <span class="error-text" id="err-inpLastName">Last Name is required.</span>
               </div>
             </div>
@@ -108,20 +108,20 @@
             <div class="field-row" style="margin-bottom: 16px;">
               <div class="field">
                 <label>Username *</label>
-                <input id="inpHandle" type="text" value="alexmorgan" oninput="validateInput(this)" />
+                <input id="inpHandle" type="text" value="" oninput="validateInput(this)" />
                 <span class="error-text" id="err-inpHandle">Username is required.</span>
                 <div class="field-hint">nexushub.io/@<span id="hintHandle">alexmorgan</span></div>
               </div>
               <div class="field">
                 <label>Display Name *</label>
-                <input id="inpFullName" type="text" value="Alex Morgan" oninput="validateInput(this)" />
+                <input id="inpFullName" type="text" value="" oninput="validateInput(this)" />
                 <span class="error-text" id="err-inpFullName">Display Name is required.</span>
               </div>
             </div>
             
             <div class="field" style="margin-bottom: 16px;">
               <label>Bio</label>
-              <textarea id="inpBio" oninput="markAsDirty()">Full-stack dev 🛠 · FPS, Node, RPG · Building cool things · based in Chennai 🇮🇳</textarea>
+              <textarea id="inpBio" oninput="markAsDirty()"></textarea>
               <div class="field-hint">160 characters max. Visible on your public profile.</div>
             </div>
           </div>
@@ -146,12 +146,12 @@
             <div class="field-row" style="margin-bottom: 16px;">
               <div class="field">
                 <label>Email Address *</label>
-                <input id="inpEmail" type="email" value="alex@example.com" oninput="validateInput(this)" />
+                <input id="inpEmail" type="email" value="" oninput="validateInput(this)" />
                 <span class="error-text" id="err-inpEmail">Valid email is required.</span>
               </div>
               <div class="field">
                 <label>Phone Number *</label>
-                <input id="inpPhone" type="tel" value="+1 234 567 890" oninput="validateInput(this)" />
+                <input id="inpPhone" type="tel" value="" oninput="validateInput(this)" />
                 <span class="error-text" id="err-inpPhone">Phone number is required.</span>
               </div>
             </div>
