@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Gameunity – Appeal Submission</title>
+<title>NexusHub – Appeal Submission</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
 <link href="../css/global.css" rel="stylesheet"/>
 <link href="../css/pages/appeal.css" rel="stylesheet"/>
@@ -182,8 +182,8 @@
 </div>
 <div class="field">
 <label>Supporting Evidence (Optional)</label>
-<div class="upload-zone" onclick="addFakeFile()">
-<input accept="image/*,.pdf" class="u-extracted-151" multiple="" type="file"/>
+<div class="upload-zone" onclick="openEvidencePicker()">
+<input id="evidenceInput" accept="image/*,.pdf" class="u-extracted-151" multiple="" type="file" onchange="handleFileUpload(event)" style="display:none"/>
 <div class="upload-icon">📎</div>
 <div class="upload-text">Attach screenshots or files</div>
 <div class="upload-sub">PNG, JPG, PDF · Max 3 files · 5MB each</div>
