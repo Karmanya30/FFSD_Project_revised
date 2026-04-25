@@ -1,0 +1,1502 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/users": {
+      "get": {
+        "operationId": "UsersController_findAll",
+        "summary": "Get all users",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      },
+      "post": {
+        "operationId": "UsersController_create",
+        "summary": "Create user",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UsersController_findOne",
+        "summary": "Get one user by id",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      },
+      "patch": {
+        "operationId": "UsersController_update",
+        "summary": "Update user",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_remove",
+        "summary": "Delete user",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "message": "User 4 deleted"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/communities": {
+      "get": {
+        "operationId": "CommunitiesController_findAll",
+        "summary": "Get all communities",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommunityDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "communities"
+        ]
+      },
+      "post": {
+        "operationId": "CommunitiesController_create",
+        "summary": "Create community",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommunityDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunityDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "communities"
+        ]
+      }
+    },
+    "/communities/{id}": {
+      "get": {
+        "operationId": "CommunitiesController_findOne",
+        "summary": "Get community by id",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunityDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "communities"
+        ]
+      },
+      "patch": {
+        "operationId": "CommunitiesController_update",
+        "summary": "Update community",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCommunityDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunityDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "communities"
+        ]
+      },
+      "delete": {
+        "operationId": "CommunitiesController_remove",
+        "summary": "Delete community",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "message": "Community 3 deleted"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "communities"
+        ]
+      }
+    },
+    "/events": {
+      "get": {
+        "operationId": "EventsController_findAll",
+        "summary": "Get all events",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "events"
+        ]
+      },
+      "post": {
+        "operationId": "EventsController_create",
+        "summary": "Create event",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "events"
+        ]
+      }
+    },
+    "/events/{id}": {
+      "get": {
+        "operationId": "EventsController_findOne",
+        "summary": "Get event by id",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "events"
+        ]
+      },
+      "patch": {
+        "operationId": "EventsController_update",
+        "summary": "Update event",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "events"
+        ]
+      },
+      "delete": {
+        "operationId": "EventsController_remove",
+        "summary": "Delete event",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "message": "Event 2 deleted"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "events"
+        ]
+      }
+    },
+    "/reports": {
+      "get": {
+        "operationId": "ReportsController_findAll",
+        "summary": "List reports",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "reports"
+        ]
+      },
+      "post": {
+        "operationId": "ReportsController_create",
+        "summary": "Create report",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "reports"
+        ]
+      }
+    },
+    "/reports/{id}/status": {
+      "patch": {
+        "operationId": "ReportsController_updateStatus",
+        "summary": "Update report status (pending -> reviewed -> resolved)",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateReportStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "reports"
+        ]
+      }
+    },
+    "/posts": {
+      "get": {
+        "operationId": "PostsController_findAll",
+        "summary": "Get all posts",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "posts"
+        ]
+      },
+      "post": {
+        "operationId": "PostsController_create",
+        "summary": "Create post",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "/posts/{id}": {
+      "get": {
+        "operationId": "PostsController_findOne",
+        "summary": "Get post by id",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "posts"
+        ]
+      },
+      "patch": {
+        "operationId": "PostsController_update",
+        "summary": "Update post",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "posts"
+        ]
+      },
+      "delete": {
+        "operationId": "PostsController_remove",
+        "summary": "Delete post",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "message": "Post 4 deleted"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "posts"
+        ]
+      }
+    },
+    "/dashboard/stats": {
+      "get": {
+        "operationId": "DashboardController_getStats",
+        "summary": "Get dashboard stats",
+        "parameters": [
+          {
+            "name": "x-role",
+            "in": "header",
+            "description": "Role for RBAC: admin | moderator | user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardStatsDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "dashboard"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Se7enSquare Backend API",
+    "description": "In-memory NestJS backend for frontend integration and academic evaluation",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "x-role": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-role",
+        "description": "RBAC role header: admin | moderator | user"
+      }
+    },
+    "schemas": {
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "username": {
+            "type": "string",
+            "example": "player01"
+          },
+          "email": {
+            "type": "string",
+            "example": "player@example.com"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "moderator",
+              "user"
+            ],
+            "example": "user"
+          },
+          "bio": {
+            "type": "string",
+            "example": "Casual and competitive gamer"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "email",
+          "role"
+        ]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 30,
+            "example": "newplayer"
+          },
+          "email": {
+            "type": "string",
+            "example": "newplayer@example.com"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "moderator",
+              "user"
+            ],
+            "example": "user"
+          },
+          "bio": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 160,
+            "example": "Loves MMORPG and FPS."
+          }
+        },
+        "required": [
+          "username",
+          "email",
+          "role"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 30,
+            "example": "newplayer"
+          },
+          "email": {
+            "type": "string",
+            "example": "newplayer@example.com"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "moderator",
+              "user"
+            ],
+            "example": "user"
+          },
+          "bio": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 160,
+            "example": "Loves MMORPG and FPS."
+          }
+        }
+      },
+      "CommunityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "FPS Arena"
+          },
+          "description": {
+            "type": "string",
+            "example": "Competitive FPS players and tournaments"
+          },
+          "ownerId": {
+            "type": "number",
+            "example": 3
+          },
+          "tags": {
+            "example": [
+              "fps",
+              "esports"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "ownerId",
+          "tags"
+        ]
+      },
+      "CreateCommunityDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50,
+            "example": "MOBA Masters"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 200,
+            "example": "Community for strategy and ranked discussions"
+          },
+          "ownerId": {
+            "type": "number",
+            "example": 3
+          },
+          "tags": {
+            "example": [
+              "moba",
+              "ranked"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "ownerId",
+          "tags"
+        ]
+      },
+      "UpdateCommunityDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50,
+            "example": "MOBA Masters"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 200,
+            "example": "Community for strategy and ranked discussions"
+          },
+          "ownerId": {
+            "type": "number",
+            "example": 3
+          },
+          "tags": {
+            "example": [
+              "moba",
+              "ranked"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "EventDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Friday Scrim Night"
+          },
+          "description": {
+            "type": "string",
+            "example": "Weekly custom matches"
+          },
+          "communityId": {
+            "type": "number",
+            "example": 1
+          },
+          "date": {
+            "type": "string",
+            "example": "2026-05-02T18:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "communityId",
+          "date"
+        ]
+      },
+      "CreateEventDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 60,
+            "example": "Clan Tournament Qualifier"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 220,
+            "example": "Qualifier round for monthly tournament"
+          },
+          "communityId": {
+            "type": "number",
+            "example": 1
+          },
+          "date": {
+            "type": "string",
+            "example": "2026-05-20T16:30:00.000Z"
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "communityId",
+          "date"
+        ]
+      },
+      "UpdateEventDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 60,
+            "example": "Clan Tournament Qualifier"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 220,
+            "example": "Qualifier round for monthly tournament"
+          },
+          "communityId": {
+            "type": "number",
+            "example": 1
+          },
+          "date": {
+            "type": "string",
+            "example": "2026-05-20T16:30:00.000Z"
+          }
+        }
+      },
+      "ReportDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "reporterId": {
+            "type": "number",
+            "example": 3
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "post",
+              "user",
+              "community"
+            ],
+            "example": "post"
+          },
+          "targetId": {
+            "type": "number",
+            "example": 1
+          },
+          "reason": {
+            "type": "string",
+            "example": "Potential harassment in comments"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "reviewed",
+              "resolved"
+            ],
+            "example": "pending"
+          }
+        },
+        "required": [
+          "id",
+          "reporterId",
+          "targetType",
+          "targetId",
+          "reason",
+          "status"
+        ]
+      },
+      "CreateReportDto": {
+        "type": "object",
+        "properties": {
+          "reporterId": {
+            "type": "number",
+            "example": 3
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "post",
+              "user",
+              "community"
+            ],
+            "example": "post"
+          },
+          "targetId": {
+            "type": "number",
+            "example": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 200,
+            "example": "Abusive language found in comments"
+          }
+        },
+        "required": [
+          "reporterId",
+          "targetType",
+          "targetId",
+          "reason"
+        ]
+      },
+      "UpdateReportStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "reviewed",
+              "resolved"
+            ],
+            "example": "reviewed"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "PostDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Looking for squad"
+          },
+          "content": {
+            "type": "string",
+            "example": "Need two players for ranked grind"
+          },
+          "communityId": {
+            "type": "number",
+            "example": 1
+          },
+          "authorId": {
+            "type": "number",
+            "example": 3
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "content",
+          "communityId",
+          "authorId"
+        ]
+      },
+      "CreatePostDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "example": "Tournament practice tonight"
+          },
+          "content": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 500,
+            "example": "Join us at 9PM for ranked practice sessions"
+          },
+          "communityId": {
+            "type": "number",
+            "example": 1
+          },
+          "authorId": {
+            "type": "number",
+            "example": 3
+          }
+        },
+        "required": [
+          "title",
+          "content",
+          "communityId",
+          "authorId"
+        ]
+      },
+      "UpdatePostDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "example": "Tournament practice tonight"
+          },
+          "content": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 500,
+            "example": "Join us at 9PM for ranked practice sessions"
+          },
+          "communityId": {
+            "type": "number",
+            "example": 1
+          },
+          "authorId": {
+            "type": "number",
+            "example": 3
+          }
+        }
+      },
+      "DashboardStatsDto": {
+        "type": "object",
+        "properties": {
+          "totalUsers": {
+            "type": "number",
+            "example": 4
+          },
+          "totalCommunities": {
+            "type": "number",
+            "example": 3
+          },
+          "totalEvents": {
+            "type": "number",
+            "example": 5
+          },
+          "pendingReportsCount": {
+            "type": "number",
+            "example": 2
+          }
+        },
+        "required": [
+          "totalUsers",
+          "totalCommunities",
+          "totalEvents",
+          "pendingReportsCount"
+        ]
+      }
+    }
+  }
+}

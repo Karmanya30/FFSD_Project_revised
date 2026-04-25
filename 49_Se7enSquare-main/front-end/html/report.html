@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NexusHub – Report Content</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="../css/global.css" rel="stylesheet"/>
+<link href="../css/pages/report.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- ─── APP RAIL ─── -->
+<aside class="app-rail">
+  <div class="rail-logo">⬡</div>
+  
+  <div class="rail-divider"></div>
+  
+  <!-- Main Nav -->
+  <a href="dashboard.html" class="rail-item" data-tooltip="Home">🏠</a>
+  <a href="discovery.html" class="rail-item" data-tooltip="Discover">🔍</a>
+  <a href="events.html" class="rail-item" data-tooltip="Events">📅<div class="notif-dot" style="background:var(--gold);width:6px;height:6px;"></div></a>
+
+  <a href="profile-settings.html" class="rail-item" data-tooltip="Settings">⚙️</a>
+  
+  <div class="rail-divider"></div>
+  
+  <!-- Communities -->
+  <div class="rail-item rail-comm grad-purple" data-tooltip="Pro Gamers">
+    ⚡<div class="rail-dot bg-dot-green"></div>
+  </div>
+  <div class="rail-item rail-comm grad-orange" data-tooltip="RPG Tavern">
+    🎨<div class="rail-dot bg-dot-green"></div>
+  </div>
+  <div class="rail-item rail-comm grad-cyan" data-tooltip="GameZone">
+    🎮<div class="rail-dot bg-dot-orange"></div>
+  </div>
+  <div class="rail-item rail-comm grad-green" data-tooltip="FPS Masters">
+    🌿<div class="rail-dot bg-dot-gray"></div>
+  </div>
+  <div class="rail-item rail-comm grad-pink" data-tooltip="SpeedRunners">
+    🎵<div class="rail-dot bg-dot-green"></div>
+  </div>
+  <div class="rail-item rail-comm grad-violet" data-tooltip="Strategy Gods">
+    📚<div class="rail-dot bg-dot-gray"></div>
+  </div>
+  <a href="create-community.html" class="rail-item" data-tooltip="Create Community" style="background:rgba(255,255,255,0.05);color:var(--text-1);font-weight:600;border-radius:14px;">✚</a>
+  
+  <div class="rail-footer">
+    <div class="rail-avatar" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">AM<div class="rail-dot bg-dot-green" style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-sidebar);"></div></div>
+  </div>
+</aside>
+<!-- ─── MAIN ─── -->
+<div class="main">
+<header class="header">
+<div class="breadcrumb">
+<span>Pro Gamers</span>
+<span class="sep">›</span>
+<span>#general</span>
+<span class="sep">›</span>
+<span class="current">🚩 Report Content</span>
+</div>
+<div class="header-actions">
+<div class="icon-btn">🔔<div class="notif-dot"></div></div>
+<div class="header-avatar">AM</div>
+</div>
+</header>
+<div class="page-wrap">
+<div class="report-container">
+<!-- Stepper -->
+<div class="stepper" id="stepper">
+<div class="step active" id="s1">
+<div class="step-circle">1</div>
+<div class="step-label">Select Content</div>
+</div>
+<div class="step" id="s2">
+<div class="step-circle">2</div>
+<div class="step-label">Choose Reason</div>
+</div>
+<div class="step" id="s3">
+<div class="step-circle">3</div>
+<div class="step-label">Review &amp; Submit</div>
+</div>
+</div>
+<!-- ── PANEL 1: SELECT CONTENT TYPE ── -->
+<div class="panel active" id="panel1">
+<div class="panel-card">
+<div class="panel-title">What are you reporting?</div>
+<div class="panel-sub">Select whether you're reporting a specific message or a user's behaviour. Reports are anonymous and reviewed by community moderators within 24 hours.</div>
+<div class="type-cards">
+<div class="type-card selected" id="tcMsg" onclick="selectType('message')">
+<div class="type-card-check">✓</div>
+<div class="type-card-icon">💬</div>
+<div class="type-card-title">Report a Message</div>
+<div class="type-card-desc">A specific message contains harmful, inappropriate, or rule-breaking content.</div>
+</div>
+<div class="type-card" id="tcUser" onclick="selectType('user')">
+<div class="type-card-check"></div>
+<div class="type-card-icon">👤</div>
+<div class="type-card-title">Report a User</div>
+<div class="type-card-desc">A user's overall behaviour or profile violates community rules or platform terms.</div>
+</div>
+</div>
+<!-- Message Preview -->
+<div id="msgPreviewWrap">
+<div class="preview-label">Reported Message</div>
+<div class="msg-preview">
+<div class="mp-av u-extracted-206">BX</div>
+<div class="mp-body">
+<div class="mp-header">
+<span class="mp-name u-extracted-283">BadActor_X</span>
+<span class="mp-ch">#general</span>
+<span class="mp-time">Today, 10:28 AM</span>
+</div>
+<div class="mp-text">Everyone in this channel is absolutely pathetic. You're all failures who couldn't code your way out of a paper bag. Stop wasting everyone's time with your garbage questions 🤮</div>
+</div>
+<div class="mp-flag">Selected</div>
+</div>
+</div>
+<!-- User Preview -->
+<div class="u-extracted-243" id="userPreviewWrap">
+<div class="preview-label">Reported User</div>
+<div class="user-preview u-extracted-310">
+<div class="up-av">BX</div>
+<div class="up-info">
+<div class="up-name">BadActor_X</div>
+<div class="up-meta">
+<span>Member since Jan 2025</span>
+<span>Pro Gamers</span>
+</div>
+</div>
+<div class="up-flag">Selected</div>
+</div>
+</div>
+<div class="u-extracted-311">
+<div class="notice-bar">
+<div class="notice-icon">🔒</div>
+<div class="notice-text"><strong>Your report is fully anonymous.</strong> The reported user will never know who submitted this report. False or malicious reports may result in action against your own account.</div>
+</div>
+</div>
+<div class="btn-row u-extracted-311">
+<button class="btn-next" onclick="goStep(2)">Choose Reason →</button>
+</div>
+</div>
+</div>
+<!-- ── PANEL 2: SELECT REASON ── -->
+<div class="panel" id="panel2">
+<div class="panel-card">
+<div class="panel-title">Why are you reporting this?</div>
+<div class="panel-sub">Choose the reason that best describes the violation. You can add additional context below.</div>
+<div class="reason-list">
+<div class="reason-opt" onclick="selectReason(this,'Harassment or Bullying')">
+<div class="reason-radio"></div>
+<div class="reason-icon">😡</div>
+<div class="reason-body">
+<div class="reason-title">Harassment or Bullying</div>
+<div class="reason-desc">Targeted attacks, insults, intimidation, or persistent negative behaviour toward individuals.</div>
+</div>
+</div>
+<div class="reason-opt selected" onclick="selectReason(this,'Hate Speech')">
+<div class="reason-radio"></div>
+<div class="reason-icon">🚫</div>
+<div class="reason-body">
+<div class="reason-title">Hate Speech or Discrimination</div>
+<div class="reason-desc">Content that promotes hatred based on race, religion, gender, sexual orientation, disability, or nationality.</div>
+</div>
+</div>
+<div class="reason-opt" onclick="selectReason(this,'Spam')">
+<div class="reason-radio"></div>
+<div class="reason-icon">📢</div>
+<div class="reason-body">
+<div class="reason-title">Spam or Unsolicited Promotion</div>
+<div class="reason-desc">Repetitive messages, advertisement spam, or irrelevant self-promotion.</div>
+</div>
+</div>
+<div class="reason-opt" onclick="selectReason(this,'NSFW Content')">
+<div class="reason-radio"></div>
+<div class="reason-icon">🔞</div>
+<div class="reason-body">
+<div class="reason-title">NSFW or Explicit Content</div>
+<div class="reason-desc">Sexually explicit material, graphic violence, or content not appropriate for general audiences.</div>
+</div>
+</div>
+<div class="reason-opt" onclick="selectReason(this,'Misinformation')">
+<div class="reason-radio"></div>
+<div class="reason-icon">❌</div>
+<div class="reason-body">
+<div class="reason-title">Misinformation or False Claims</div>
+<div class="reason-desc">Deliberately false or misleading technical, medical, or factual information.</div>
+</div>
+</div>
+<div class="reason-opt" onclick="selectReason(this,'Other')">
+<div class="reason-radio"></div>
+<div class="reason-icon">⚠️</div>
+<div class="reason-body">
+<div class="reason-title">Other Rule Violation</div>
+<div class="reason-desc">The content violates community guidelines in a way not listed above.</div>
+</div>
+</div>
+</div>
+<div class="additional-field">
+<label>Additional Context (Optional)</label>
+<textarea id="additionalContext" maxlength="500" oninput="document.getElementById('charCount').textContent=this.value.length+'/500'" placeholder="Describe the issue in more detail. Include relevant context like repeated behaviour, links to other messages, or any other information that might help moderators…"></textarea>
+<div class="char-count" id="charCount">0/500</div>
+</div>
+<div class="btn-row u-extracted-312">
+<button class="btn-back" onclick="goStep(1)">← Back</button>
+<button class="btn-next" onclick="goStep(3)">Review Report →</button>
+</div>
+</div>
+</div>
+<!-- ── PANEL 3: REVIEW & SUBMIT ── -->
+<div class="panel" id="panel3">
+<div class="panel-card">
+<div class="panel-title">Review your report</div>
+<div class="panel-sub">Check the details below before submitting. Once sent, a moderator will review this report and take action within 24 hours.</div>
+<div class="review-section">
+<div class="review-row">
+<div class="review-key">Report Type</div>
+<div class="review-val" id="rvType">Message Report</div>
+</div>
+<div class="review-row">
+<div class="review-key">Reported User</div>
+<div class="review-val red">BadActor_X</div>
+</div>
+<div class="review-row">
+<div class="review-key">Channel</div>
+<div class="review-val">#general · Pro Gamers</div>
+</div>
+<div class="review-row">
+<div class="review-key">Message Date</div>
+<div class="review-val">March 5, 2025 · 10:28 AM</div>
+</div>
+<div class="review-row">
+<div class="review-key">Violation Reason</div>
+<div class="review-val red" id="rvReason">🚫 Hate Speech or Discrimination</div>
+</div>
+<div class="review-row">
+<div class="review-key">Additional Context</div>
+<div class="review-val u-extracted-171" id="rvContext">None provided</div>
+</div>
+<div class="review-row">
+<div class="review-key">Anonymous</div>
+<div class="review-val green">✓ Yes — your identity is protected</div>
+</div>
+</div>
+<!-- Reported content recap -->
+<div class="preview-label">Content Being Reported</div>
+<div class="msg-preview u-extracted-144">
+<div class="mp-av u-extracted-206">BX</div>
+<div class="mp-body">
+<div class="mp-header">
+<span class="mp-name u-extracted-283">BadActor_X</span>
+<span class="mp-ch">#general</span>
+<span class="mp-time">10:28 AM</span>
+</div>
+<div class="mp-text">Everyone in this channel is absolutely pathetic. You're all failures who couldn't code your way out of a paper bag. Stop wasting everyone's time with your garbage questions 🤮</div>
+</div>
+</div>
+<div class="confirm-row">
+<input id="confirmCheck" onchange="document.getElementById('submitBtn').disabled=!this.checked" type="checkbox"/>
+<label for="confirmCheck">I confirm that this report is <strong>accurate and made in good faith</strong>. I understand that submitting false or malicious reports is a violation of NexusHub's Terms of Service and may result in action against my account.</label>
+</div>
+<div class="btn-row">
+<button class="btn-back" onclick="goStep(2)">← Back</button>
+<button class="btn-next" disabled="" id="submitBtn" onclick="submitReport()">🚩 Submit Report</button>
+</div>
+</div>
+</div>
+<!-- ── PANEL 4: SUCCESS ── -->
+<div class="panel" id="panel4">
+<div class="panel-card">
+<div class="success-screen">
+<div class="success-circle">✓</div>
+<div class="success-title">Report Submitted</div>
+<div class="success-sub">Your report has been received and will be reviewed by a moderator within <strong>24 hours</strong>. We take all reports seriously and will take appropriate action if the content violates our community guidelines.</div>
+<div class="success-ref">Report ID: RPT-DNX-2025-039471</div>
+<div class="u-extracted-313">
+<button class="btn-done" onclick="window.location.href='chat.html'">Return to Chat</button>
+<button class="u-extracted-314" onclick="resetForm()">Submit Another Report</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script src="../js/pages/report.js"></script>
+<script src="../js/components/notifications.js"></script>
+</body>
+</html>
