@@ -1,40 +1,16 @@
-import { api } from '../core/api.js';
+/**
+ * Gameunity — Home Dashboard Logic
+ * Handles community interactions, join states, and notification management.
+ */
 
 // ==========================================
 // 1. STATE & MOCK DATA
 // ==========================================
 let unreadMessages = 12;
 
-async function fetchDashboardStats() {
-  const stats = await api.get('/dashboard/stats');
-  if (stats) {
-    updateHeaderStatValue("Communities", stats.communitiesJoined);
-    updateHeaderStatValue("Friends", stats.friendsOnline);
-    updateHeaderStatValue("Level", stats.userLevel);
-  }
-}
-
-function updateHeaderStatValue(label, value) {
-  const stats = document.querySelectorAll(".g-stat");
-  stats.forEach((stat) => {
-    const statLabel = stat.querySelector(".g-stat-label");
-    if (statLabel && statLabel.textContent.trim().toLowerCase() === label.toLowerCase()) {
-      const valEl = stat.querySelector(".g-stat-val");
-      if (valEl) valEl.textContent = value;
-    }
-  });
-}
-
-/**
- * Toggles sidebar expansion state
- * Switches between compact (72px) and expanded (240px) modes
- */
-window.toggleSidebar = function () {
-  const sidebar = document.getElementById("sidebar");
-  if (sidebar) {
-    sidebar.classList.toggle("expanded");
-  }
-};
+// ==========================================
+// 2. SIDEBAR — app rail handled by ../js/components/app-rail.js (toggleSidebar)
+// ==========================================
 
 window.toggleJoin = function (btn) {
   const card = btn.closest(".rec-card");
@@ -172,7 +148,6 @@ function initHorizontalScroll() {
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
   initHorizontalScroll();
-  fetchDashboardStats();
 
   // 1. Hide pills for communities already visited in the past
   hideVisitedPills();
@@ -184,20 +159,6 @@ document.addEventListener("DOMContentLoaded", () => {
       markCommunityAsVisited(this.getAttribute("href"));
     });
   });
-
-  // --- BULLETPROOF: Sidebar Click-Outside Logic ---
-  const mainContentArea = document.querySelector(".main");
-
-  if (mainContentArea) {
-    mainContentArea.addEventListener("click", () => {
-      const sidebar = document.getElementById("sidebar");
-
-      // If the sidebar exists and is open, close it!
-      if (sidebar && sidebar.classList.contains("expanded")) {
-        sidebar.classList.remove("expanded");
-      }
-    });
-  }
 
   updateNotificationPersistence();
 

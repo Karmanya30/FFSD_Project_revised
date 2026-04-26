@@ -1,3 +1,10 @@
+/**
+ * DEPRECATED - moderation.js
+ * C5 AUDIT FIX: This file is orphaned - never imported by any HTML page.
+ * All moderation logic lives in: js/pages/mod-panel.js
+ * TODO: Delete this file after confirming mod-panel.js covers all needed functions.
+ */
+// Imports below are also unused - api.js, modal.js are orphaned too.
 import { fetchData } from '../core/api.js';
 import { requireRole } from '../core/auth.js';
 import { openModal } from '../components/modal.js';

@@ -1,4 +1,9 @@
 /**
+ * DEPRECATED/TODO - api.js
+ * AUDIT FIX: This file is currently orphaned and not imported by any HTML page.
+ * Keep for reference if backend integration is planned, otherwise safe to delete.
+ */
+/**
  * Gameunity — Core API Wrapper
  * Centralizes all network requests and handles mock data for the frontend prototype.
  */
@@ -46,37 +51,45 @@ export async function fetchData(endpoint, options = {}) {
         }
 
         // --- AUTH INTERCEPTOR ---
+        // Automatically inject the token if the user is logged in
         const user = JSON.parse(localStorage.getItem('nexus_user'));
         const headers = {
             'Content-Type': 'application/json',
             ...options.headers
         };
-        
-        // Map frontend roles to backend roles
-        const roleMap = {
-            'superuser': 'admin',
-            'mod': 'moderator',
-            'gamer': 'user',
-            'audience': 'user'
-        };
-
-        if (user?.role) {
-            headers['x-role'] = roleMap[user.role] || 'user';
+        if (user?.token) {
+            headers['Authorization'] = `Bearer ${user.token}`;
         }
 
-        // --- REAL FETCH ---
+        // --- MOCK LOGIC (For frontend Prototype) ---
+        // Remove this block once the Strategy is fully integrated
+        if (MOCK_DATA[endpoint]) {
+            // Simulate 300ms network latency
+            await new Promise(resolve => setTimeout(resolve, 300));
+            return { 
+                success: true, 
+                data: MOCK_DATA[endpoint],
+                source: 'mock' 
+            };
+        }
+
+        // --- REAL FETCH (Disabled for prototype) ---
+        /*
         const response = await fetch(url, { ...options, headers });
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || `HTTP Error: ${response.status}`);
+            throw new Error(`HTTP Error: ${response.status}`);
         }
         return await response.json();
+        */
+
+        // Fallback for non-mocked endpoints in prototype
+        return { success: true, message: "Endpoint hit (Prototype Mode)", data: {} };
 
     } catch (error) {
         console.error(`%c[API ERROR] %cFailed to fetch ${endpoint}:`, "color: #ef4444; font-weight: bold;", "color: #fff;", error);
         
         if (window.toast) {
-            window.toast(`⚠️ ${error.message}`);
+            window.toast("⚠️ Connection error. Please try again.");
         }
         
         return { success: false, error: error.message };

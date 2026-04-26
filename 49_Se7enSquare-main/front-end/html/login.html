@@ -10,7 +10,6 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
         rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="../css/global.css" rel="stylesheet" />
     <link href="../css/pages/login.css" rel="stylesheet" />
 </head>
@@ -18,34 +17,6 @@
 <body>
     <!-- Background Canvas -->
     <canvas id="bgCanvas"></canvas>
-    <div class="bg-mesh" aria-hidden="true"></div>
-    <div class="bg-vignette" aria-hidden="true"></div>
-    <svg class="bg-waves" aria-hidden="true" viewBox="0 0 1440 900" preserveAspectRatio="none">
-        <defs>
-            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#3B82F6" stop-opacity="0" />
-                <stop offset="35%" stop-color="#3B82F6" stop-opacity="0.55" />
-                <stop offset="65%" stop-color="#8B5CF6" stop-opacity="0.5" />
-                <stop offset="100%" stop-color="#38BDF8" stop-opacity="0" />
-            </linearGradient>
-            <filter id="waveBlur">
-                <feGaussianBlur stdDeviation="2.3" />
-            </filter>
-        </defs>
-        <g fill="none" stroke="url(#waveGradient)" stroke-width="1.9" filter="url(#waveBlur)">
-            <path d="M-40,670 C180,625 280,735 470,690 S820,625 1000,670 S1280,735 1480,665" />
-            <path d="M-30,735 C160,680 320,790 520,740 S850,675 1040,730 S1290,790 1480,720" />
-            <path d="M-50,800 C130,745 360,835 560,792 S870,725 1080,790 S1310,845 1490,780" />
-        </g>
-    </svg>
-    <div class="bg-streaks" aria-hidden="true"></div>
-    <div class="cursor-dot" aria-hidden="true"></div>
-    <div class="cursor-ring" aria-hidden="true"></div>
-    <div class="cursor-trail" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
 
     <!-- Back to Home -->
     <a href="landing.html" style="position: absolute; top: 32px; left: 40px; color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 600; font-family: 'Syne', sans-serif; display: flex; align-items: center; gap: 8px; transition: color 0.2s ease; z-index: 50;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'" title="Return to Landing Page">
@@ -60,7 +31,7 @@
         <div class="login-card" id="loginCard">
             <!-- Logo -->
             <div class="login-logo">
-                <div class="logo-hex">G</div>
+                <div class="logo-hex">N</div>
                 <span class="logo-text">Gameunity</span>
             </div>
 

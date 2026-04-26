@@ -8,8 +8,13 @@
 // import { fetchData } from '../core/api.js';
 // import { requireRole } from '../core/auth.js';
 
-// Mocking requireRole for the sake of the prototype
-const requireRole = (roles) => true; 
+// C1 FIX: requireRole() is provided by auth.js loaded before this script.
+// The previous mock (always returned true) has been replaced with a proper delegation.
+const requireRole = window.requireRole || function (roles) {
+    console.error('[admin.js] auth.js not loaded. Required roles:', roles);
+    document.body.innerHTML = '<div style="padding:40px"><h1>403 Forbidden</h1><p>auth.js not loaded.</p></div>';
+    return false;
+}; 
 
 // ==========================================
 // 2. STATE & DATA

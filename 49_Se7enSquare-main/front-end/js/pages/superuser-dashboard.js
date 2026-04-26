@@ -34,7 +34,7 @@ let toastTimer;
 window.navTo = function(page, el) {
     currentPage = page;
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelector('.nav-section')?.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('#suSubSidebar .nav-item').forEach(n => n.classList.remove('active'));
 
     const target = document.getElementById('page-' + page);
     if (target) target.classList.add('active');
@@ -51,6 +51,8 @@ window.navTo = function(page, el) {
     if (page === 'events-mgmt') renderEvents();
     if (page === 'audit') renderAuditFull();
     if (page === 'config') renderConfig();
+
+    if (window.innerWidth <= 900) window.closeSuSidebarDrawer?.();
 };
 
 // ==========================================
@@ -712,7 +714,103 @@ function toast(msg) {
 // ==========================================
 // 15. INIT
 // ==========================================
+// ==========================================
+// 16. SUB-SIDEBAR (collapse, sections, drawer)
+// ==========================================
+const SU_SIDEBAR_LS = 'su_subsidebar_collapsed';
+const SU_SECTION_LS_PREFIX = 'su_nav_sec_';
+
+function applySuSidebarCollapsed(collapsed) {
+    const aside = document.getElementById('suSubSidebar');
+    const btn = document.getElementById('suNavCollapseBtn');
+    if (!aside) return;
+    aside.classList.toggle('is-collapsed', collapsed);
+    aside.setAttribute('data-collapsed', collapsed ? 'true' : 'false');
+    if (btn) {
+        btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        btn.title = collapsed ? 'Expand panel' : 'Collapse panel';
+        btn.setAttribute('aria-label', collapsed ? 'Expand navigation panel' : 'Collapse navigation panel');
+    }
+    try {
+        localStorage.setItem(SU_SIDEBAR_LS, collapsed ? '1' : '0');
+    } catch (e) { /* ignore */ }
+}
+
+window.toggleSuNavPanel = function() {
+    const aside = document.getElementById('suSubSidebar');
+    if (!aside) return;
+    applySuSidebarCollapsed(!aside.classList.contains('is-collapsed'));
+};
+
+window.toggleSuNavSection = function(headBtn) {
+    const section = headBtn.closest('.su-nav-section');
+    if (!section || asideIsCollapsed()) return;
+    const nowClosed = section.classList.toggle('is-closed');
+    headBtn.setAttribute('aria-expanded', nowClosed ? 'false' : 'true');
+    const key = section.getAttribute('data-section');
+    if (key) {
+        try {
+            localStorage.setItem(SU_SECTION_LS_PREFIX + key, nowClosed ? '0' : '1');
+        } catch (e) { /* ignore */ }
+    }
+};
+
+function asideIsCollapsed() {
+    const aside = document.getElementById('suSubSidebar');
+    if (!aside || !aside.classList.contains('is-collapsed')) return false;
+    if (window.innerWidth <= 900 && aside.classList.contains('su-drawer-open')) return false;
+    return true;
+}
+
+function initSuSidebarFromStorage() {
+    let collapsed = false;
+    try {
+        collapsed = localStorage.getItem(SU_SIDEBAR_LS) === '1';
+    } catch (e) { /* ignore */ }
+    applySuSidebarCollapsed(collapsed);
+
+    document.querySelectorAll('.su-nav-section[data-section]').forEach(section => {
+        const key = section.getAttribute('data-section');
+        let open = true;
+        try {
+            const v = localStorage.getItem(SU_SECTION_LS_PREFIX + key);
+            if (v === '0') open = false;
+        } catch (e) { /* ignore */ }
+        section.classList.toggle('is-closed', !open);
+        const head = section.querySelector('.su-nav-section-head');
+        if (head) head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+}
+
+window.openSuSidebarDrawer = function() {
+    const aside = document.getElementById('suSubSidebar');
+    const backdrop = document.getElementById('suNavBackdrop');
+    if (!aside) return;
+    aside.classList.add('su-drawer-open');
+    if (backdrop) backdrop.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('su-nav-drawer-active');
+};
+
+window.closeSuSidebarDrawer = function() {
+    const aside = document.getElementById('suSubSidebar');
+    const backdrop = document.getElementById('suNavBackdrop');
+    if (aside) aside.classList.remove('su-drawer-open');
+    if (backdrop) backdrop.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('su-nav-drawer-active');
+};
+
 document.addEventListener('DOMContentLoaded', () => {
+    initSuSidebarFromStorage();
+    const backdrop = document.getElementById('suNavBackdrop');
+    if (backdrop) {
+        backdrop.addEventListener('click', closeSuSidebarDrawer);
+    }
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 900) closeSuSidebarDrawer();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeSuSidebarDrawer();
+    });
     renderOverview();
     console.log('%c[Gameunity] %cSuper User Dashboard loaded.', 'color: #5B6EF5; font-weight: bold;', 'color: #F59E0B;');
 });

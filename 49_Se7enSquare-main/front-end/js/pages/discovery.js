@@ -1,14 +1,16 @@
-import { api } from '../core/api.js';
+/**
+ * Gameunity — Community Discovery Logic
+ * Handles real-time filtering, category chip management, and keyboard shortcuts.
+ */
 
 // ==========================================
 // 1. STATE & CONFIG
 // ==========================================
 let activeCategory = 'all';
 let searchTimeout;
-let sortModes = ['Popular', 'A-Z', 'Z-A']; 
-let currentSortIndex = 0;                  
-let hiddenCommunities = []; 
-let allCommunities = []; // Store fetched communities
+let sortModes = ['Popular', 'A-Z', 'Z-A']; // New: Sort states
+let currentSortIndex = 0;                  // New: Tracks active sort mode
+let hiddenCommunities = []; // NEW: Stores communities pushed off the sidebar
 
 // ==========================================
 // 2. FILTERING ENGINE
@@ -291,58 +293,38 @@ function handleShortcuts(e) {
 // 5. INITIALIZATION
 // ==========================================
 
-async function fetchCommunities() {
-    const response = await api.get('/communities');
-    if (response && Array.isArray(response)) {
-        allCommunities = response;
-        renderCommunities(allCommunities);
-    }
-}
-
-function renderCommunities(communities) {
-    const grid = document.getElementById('commGrid');
-    if (!grid) return;
-    
-    grid.innerHTML = '';
-    
-    communities.forEach((comm, index) => {
-        const card = document.createElement('div');
-        card.className = `c-card delay-${(index % 5 + 1) * 5}`;
-        card.dataset.cat = 'gaming'; // Defaulting for prototype
-        
-        card.innerHTML = `
-            <div class="c-banner banner-cyan"><div class="c-banner-inner">🎮🎮🎮</div></div>
-            <div class="c-card-body">
-                <div class="c-top">
-                    <div class="c-icon grad-cyan">🎮</div>
-                    <div class="c-badges"><span class="c-badge badge-trending">🔥 Trending</span></div>
-                </div>
-                <div><div class="c-name">${comm.name}</div><div class="c-cat">${comm.tags.join(' · ')}</div></div>
-                <div class="c-desc">${comm.description}</div>
-                <div class="c-footer">
-                    <div class="c-stats"><span class="c-stat">👥 1,240</span><span class="c-stat">🟢 156 online</span></div>
-                    <button class="btn-join" onclick="toggleJoin(this)">Join</button>
-                </div>
-            </div>
-        `;
-        
-        card.addEventListener('click', (e) => {
-            if (e.target.closest('button')) return;
-            const cleanName = comm.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-            window.location.href = `community-page.html?name=${cleanName}&id=${comm.id}`;
-        });
-        
-        grid.appendChild(card);
-    });
-    
-    const countDisplay = document.getElementById('gridCount');
-    if (countDisplay) {
-        countDisplay.textContent = `Showing ${communities.length} of ${communities.length}`;
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
+    // Listen for global keyboard shortcuts
     window.addEventListener('keydown', handleShortcuts);
-    fetchCommunities();
+
+    // Initial Filter Apply
+    applyFilters();
+    
+    // NEW: Make community cards and featured banner clickable
+    const allCards = document.querySelectorAll('.c-card, .featured-banner');
+    
+    allCards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            // Prevent navigation if the user clicked the "Join" button
+            if (e.target.closest('button')) {
+                return;
+            }
+
+            // Extract the community name to format it as a URL parameter
+            // (e.g., "Pro Gamers" becomes "?name=pro-gamers")
+            const nameElement = card.querySelector('.c-name') || card.querySelector('.feat-name');
+            let urlParams = '';
+            
+            if (nameElement) {
+                // Convert text to lowercase, replace spaces/special chars with hyphens
+                const cleanName = nameElement.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                urlParams = `?name=${cleanName}`;
+            }
+
+            // Navigate to the community page
+            window.location.href = `community-page.html${urlParams}`;
+        });
+    });
+
     console.log("Discovery module initialized. Press ⌘K to search.");
 });

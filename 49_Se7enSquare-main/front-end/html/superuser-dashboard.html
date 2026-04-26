@@ -6,7 +6,6 @@
     <title>Gameunity — Super User Dashboard</title>
     <meta name="description" content="Gameunity Super User Control Panel — Full system-level access to manage users, communities, moderation, and platform configuration."/>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="../css/global.css" rel="stylesheet"/>
     <link href="../css/pages/superuser-dashboard.css" rel="stylesheet"/>
     <link href="../css/pages/rbac-nav.css" rel="stylesheet"/>
@@ -35,26 +34,53 @@
   </div>
 </aside>
 
-    <!-- ═══ SUB-SIDEBAR ═══ -->
-    <aside class="sub-sidebar">
-        <div class="sub-header" style="display:flex;align-items:center;gap:8px;">
-            Gameunity <span class="su-badge" style="background:var(--error);color:#fff;padding:2px 6px;border-radius:6px;font-size:10px;">SUPER</span>
-        </div>
-        <div class="nav-section">
-            <div class="nav-label">System Control</div>
-            <a class="nav-item active" onclick="navTo('overview', this)"><span class="nav-icon">📊</span> Overview</a>
-            <a class="nav-item" onclick="navTo('users', this)"><span class="nav-icon">👤</span> User Management <span class="nav-badge">148K</span></a>
-            <a class="nav-item" onclick="navTo('communities', this)"><span class="nav-icon">🏘️</span> Communities</a>
-            <a class="nav-item" onclick="navTo('moderation', this)"><span class="nav-icon">🛡️</span> Moderation</a>
-            <a class="nav-item" onclick="navTo('events-mgmt', this)"><span class="nav-icon">📅</span> Events</a>
-            <a class="nav-item" onclick="navTo('audit', this)"><span class="nav-icon">📋</span> Audit Log</a>
-            <a class="nav-item" onclick="navTo('config', this)"><span class="nav-icon">⚙️</span> Platform Config</a>
-        </div>
-        <div class="nav-section">
-            <div class="nav-label">Quick Links</div>
-            <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> End-User View</a>
-            <a href="admin-dashboard.html" class="nav-item"><span class="nav-icon">📈</span> Admin Dashboard</a>
-            <a href="mod-panel.html" class="nav-item"><span class="nav-icon">🔍</span> Mod Panel</a>
+    <!-- ═══ SUB-SIDEBAR (collapsible) ═══ -->
+    <div class="su-nav-backdrop" id="suNavBackdrop" aria-hidden="true"></div>
+    <aside class="sub-sidebar su-nav-panel" id="suSubSidebar" aria-label="Super user navigation">
+        <div class="su-nav-surface">
+            <header class="su-nav-header">
+                <div class="su-nav-brand">
+                    <div class="su-nav-brand-text">
+                        <span class="su-nav-brand-name">Gameunity</span>
+                        <span class="su-nav-brand-badge">Super</span>
+                    </div>
+                </div>
+                <button type="button" class="su-nav-collapse-toggle" id="suNavCollapseBtn" onclick="toggleSuNavPanel()" aria-controls="suSubSidebar" aria-expanded="true" title="Collapse panel">
+                    <span class="su-nav-collapse-icon" aria-hidden="true">⟨</span>
+                </button>
+            </header>
+            <nav class="su-nav-scroll" aria-label="Dashboard sections">
+                <div class="su-nav-section" data-section="system">
+                    <button type="button" class="su-nav-section-head" onclick="toggleSuNavSection(this)" aria-expanded="true">
+                        <span class="su-nav-section-chevron" aria-hidden="true"></span>
+                        <span class="su-nav-section-title">System Control</span>
+                    </button>
+                    <div class="su-nav-section-panel">
+                        <div class="su-nav-section-panel-inner">
+                            <a class="nav-item active" href="#" onclick="event.preventDefault(); navTo('overview', this);" data-tooltip="Overview"><span class="nav-icon">📊</span><span class="nav-item-text">Overview</span></a>
+                            <a class="nav-item" href="#" onclick="event.preventDefault(); navTo('users', this);" data-tooltip="User Management"><span class="nav-icon">👤</span><span class="nav-item-text">User Management</span><span class="nav-badge">148K</span></a>
+                            <a class="nav-item" href="#" onclick="event.preventDefault(); navTo('communities', this);" data-tooltip="Communities"><span class="nav-icon">🏘️</span><span class="nav-item-text">Communities</span></a>
+                            <a class="nav-item" href="#" onclick="event.preventDefault(); navTo('moderation', this);" data-tooltip="Moderation"><span class="nav-icon">🛡️</span><span class="nav-item-text">Moderation</span></a>
+                            <a class="nav-item" href="#" onclick="event.preventDefault(); navTo('events-mgmt', this);" data-tooltip="Events"><span class="nav-icon">📅</span><span class="nav-item-text">Events</span></a>
+                            <a class="nav-item" href="#" onclick="event.preventDefault(); navTo('audit', this);" data-tooltip="Audit Log"><span class="nav-icon">📋</span><span class="nav-item-text">Audit Log</span></a>
+                            <a class="nav-item" href="#" onclick="event.preventDefault(); navTo('config', this);" data-tooltip="Platform Config"><span class="nav-icon">⚙️</span><span class="nav-item-text">Platform Config</span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="su-nav-section" data-section="links">
+                    <button type="button" class="su-nav-section-head" onclick="toggleSuNavSection(this)" aria-expanded="true">
+                        <span class="su-nav-section-chevron" aria-hidden="true"></span>
+                        <span class="su-nav-section-title">Quick Links</span>
+                    </button>
+                    <div class="su-nav-section-panel">
+                        <div class="su-nav-section-panel-inner">
+                            <a href="dashboard.html" class="nav-item" data-tooltip="End-User View"><span class="nav-icon">🏠</span><span class="nav-item-text">End-User View</span></a>
+                            <a href="admin-dashboard.html" class="nav-item" data-tooltip="Admin Dashboard"><span class="nav-icon">📈</span><span class="nav-item-text">Admin Dashboard</span></a>
+                            <a href="mod-panel.html" class="nav-item" data-tooltip="Mod Panel"><span class="nav-icon">🔍</span><span class="nav-item-text">Mod Panel</span></a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
         </div>
     </aside>
 
@@ -62,6 +88,9 @@
     <div class="main">
         <header class="header">
             <div class="header-left">
+                <button type="button" class="su-drawer-trigger" id="suDrawerOpenBtn" onclick="openSuSidebarDrawer()" aria-label="Open navigation menu">
+                    <span aria-hidden="true">☰</span>
+                </button>
                 <h1 class="header-title" id="page-title">System Overview</h1>
                 <span class="header-badge">SUPER USER</span>
             </div>
@@ -303,6 +332,7 @@
     </div>
 
     <script src="../js/core/auth.js"></script>
+    <script src="../js/components/app-rail.js"></script>
     <script src="../js/components/rbac-nav.js"></script>
     <script src="../js/data/mockData.js"></script>
     <script src="../js/data/crudService.js"></script>

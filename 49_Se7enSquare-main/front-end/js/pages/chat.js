@@ -554,13 +554,13 @@ function addReaction(msgGroup, emoji) {
   }
 
   let existingPill = Array.from(
-    reactionsContainer.querySelectorAll(".FPS-pill"),
+    reactionsContainer.querySelectorAll(".reaction-pill"),
   ).find((pill) => pill.querySelector("span")?.textContent === emoji);
 
   if (existingPill) {
     if (existingPill.classList.contains("mine")) {
       // Already reacted — remove reaction
-      const countSpan = existingPill.querySelector(".FPS-count");
+      const countSpan = existingPill.querySelector(".reaction-count");
       const newCount = parseInt(countSpan.textContent) - 1;
       if (newCount <= 0) {
         existingPill.remove();
@@ -569,23 +569,23 @@ function addReaction(msgGroup, emoji) {
         existingPill.classList.remove("mine");
       }
     } else {
-      const countSpan = existingPill.querySelector(".FPS-count");
+      const countSpan = existingPill.querySelector(".reaction-count");
       countSpan.textContent = parseInt(countSpan.textContent) + 1;
       existingPill.classList.add("mine");
     }
   } else {
     const pill = document.createElement("div");
-    pill.className = "FPS-pill mine";
+    pill.className = "reaction-pill mine";
     pill.onclick = function () {
-      window.toggleFPS(this);
+      window.toggleReaction(this);
     };
-    pill.innerHTML = `<span>${emoji}</span><span class="FPS-count">1</span>`;
+    pill.innerHTML = `<span>${emoji}</span><span class="reaction-count">1</span>`;
     reactionsContainer.appendChild(pill);
   }
 }
 
-window.toggleFPS = function (pill) {
-  const countEl = pill.querySelector(".FPS-count");
+window.toggleReaction = function (pill) {
+  const countEl = pill.querySelector(".reaction-count");
   let count = parseInt(countEl.textContent);
   if (pill.classList.contains("mine")) {
     // Un-react
@@ -1009,7 +1009,7 @@ function simulateResponse() {
                 </div>
                 <div class="msg-text">Got it! We'll be using the <strong>Nexus Design System</strong> to keep things consistent. Can't wait for tomorrow! 🚀</div>
                 <div class="reactions">
-                    <div class="FPS-pill" onclick="toggleFPS(this)"><span>🔥</span><span class="FPS-count">1</span></div>
+                    <div class="reaction-pill" onclick="toggleReaction(this)"><span>🔥</span><span class="reaction-count">1</span></div>
                 </div>
             </div>
             <div class="msg-actions">
@@ -1086,3 +1086,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+

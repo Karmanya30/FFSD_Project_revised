@@ -3,10 +3,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta name="description" content="Gameunity Community Page — Join discussions, view members, and explore community events." />
     <title>Gameunity – Community Page</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
       rel="stylesheet"
     />
     <link href="../css/global.css" rel="stylesheet" />
@@ -17,26 +17,62 @@
   <body>
     <!-- ─── APP RAIL ─── -->
     <aside class="app-rail" id="sidebar">
-  <!-- Top: Logo -->
-  <div class="rail-top">
-    <div class="rail-logo">⬡</div>
-    <div class="rail-toggle" onclick="toggleSidebar()">☰</div>
-  </div>
-  
-  <!-- Middle: Nav Icons -->
-  <div class="rail-middle">
-    <a href="dashboard.html" class="rail-item" data-tooltip="Home">🏠</a>
-    <a href="discovery.html" class="rail-item active" data-tooltip="Communities">💬</a>
-    <a href="discovery.html" class="rail-item" data-tooltip="Search">🔍</a>
-    <a href="events.html" class="rail-item" data-tooltip="Events">📅<div class="notif-dot" style="background:var(--gold);width:6px;height:6px;"></div></a>
-    <a href="profile-settings.html" class="rail-item" data-tooltip="Settings">⚙️</a>
-  </div>
-  
-  <!-- Bottom: Profile -->
-  <div class="rail-bottom">
-    <div class="rail-avatar" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">AM<div class="rail-dot bg-dot-green" style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-sidebar);"></div></div>
-  </div>
-</aside>
+      <div class="rail-logo">⬡</div>
+      <div class="rail-toggle"><span class="rail-toggle-icon" aria-hidden="true">⟩</span></div>
+
+      <div class="rail-divider"></div>
+
+      <!-- Main Nav -->
+      <a href="dashboard.html" class="rail-item" data-tooltip="Home">🏠</a>
+      <a href="discovery.html" class="rail-item active" data-tooltip="Discover"
+        >🔍</a
+      >
+      <a href="events.html" class="rail-item" data-tooltip="Events"
+        >📅<div class="notif-dot"></div></a>
+      <a href="profile-settings.html" class="rail-item" data-tooltip="Settings"
+        >⚙️</a
+      >
+
+      <div class="rail-divider"></div>
+
+      <!-- Communities -->
+      <div id="railCommunities"></div>
+
+      <a
+        href="create-community.html"
+        class="rail-item"
+        data-tooltip="Create Community"
+        style="
+          background: rgba(255, 255, 255, 0.05);
+          color: var(--text-1);
+          font-weight: 600;
+          border-radius: 14px;
+        "
+        >✚</a
+      >
+
+      <div class="rail-footer">
+        <div
+          class="rail-avatar"
+          onclick="window.location.href = 'profile-settings.html'"
+          data-tooltip="Profile"
+        >
+          AM
+          <div
+            class="rail-dot bg-dot-green"
+            style="
+              position: absolute;
+              bottom: -2px;
+              right: -2px;
+              width: 12px;
+              height: 12px;
+              border-radius: 50%;
+              border: 2px solid var(--bg-sidebar);
+            "
+          ></div>
+        </div>
+      </div>
+    </aside>
     <!-- ─── MAIN ─── -->
     <div class="main">
       <!-- Header -->
@@ -669,60 +705,43 @@
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const storedUser = localStorage.getItem("nexus_current_user");
+        // C3 FIX: Use the correct storage key 'nexus_user' (not 'nexus_current_user')
+        const storedUser = localStorage.getItem("nexus_user");
 
         if (storedUser) {
           const user = JSON.parse(storedUser);
 
-          const railAv = document.getElementById("railUserAvatar");
-          const headerAv = document.getElementById("headerUserAvatar");
+          const railAv = document.querySelector(".rail-avatar");
+          const headerAv = document.querySelector(".header-avatar");
 
-          if (railAv) {
+          if (railAv && user.initials) {
             railAv.innerHTML = `${user.initials}<div class="rail-dot bg-dot-green" style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-sidebar);"></div>`;
-            railAv.className = `rail-avatar ${user.bgClass || ""}`;
-            if (user.bgClass === "grad-orange" || user.initials === "JK") {
-              railAv.style.background =
-                "linear-gradient(135deg, var(--gold), #d97706)";
-            }
+            if (user.bgClass) railAv.className = `rail-avatar ${user.bgClass}`;
           }
 
-          if (headerAv) {
+          if (headerAv && user.initials) {
             headerAv.innerText = user.initials;
-            headerAv.className = `header-avatar ${user.bgClass || ""}`;
-            if (user.bgClass === "grad-orange" || user.initials === "JK") {
-              headerAv.style.background =
-                "linear-gradient(135deg, var(--gold), #d97706)";
-            }
+            if (user.bgClass) headerAv.className = `header-avatar ${user.bgClass}`;
           }
         }
-      });
-    </script>
 
-    <script src="../js/core/auth.js"></script>
-    <script src="../js/components/rbac-nav.js"></script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
         // Show/hide Manage & Delete buttons based on ownership and superuser role
-        const user = window.getCurrentUser ? window.getCurrentUser() : null;
+        const userObj = window.getCurrentUser ? window.getCurrentUser() : null;
         const manageBtn = document.getElementById("rbacManageBtn");
         const deleteBtn = document.getElementById("rbacDeleteBtn");
 
-        if (user) {
+        if (userObj) {
           const params = new URLSearchParams(window.location.search);
           const communityName = params.get("name") || "pro-gamers";
           const isOwner = window.isOwnerOfCommunity
             ? window.isOwnerOfCommunity(communityName)
             : false;
-          const isSuperUser = user.role === "superuser";
+          const isSuperUser = userObj.role === "superuser";
 
-          // Let owners and superusers manage
           if (manageBtn && (isOwner || isSuperUser)) {
             manageBtn.classList.remove("hidden");
             manageBtn.href = `community-manager.html?name=${communityName}`;
           }
-
-          // Let owners and superusers delete
           if (deleteBtn && (isOwner || isSuperUser)) {
             deleteBtn.classList.remove("hidden");
           }
@@ -734,16 +753,14 @@
           "Are you sure you want to permanently delete this community? This action cannot be undone.",
         );
         if (conf) {
-          // Usually this would call an API, we will just simulate it and redirect to dashboard
           const params = new URLSearchParams(window.location.search);
           const communityName = params.get("name") || "pro-gamers";
 
-          // Remove from session local storage to simulate deletion
+          // C4 FIX: auth.js stores owned communities as an ARRAY, not an object
           let owned = JSON.parse(
-            localStorage.getItem("nexus_owned_communities") ||
-              '{"pro-gamers":true}',
+            localStorage.getItem("nexus_owned_communities") || "[]",
           );
-          delete owned[communityName];
+          owned = owned.filter(c => c !== communityName);
           localStorage.setItem(
             "nexus_owned_communities",
             JSON.stringify(owned),
@@ -759,3 +776,4 @@
     <script src="../js/components/notifications.js"></script>
   </body>
 </html>
+

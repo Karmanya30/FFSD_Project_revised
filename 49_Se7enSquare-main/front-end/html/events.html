@@ -7,7 +7,7 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>Gameunity – Events</title>
   <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;display=swap"
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
     rel="stylesheet" />
   <link href="../css/global.css" rel="stylesheet" />
   <link href="../css/pages/events.css" rel="stylesheet" />
@@ -16,40 +16,44 @@
 
 <body>
   <!-- ─── APP RAIL ─── -->
-  <aside class="app-rail" id="sidebar">
-    <!-- Top: Logo -->
-    <div class="rail-top">
-      <div class="rail-logo">⬡</div>
-      <div class="rail-toggle" onclick="toggleSidebar()">☰</div>
-    </div>
-    
-    <!-- Middle: Nav Icons -->
-    <div class="rail-middle nav-icons">
-      <a href="dashboard.html" class="rail-item" data-tooltip="Home">🏠</a>
-      <a href="discovery.html" class="rail-item" data-tooltip="Communities">💬</a>
-      <a href="discovery.html" class="rail-item" data-tooltip="Search">🔍</a>
-      <a href="events.html" class="rail-item active" data-tooltip="Events">📅</a>
-      <a href="profile-settings.html" class="rail-item" data-tooltip="Settings">⚙️</a>
-    </div>
-    
-    <!-- Bottom: Actions & Profile -->
-    <div class="rail-bottom bottom-section">
-      <!-- 1. Panels section (shield + red button) -->
-      <div class="panels">
-        <a href="superuser-dashboard.html" class="rail-item" data-tooltip="Admin Dashboard">🛡️</a>
-        <a href="#" class="rail-item" data-tooltip="Emergency/Broadcast" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #ff5555;">⚡</a>
-      </div>
+  <aside class="app-rail">
+    <div class="rail-logo">⬡</div>
 
-      <!-- 2. Utility icons (shield + alert) -->
-      <div class="utility-icons">
-        <a href="mod-panel.html" class="rail-item" data-tooltip="Mod Panel">🛡️</a>
-        <a href="#" class="rail-item" data-tooltip="Alerts">⚠️</a>
-      </div>
+    <div class="rail-divider"></div>
 
-      <!-- 3. RA profile (LAST) -->
-      <div class="profile">
-        <div class="rail-avatar ra-profile" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">RA</div>
-      </div>
+    <!-- Main Nav -->
+    <a href="dashboard.html" class="rail-item" data-tooltip="Home">🏠</a>
+    <a href="discovery.html" class="rail-item" data-tooltip="Discover">🔍</a>
+    <a href="events.html" class="rail-item active" data-tooltip="Events">📅<div class="notif-dot"></div></a>
+    <a href="profile-settings.html" class="rail-item" data-tooltip="Settings">⚙️</a>
+
+    <div class="rail-divider"></div>
+
+    <!-- Communities -->
+    <a href="community-page.html?name=pro-gamers" class="rail-item rail-comm grad-purple" data-tooltip="Pro Gamers">
+      ⚡<div class="rail-dot bg-dot-green"></div>
+    </a>
+    <a href="community-page.html?name=rpg-tavern" class="rail-item rail-comm grad-orange" data-tooltip="RPG Tavern">
+      🎨<div class="rail-dot bg-dot-green"></div>
+    </a>
+    <a href="community-page.html?name=gamezone" class="rail-item rail-comm grad-cyan" data-tooltip="GameZone">
+      🎮<div class="rail-dot bg-dot-orange"></div>
+    </a>
+    <a href="community-page.html?name=fps-masters" class="rail-item rail-comm grad-green" data-tooltip="FPS Masters">
+      🌿<div class="rail-dot bg-dot-gray"></div>
+    </a>
+    <a href="community-page.html?name=speedrunners" class="rail-item rail-comm grad-pink" data-tooltip="SpeedRunners">
+      🎵<div class="rail-dot bg-dot-green"></div>
+    </a>
+    <a href="community-page.html?name=strategy-gods" class="rail-item rail-comm grad-violet"
+      data-tooltip="Strategy Gods">
+      📚<div class="rail-dot bg-dot-gray"></div>
+    </a>
+    <a href="create-community.html" class="rail-item" data-tooltip="Create Community"
+      style="background:rgba(255,255,255,0.05);color:var(--text-1);font-weight:600;border-radius:14px;">✚</a>
+
+    <div class="rail-footer">
+      <div class="rail-avatar" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">AM<div class="rail-avatar-dot bg-dot-green"></div></div>
     </div>
   </aside>
   <!-- ─── MAIN ─── -->
@@ -122,7 +126,7 @@
           </div>
           <div>
             <div class="seats-left">⚡ 52 seats left</div>
-            <button id="featured-register" class="btn-register u-extracted-141"
+            <button id="featured-register" class="btn-register u-extracted-141" aria-label="Register for featured event"
               onclick="registerFeaturedEvent(this)">Register Now</button>
           </div>
         </div>
@@ -164,7 +168,7 @@
             </div>
             <div class="ev-card-footer">
               <div class="ev-attendees">👥 520 going</div>
-              <button class="btn-ev" onclick="toggleReg(this)">Register</button>
+              <button class="btn-ev" aria-label="Register for event" onclick="toggleReg(this)">Register</button>
             </div>
           </div>
         </div>
@@ -228,7 +232,7 @@
             </div>
             <div class="ev-card-footer">
               <div class="ev-attendees">👥 156 going</div>
-              <button class="btn-ev" onclick="toggleReg(this)">Register</button>
+              <button class="btn-ev" aria-label="Register for event" onclick="toggleReg(this)">Register</button>
             </div>
           </div>
         </div>
@@ -260,7 +264,7 @@
             </div>
             <div class="ev-card-footer">
               <div class="ev-attendees">👥 48 going</div>
-              <button class="btn-ev" onclick="toggleReg(this)">Register</button>
+              <button class="btn-ev" aria-label="Register for event" onclick="toggleReg(this)">Register</button>
             </div>
           </div>
         </div>
@@ -292,7 +296,7 @@
             </div>
             <div class="ev-card-footer">
               <div class="ev-attendees">👥 280 going</div>
-              <button class="btn-ev" onclick="toggleReg(this)">Register</button>
+              <button class="btn-ev" aria-label="Register for event" onclick="toggleReg(this)">Register</button>
             </div>
           </div>
         </div>
@@ -356,7 +360,7 @@
             </div>
             <div class="ev-card-footer">
               <div class="ev-attendees">👥 92 going</div>
-              <button class="btn-ev" onclick="toggleReg(this)">Register</button>
+              <button class="btn-ev" aria-label="Register for event" onclick="toggleReg(this)">Register</button>
             </div>
           </div>
         </div>
@@ -388,7 +392,7 @@
             </div>
             <div class="ev-card-footer">
               <div class="ev-attendees">👥 215 going</div>
-              <button class="btn-ev" onclick="toggleReg(this)">Register</button>
+              <button class="btn-ev" aria-label="Register for event" onclick="toggleReg(this)">Register</button>
             </div>
           </div>
         </div>
@@ -420,7 +424,7 @@
             </div>
             <div class="ev-card-footer">
               <div class="ev-attendees">👥 36 going</div>
-              <button class="btn-ev" onclick="toggleReg(this)">Register</button>
+              <button class="btn-ev" aria-label="Register for event" onclick="toggleReg(this)">Register</button>
             </div>
           </div>
         </div>
@@ -452,7 +456,7 @@
             </div>
             <div class="ev-card-footer">
               <div class="ev-attendees">👥 178 going</div>
-              <button class="btn-ev" onclick="toggleReg(this)">Register</button>
+              <button class="btn-ev" aria-label="Register for event" onclick="toggleReg(this)">Register</button>
             </div>
           </div>
         </div>
@@ -472,7 +476,7 @@
         <div class="section-sub u-extracted-255">3 upcoming events you're registered for</div>
       </div>
     </div>
-    <div class="container-events">
+    <div class="reg-list">
 
       <!-- Card 1 -->
       <div class="reg-card">
@@ -701,9 +705,11 @@
   </div>
   </div><!-- end main -->
   <script src="../js/core/auth.js"></script>
+  <script src="../js/components/app-rail.js"></script>
   <script src="../js/components/rbac-nav.js"></script>
-  <script type="module" src="../js/pages/events.js"></script>
+  <script src="../js/pages/events.js"></script>
   <script src="../js/components/notifications.js"></script>
 </body>
 
 </html>
+

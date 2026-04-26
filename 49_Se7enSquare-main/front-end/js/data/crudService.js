@@ -1,4 +1,9 @@
 /**
+ * DEPRECATED/TODO - crudService.js
+ * AUDIT FIX: This file is currently orphaned and not imported by any HTML page.
+ * Keep for reference if backend integration is planned, otherwise safe to delete.
+ */
+/**
  * Gameunity — Generic CRUD Service
  * Provides Create, Read, Update, Delete operations on the centralized mock data store.
  * All mutations persist to localStorage and trigger optional callbacks.
@@ -181,3 +186,4 @@ window.NexusCRUD = {
 };
 
 console.log('%c[Gameunity] %cCRUD service ready.', 'color: #5B6EF5; font-weight: bold;', 'color: #10B981;');
+

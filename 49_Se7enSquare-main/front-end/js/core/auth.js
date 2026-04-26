@@ -225,8 +225,8 @@ function getAccessiblePanels() {
 
     const panels = [];
 
-    // Mod Panel — mod + superuser
-    if (user.role === 'mod' || user.role === 'superuser') {
+    // Mod Panel — mod only (superuser accesses it via sub-sidebar)
+    if (user.role === 'mod') {
         panels.push({
             id: 'mod-panel',
             label: 'Mod Panel',

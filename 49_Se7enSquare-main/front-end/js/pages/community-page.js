@@ -570,7 +570,3 @@ window.switchTab = function (tabName, btn) {
   if (target) target.classList.add("active");
 };
 
-window.toggleSidebar = function () {
-  const sidebar = document.getElementById("sidebar");
-  if (sidebar) sidebar.classList.toggle("expanded");
-};

@@ -1,4 +1,9 @@
 /**
+ * DEPRECATED/TODO - modal.js
+ * AUDIT FIX: This file is currently orphaned and not imported by any HTML page.
+ * Keep for reference if backend integration is planned, otherwise safe to delete.
+ */
+/**
  * Gameunity — Reusable Modal System
  * Provides a promise-based API for confirmations, forms, and alerts.
  */
@@ -33,43 +38,30 @@ function initializeModal() {
     const styleTag = document.createElement('style');
     styleTag.textContent = `
         .modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(4, 6, 14, 0.78); z-index: 9999;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); z-index: 9999;
             display: flex; justify-content: center; align-items: center;
-            backdrop-filter: blur(14px); animation: fadeIn 0.22s ease;
-            padding: 20px;
+            backdrop-filter: blur(4px); animation: fadeIn 0.2s ease;
         }
         .modal-container {
-            background: linear-gradient(180deg, rgba(15, 19, 34, 0.98), rgba(10, 13, 24, 0.96));
-            color: var(--text-1, #fff); width: 90%; max-width: 520px;
-            border-radius: 18px; border: 1px solid rgba(255,255,255,0.08);
-            overflow: hidden; box-shadow: 0 28px 80px rgba(0,0,0,0.55);
-            transform: translateY(0) scale(1);
-            animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            background: var(--bg-2, #1e1e1e); color: var(--text-1, #fff); 
+            width: 90%; max-width: 480px; border-radius: 12px;
+            border: 1px solid var(--border, #333); overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); transform: translateY(0);
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .modal-header {
-            padding: 18px 22px; border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 16px 20px; border-bottom: 1px solid var(--border, #333);
             display: flex; justify-content: space-between; align-items: center;
         }
-        .modal-header h3 { margin: 0; font-family: 'Syne', sans-serif; font-size: 1.1rem; letter-spacing: -0.02em; }
+        .modal-header h3 { margin: 0; font-family: 'Syne', sans-serif; font-size: 1.1rem; }
         .modal-x-btn { background: none; border: none; color: var(--text-3); font-size: 24px; cursor: pointer; transition: 0.2s; }
-        .modal-x-btn:hover { color: var(--text-1); transform: scale(1.05); }
-        .modal-body { padding: 24px 22px; line-height: 1.6; color: var(--text-2); }
-        .modal-footer { padding: 14px 22px 18px; background: rgba(255,255,255,0.02); display: flex; justify-content: flex-end; gap: 12px; }
-        .modal-footer .btn-ghost, .modal-footer .btn-primary {
-            min-width: 112px;
-        }
-        .modal-footer .btn-ghost {
-            background: rgba(255,255,255,0.03);
-        }
-        .modal-footer .btn-primary {
-            background: linear-gradient(135deg, #6d7bff, #8b5cf6 70%, #06b6d4 130%);
-            box-shadow: 0 12px 30px rgba(91,110,245,0.25);
-        }
-        .modal-footer .btn-primary:hover { transform: translateY(-1px); }
+        .modal-x-btn:hover { color: var(--text-1); }
+        .modal-body { padding: 24px 20px; line-height: 1.5; color: var(--text-2); }
+        .modal-footer { padding: 12px 20px; background: var(--bg-3, #252525); display: flex; justify-content: flex-end; gap: 12px; }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(20px) scale(0.98); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     `;
 
     document.head.appendChild(styleTag);

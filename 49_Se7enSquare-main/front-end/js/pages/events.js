@@ -1,10 +1,15 @@
-import { api } from '../core/api.js';
+/**
+ * Gameunity — Events Module Logic
+ * Handles event discovery filtering, registration states, and the creation wizard.
+ */
 
 // ==========================================
 // 1. STATE & CONFIG
 // ==========================================
 let currentActiveTab = "upcoming";
 let activeFilter = "all";
+
+const COMMUNITY_EVENTS_STORAGE_KEY = "nexus_community_events";
 
 // ==========================================
 // 1.5 RBAC - HIDE CREATE EVENT FOR AUDIENCE
@@ -15,7 +20,7 @@ let activeFilter = "all";
  * Only gamers (and higher roles) can create events
  */
 function enforceCreateEventPermissions() {
-  const user = window.getCurrentUser();
+  const user = getCurrentUser();
 
   // If user is not logged in or is an audience member, hide create event UI
   if (!user || user.role === "audience") {
@@ -169,50 +174,48 @@ window.toggleLoadMoreEvents = function () {
 // 3.5 DYNAMIC EVENTS LOADING
 // ==========================================
 
-async function renderDynamicEvents() {
-  const response = await api.get('/events');
-  if (!response || !Array.isArray(response)) return;
+function loadEventsFromStorage() {
+  return JSON.parse(localStorage.getItem(COMMUNITY_EVENTS_STORAGE_KEY) || "[]");
+}
 
+function renderDynamicEvents() {
+  const events = loadEventsFromStorage();
+  const communities = JSON.parse(
+    localStorage.getItem("nexus_communities") || "[]",
+  );
   const eventsGrid = document.querySelector(".events-grid");
   if (!eventsGrid) return;
 
-  // Clear existing static/mock cards to show real backend data
-  eventsGrid.innerHTML = ''; 
-
-  response.forEach((event) => {
+  // Add dynamic events to the grid
+  events.forEach((event, index) => {
+    const community = communities.find((c) => c.id === event.communityId) || {};
     const eventCard = document.createElement("div");
     eventCard.className = "ev-card delay-dynamic";
     eventCard.setAttribute("data-event-id", event.id);
-    
-    const eventDate = new Date(event.date);
-    const month = eventDate.toLocaleString("en-US", { month: "short" });
-    const day = eventDate.getDate();
-    const time = eventDate.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
-
     eventCard.innerHTML = `
             <div class="ev-card-banner" style="background: linear-gradient(135deg, var(--accent), var(--bg-card));">
-                <div class="ev-card-banner-inner">📅</div>
+                <div class="ev-card-banner-inner">${community.emoji || "📅"}</div>
                 <div class="ev-card-badges">
-                    <span class="ev-badge badge-online">Online</span>
+                    <span class="ev-badge badge-online">${event.location || "Online"}</span>
                 </div>
             </div>
             <div class="ev-card-body">
                 <div class="ev-card-top">
                     <div class="ev-date-box">
-                        <div class="ev-date-mon">${month}</div>
-                        <div class="ev-date-day">${day}</div>
+                        <div class="ev-date-mon">${event.month || "TBD"}</div>
+                        <div class="ev-date-day">${event.day || ""}</div>
                     </div>
                     <div>
                         <div class="ev-card-title">${event.title}</div>
                         <div class="ev-card-comm">
-                            <div class="ev-comm-av">⚡</div>
-                            <div class="ev-comm-name">Community</div>
+                            <div class="ev-comm-av">${community.emoji || "⚡"}</div>
+                            <div class="ev-comm-name">${community.name || "Community"}</div>
                         </div>
                     </div>
                 </div>
                 <div class="ev-card-meta">
-                    <div class="ev-meta-tag">⏰ ${time}</div>
-                    <div class="ev-meta-tag">🌐 Online</div>
+                    <div class="ev-meta-tag">⏰ ${event.time || "TBD"}</div>
+                    <div class="ev-meta-tag">${event.location || "🌐 Online"}</div>
                     <div class="ev-meta-tag">${event.description || "🎉 Event"}</div>
                 </div>
                 <div class="ev-card-footer">
@@ -224,6 +227,7 @@ async function renderDynamicEvents() {
     eventsGrid.appendChild(eventCard);
   });
 
+  // Update visibility and counts
   updateUpcomingVisibility();
 }
 
@@ -260,126 +264,56 @@ function getEventDataFromCard(card) {
   return { title, date, time, community, type, category };
 }
 
-const REG_EVENTS_STORAGE_KEY = "registeredEvents";
+function addToMyRegistrations(eventData) {
+  const regList = document.querySelector(".reg-list");
+  if (!regList) return;
 
-function loadRegisteredEvents() {
-  return JSON.parse(localStorage.getItem(REG_EVENTS_STORAGE_KEY) || "[]");
-}
+  const exists = Array.from(regList.querySelectorAll(".reg-card")).find(
+    (card) => card.querySelector(".reg-title")?.textContent === eventData.title,
+  );
+  if (exists) return;
 
-function saveRegisteredEvents(events) {
-  localStorage.setItem(REG_EVENTS_STORAGE_KEY, JSON.stringify(events));
-}
-
-function renderRegisteredEvents() {
-  const container = document.querySelector(".container-events");
-  if (!container) return;
-
-  const events = loadRegisteredEvents();
-  container.innerHTML = "";
-
-  events.forEach(eventData => {
-    const [month, day] = (eventData.date || "").split(" ");
-    const regCard = document.createElement("div");
-    regCard.className = "reg-card";
-    regCard.innerHTML = `
-      <div class="reg-card-banner" style="background:linear-gradient(135deg,#0d1535,#1a0d3a,#0c2040);">
-        <div class="reg-card-banner-inner">🏆🏆</div>
-        <div class="reg-card-badges"><span class="ev-badge badge-online">${eventData.type || "Online"}</span></div>
-      </div>
-      <div class="reg-card-body">
-        <div class="reg-card-top">
-          <div class="reg-date-box">
-            <div class="reg-mon">${month || ""}</div>
-            <div class="reg-day">${day || ""}</div>
-          </div>
-          <div>
+  const [month, day] = eventData.date.split(" ");
+  const regCard = document.createElement("div");
+  regCard.className = "reg-card";
+  regCard.innerHTML = `
+        <div class="reg-date-box"><div class="reg-mon">${month || ""}</div><div class="reg-day">${day || ""}</div></div>
+        <div class="reg-info">
             <div class="reg-title">${eventData.title}</div>
-            <div class="reg-comm">
-              <div class="reg-comm-av grad-purple">⚡</div>
-              <div class="reg-comm-name">${eventData.community || "Community"}</div>
+            <div class="reg-meta">
+                <div class="reg-meta-item">⏰ ${eventData.time}</div>
+                <div class="reg-meta-item">${eventData.type || "🌐 Online"}</div>
+                <div class="reg-meta-item">${eventData.community || "⚡ Pro Gamers"}</div>
+                <div class="reg-meta-item">${eventData.category || "🏆"}</div>
             </div>
-          </div>
+            <div class="reg-status-row">
+                <span class="reg-status status-confirmed">✓ Confirmed</span>
+                <span class="ticket-id">TKT-${Math.random().toString(36).slice(2, 8).toUpperCase()}-${Date.now().toString().slice(-6)}</span>
+            </div>
         </div>
-        <div class="reg-meta">
-          <div class="reg-meta-item">⏰ ${eventData.time || "TBD"}</div>
-          <div class="reg-meta-item">${eventData.type || "🌐 Online"}</div>
-          <div class="reg-meta-item">${eventData.category || "🏆 Event"}</div>
-        </div>
-        <div class="reg-status-row">
-          <span class="reg-status status-confirmed">✓ Confirmed</span>
-          <span class="ticket-id">TKT-${Math.random().toString(36).slice(2, 8).toUpperCase()}</span>
-        </div>
-        <div class="reg-card-footer">
-          <div class="ev-attendees">👥 Going</div>
-          <div class="reg-actions">
-            <button class="btn-add-cal">📅 Calendar</button>
+        <div class="reg-actions">
+            <button class="btn-add-cal">📅 Add to Calendar</button>
             <button class="btn-cancel">Cancel</button>
-          </div>
         </div>
-      </div>
     `;
-    container.appendChild(regCard);
-  });
-
+  regList.insertBefore(regCard, regList.firstChild);
   updateRegistrationCount();
 }
 
-function syncUpcomingButtons() {
-  const events = loadRegisteredEvents();
-  const eventTitles = events.map(e => e.title);
-  
-  document.querySelectorAll(".ev-card").forEach(card => {
-    const title = card.querySelector(".ev-card-title")?.textContent || "";
-    const btn = card.querySelector(".btn-ev");
-    if (btn) {
-      if (eventTitles.includes(title)) {
-        btn.classList.add("registered");
-        btn.textContent = "✓ Registered";
-      } else {
-        btn.classList.remove("registered");
-        btn.textContent = "Register";
-      }
-    }
-  });
-
-  const featuredTitle = document.querySelector(".featured-event .feat-title")?.textContent || "";
-  const featBtn = document.getElementById("featured-register");
-  if (featBtn) {
-    if (eventTitles.includes(featuredTitle)) {
-      featBtn.classList.add("registered");
-      featBtn.textContent = "✓ Registered";
-    } else {
-      featBtn.classList.remove("registered");
-      featBtn.textContent = "Register Now";
-    }
-  }
-}
-
-function addToMyRegistrations(eventData) {
-  let events = loadRegisteredEvents();
-  const alreadyExists = events.find(e => e.title === eventData.title);
-
-  if (!alreadyExists) {
-    events.push({
-      id: eventData.title.replace(/\s+/g, '-').toLowerCase(),
-      ...eventData
-    });
-    saveRegisteredEvents(events);
-  }
-
-  renderRegisteredEvents();
-}
-
 function removeFromMyRegistrations(title) {
-  let events = loadRegisteredEvents();
-  events = events.filter(e => e.title !== title);
-  saveRegisteredEvents(events);
-  renderRegisteredEvents();
+  const regList = document.querySelector(".reg-list");
+  if (!regList) return;
+  const exists = Array.from(regList.querySelectorAll(".reg-card")).find(
+    (card) => card.querySelector(".reg-title")?.textContent === title,
+  );
+  if (exists) {
+    exists.remove();
+    updateRegistrationCount();
+  }
 }
 
 function updateRegistrationCount() {
-  const events = loadRegisteredEvents();
-  const count = events.length;
+  const count = document.querySelectorAll(".reg-list .reg-card").length;
   const tabButton = Array.from(document.querySelectorAll(".tab-btn")).find(
     (btn) => btn.textContent.includes("My Registrations"),
   );
@@ -465,9 +399,20 @@ function cancelRegistration(el) {
 
   const title = regCard.querySelector(".reg-title")?.textContent || "";
   if (window.toast) window.toast(`Registration canceled for ${title}.`);
-  
-  removeFromMyRegistrations(title);
-  syncUpcomingButtons();
+  regCard.remove();
+  updateRegistrationCount();
+
+  // Reflect state in event list if matching card exists
+  const eventCard = Array.from(document.querySelectorAll(".ev-card")).find(
+    (c) => c.querySelector(".ev-card-title")?.textContent === title,
+  );
+  if (eventCard) {
+    const btn = eventCard.querySelector(".btn-ev");
+    if (btn) {
+      btn.classList.remove("registered");
+      btn.textContent = "Register";
+    }
+  }
 }
 
 function addToCalendar(el) {
@@ -545,7 +490,7 @@ window.setType = function (el, type) {
     .querySelectorAll(".type-opt")
     .forEach((o) => o.classList.remove("on"));
   el.classList.add("on");
-  window.updatePreview();
+  updatePreview();
 };
 
 let selectedCoverImageFile = null;
@@ -690,27 +635,13 @@ function resetCreateForm() {
   showUploadPreview(null);
   document.querySelector(".type-opt.on")?.classList.remove("on");
   document.querySelector(".type-opt")?.classList.add("on");
-  window.updatePreview();
+  updatePreview();
 }
 
 // ==========================================
 // 6. INITIALIZATION
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
-  // Init mock data if localStorage is empty
-  const storedEvents = localStorage.getItem(REG_EVENTS_STORAGE_KEY);
-  if (!storedEvents) {
-    const mockEvents = [
-      { id: "march-hack-sprint-2025", title: "March Hack Sprint 2025", date: "Mar 07", time: "2:00 PM IST", community: "Pro Gamers", type: "🌐 Online", category: "🏆 Hackathon" },
-      { id: "building-with-llms", title: "Building with LLMs: Practical AMA", date: "Mar 12", time: "7:00 PM IST", community: "AI & ML Hub", type: "🌐 Online", category: "🎙 AMA" },
-      { id: "atomic-habits", title: "March Book Club: Atomic Habits Deep Dive", date: "Mar 22", time: "6:00 PM IST", community: "Strategy Gods", type: "🌐 Online", category: "📖 Discussion" }
-    ];
-    saveRegisteredEvents(mockEvents);
-  }
-
-  renderRegisteredEvents();
-  syncUpcomingButtons();
-  
   // Enforce role-based create event permissions
   enforceCreateEventPermissions();
 
@@ -788,7 +719,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (publishBtn) {
-    publishBtn.addEventListener("click", async (event) => {
+    publishBtn.addEventListener("click", (event) => {
       event.preventDefault();
 
       const title = document.getElementById("evTitle").value.trim();
@@ -808,68 +739,44 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      publishBtn.disabled = true;
-      publishBtn.textContent = "Publishing...";
+      publishBtn.textContent = "✓ Published!";
+      publishBtn.style.background = "linear-gradient(135deg,#34D399,#059669)";
 
       const type =
         document.querySelector(".type-opt.on")?.textContent.trim() || "Online";
-      const communityText =
+      const community =
         document.getElementById("evCommunity")?.value || "⚡ Pro Gamers";
       const category =
         document.getElementById("evCategory")?.value || "🏆 Hackathon";
-      const description = document.querySelector("#tab-create textarea")?.value || "No description provided.";
+      const coverUrl = selectedCoverImageFile
+        ? URL.createObjectURL(selectedCoverImageFile)
+        : "";
 
-      // Payload for NestJS backend
-      let isoDate;
-      try {
-        isoDate = new Date(`${date}T${time}`).toISOString();
-      } catch (e) {
-        if (window.toast) window.toast("Invalid date or time format.", { type: "error" });
-        publishBtn.disabled = false;
+      appendEventToUpcoming({
+        title,
+        date,
+        time,
+        type,
+        community,
+        category,
+        coverUrl,
+      });
+
+      if (window.toast) window.toast("Event published successfully! 🎉");
+
+      setTimeout(() => {
         publishBtn.textContent = "Publish Event";
-        return;
-      }
+        publishBtn.style.background = "";
+      }, 2500);
 
-      const payload = {
-        title: title,
-        description: description,
-        communityId: 1, // Defaulting to 1 for prototype
-        date: isoDate
-      };
-
-      try {
-        const response = await api.post('/events', payload);
-        
-        if (response && response.id) {
-          publishBtn.textContent = "✓ Published!";
-          publishBtn.style.background = "linear-gradient(135deg,#34D399,#059669)";
-          
-          if (window.toast) window.toast("Event published successfully! 🎉");
-
-          // Refresh the grid
-          const grid = document.querySelector(".events-grid");
-          if (grid) grid.innerHTML = '';
-          await renderDynamicEvents();
-
-          resetCreateForm();
-        }
-      } catch (err) {
-        console.error("Failed to publish event:", err);
-        if (window.toast) window.toast("Failed to publish event. Check console.");
-      } finally {
-        setTimeout(() => {
-          publishBtn.disabled = false;
-          publishBtn.textContent = "Publish Event";
-          publishBtn.style.background = "";
-        }, 2500);
-      }
+      resetCreateForm();
     });
   }
 
   // Keep live preview in sync as the user types / selects
   ["evTitle", "evDate", "evTime"].forEach((id) => {
     const input = document.getElementById(id);
-    if (input) input.addEventListener("input", window.updatePreview);
+    if (input) input.addEventListener("input", updatePreview);
   });
 
   console.log("Events module initialized. Happy hosting! 📅");

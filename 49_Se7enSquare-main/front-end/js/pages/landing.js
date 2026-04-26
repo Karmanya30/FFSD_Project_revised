@@ -114,7 +114,6 @@ setInterval(() => {
 /* ── HERO MOCKUP — 3D TILT ON MOUSE MOVE ── */
 const mockup  = document.querySelector('.mockup');
 const heroR   = document.querySelector('.hero-r');
-const hero    = document.querySelector('.hero');
 
 if (mockup && heroR) {
   heroR.addEventListener('mousemove', e => {
@@ -126,20 +125,5 @@ if (mockup && heroR) {
 
   heroR.addEventListener('mouseleave', () => {
     mockup.style.transform = 'rotateY(-6deg) rotateX(3deg)';
-  });
-}
-
-if (hero) {
-  hero.addEventListener('pointermove', event => {
-    const rect = hero.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
-    hero.style.setProperty('--hero-x', `${x}%`);
-    hero.style.setProperty('--hero-y', `${y}%`);
-  });
-
-  hero.addEventListener('pointerleave', () => {
-    hero.style.removeProperty('--hero-x');
-    hero.style.removeProperty('--hero-y');
   });
 }

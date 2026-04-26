@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Gameunity – Home Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<meta name="description" content="Gameunity Home Dashboard — Browse joined communities, upcoming events, and notifications."/>
 
 <link rel="stylesheet" href="../css/global.css"/>
 <link rel="stylesheet" href="../css/pages/dashboard.css"/>
@@ -14,39 +15,43 @@
 
 <!-- ─── APP RAIL ─── -->
 <aside class="app-rail" id="sidebar">
-  <!-- Top: Logo -->
-  <div class="rail-top">
-    <div class="rail-logo">⬡</div>
-    <div class="rail-toggle" onclick="toggleSidebar()">☰</div>
-  </div>
+  <div class="rail-logo">⬡</div>
+  <div class="rail-toggle"><span class="rail-toggle-icon" aria-hidden="true">⟩</span></div>
   
-  <!-- Middle: Nav Icons -->
-  <div class="rail-middle nav-icons">
-    <a href="dashboard.html" class="rail-item active" data-tooltip="Home">🏠</a>
-    <a href="discovery.html" class="rail-item" data-tooltip="Communities">💬</a>
-    <a href="discovery.html" class="rail-item" data-tooltip="Search">🔍</a>
-    <a href="events.html" class="rail-item" data-tooltip="Events">📅</a>
-    <a href="profile-settings.html" class="rail-item" data-tooltip="Settings">⚙️</a>
-  </div>
+  <div class="rail-divider"></div>
   
-  <!-- Bottom: Actions & Profile -->
-  <div class="rail-bottom bottom-section">
-    <!-- 1. Panels section (shield + red button) -->
-    <div class="panels">
-      <a href="superuser-dashboard.html" class="rail-item" data-tooltip="Admin Dashboard">🛡️</a>
-      <a href="#" class="rail-item" data-tooltip="Emergency/Broadcast" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #ff5555;">⚡</a>
-    </div>
-
-    <!-- 2. Utility icons (shield + alert) -->
-    <div class="utility-icons">
-      <a href="mod-panel.html" class="rail-item" data-tooltip="Mod Panel">🛡️</a>
-      <a href="#" class="rail-item" data-tooltip="Alerts">⚠️</a>
-    </div>
-
-    <!-- 3. RA profile (LAST) -->
-    <div class="profile">
-      <div class="rail-avatar ra-profile" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">RA</div>
-    </div>
+  <!-- Main Nav -->
+  <a href="dashboard.html" class="rail-item active" data-tooltip="Home">🏠</a>
+  <a href="discovery.html" class="rail-item" data-tooltip="Discover">🔍</a>
+  <a href="events.html" class="rail-item" data-tooltip="Events">📅<div class="notif-dot"></div></a>
+  <a href="profile-settings.html" class="rail-item" data-tooltip="Settings">⚙️</a>
+  
+  <div class="rail-divider"></div>
+  
+  <!-- Communities -->
+  <a href="community-page.html?name=pro-gamers" class="rail-item rail-comm grad-purple" data-tooltip="Pro Gamers">
+    ⚡<div class="rail-dot bg-dot-green"></div>
+  </a>
+  <a href="community-page.html?name=rpg-tavern" class="rail-item rail-comm grad-orange" data-tooltip="RPG Tavern">
+    🎨<div class="rail-dot bg-dot-green"></div>
+  </a>
+  <a href="community-page.html?name=gamezone" class="rail-item rail-comm grad-cyan" data-tooltip="GameZone">
+    🎮<div class="rail-dot bg-dot-orange"></div>
+  </a>
+  <a href="community-page.html?name=fps-masters" class="rail-item rail-comm grad-green" data-tooltip="FPS Masters">
+    🌿<div class="rail-dot bg-dot-gray"></div>
+  </a>
+  <a href="community-page.html?name=speedrunners" class="rail-item rail-comm grad-pink" data-tooltip="SpeedRunners">
+    🎵<div class="rail-dot bg-dot-green"></div>
+  </a>
+  <a href="community-page.html?name=strategy-gods" class="rail-item rail-comm grad-violet" data-tooltip="Strategy Gods">
+    📚<div class="rail-dot bg-dot-gray"></div>
+  </a>
+  
+  <a href="create-community.html" class="rail-item rail-create-btn" data-tooltip="Create Community">✚</a>
+  
+  <div class="rail-footer">
+    <div class="rail-avatar" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">AM<div class="rail-avatar-dot bg-dot-green"></div></div>
   </div>
 </aside>
 
@@ -63,179 +68,234 @@
       <div class="icon-btn">🔔<div class="notif-dot"></div></div>
       <div class="icon-btn">📬</div>
       <div class="header-avatar">AM</div>
-      <button class="logout-btn" onclick="logout()" data-tooltip="Logout">🚪</button>
+      <button type="button" class="logout-btn" onclick="logoutUser()" aria-label="Log out" data-tooltip="Logout">🚪</button>
     </div>
   </header>
 
   <!-- Content -->
   <div class="content">
 
-    <!-- Floating Notification -->
-    <div id="floating-notification" class="floating-notification">
-      <div class="fn-content">
-        <div class="fn-title">Good morning, Rajat 👋</div>
-        <div class="fn-desc">You have 12 unread messages and 3 upcoming events</div>
+    <!-- Greeting Banner -->
+    <div class="greeting">
+      <div class="greeting-text">
+        <div class="greeting-name">Good afternoon, Alex 👋</div>
+        <div class="greeting-sub">You have 12 unread messages and 3 upcoming events today.</div>
       </div>
-      <button class="fn-close" onclick="closeFloatingNotification()">✕</button>
-    </div>
-
-    <!-- Stats Row -->
-    <div class="dashboard-wrapper">
-      <div class="stats-row">
+      <div class="greeting-stats">
         <div class="g-stat"><div class="g-stat-val">6</div><div class="g-stat-label">Communities</div></div>
         <div class="g-stat"><div class="g-stat-val">12</div><div class="g-stat-label">Messages</div></div>
         <div class="g-stat"><div class="g-stat-val">3</div><div class="g-stat-label">Events</div></div>
       </div>
+    </div>
 
-      <div class="dashboard-content">
-        <div class="left-section dashboard-main-flow">
-          <!-- Joined Communities -->
-          <section class="section-box section-block joined-communities">
-            <div class="section-header">
-              <div class="section-title">Joined Communities</div>
-              <div class="section-link" onclick="window.location.href='discovery.html'">View all →</div>
-            </div>
-            <div class="communities-grid">
-              <a href="community-page.html?name=pro-gamers" class="comm-card delay-05">
-                <div class="comm-card-banner banner-purple">
-                  <div class="comm-card-icon grad-purple">⚡</div>
-                </div>
-                <div class="comm-card-name">Pro Gamers</div>
-                <div class="comm-card-meta"><span>2,451 members</span><span class="unread-pill">4</span></div>
-              </a>
-              <a href="community-page.html?name=rpg-tavern" class="comm-card delay-10">
-                <div class="comm-card-banner banner-orange">
-                  <div class="comm-card-icon grad-orange">🎨</div>
-                </div>
-                <div class="comm-card-name">RPG Tavern</div>
-                <div class="comm-card-meta"><span>1,120 members</span><span class="unread-pill">8</span></div>
-              </a>
-              <a href="community-page.html?name=gamezone" class="comm-card delay-15">
-                <div class="comm-card-banner banner-cyan">
-                  <div class="comm-card-icon grad-cyan">🎮</div>
-                </div>
-                <div class="comm-card-name">GameZone</div>
-                <div class="comm-card-meta"><span>8,712 members</span></div>
-              </a>
-              <a href="community-page.html?name=fps-masters" class="comm-card delay-20">
-                <div class="comm-card-banner banner-green">
-                  <div class="comm-card-icon grad-green">🌿</div>
-                </div>
-                <div class="comm-card-name">FPS Masters</div>
-                <div class="comm-card-meta"><span>540 members</span></div>
-              </a>
-              <a href="community-page.html?name=speedrunners" class="comm-card delay-25">
-                <div class="comm-card-banner banner-pink">
-                  <div class="comm-card-icon grad-pink">🎵</div>
-                </div>
-                <div class="comm-card-name">SpeedRunners</div>
-                <div class="comm-card-meta"><span>3,210 members</span><span class="unread-pill">1</span></div>
-              </a>
-              <a href="community-page.html?name=strategy-gods" class="comm-card delay-30">
-                <div class="comm-card-banner banner-violet">
-                  <div class="comm-card-icon grad-violet">📚</div>
-                </div>
-                <div class="comm-card-name">Strategy Gods</div>
-                <div class="comm-card-meta"><span>920 members</span></div>
-              </a>
-            </div>
-          </section>
+    <!-- Joined Communities -->
+    <div>
+      <div class="section-header">
+        <div class="section-title">Joined Communities</div>
+        <div class="section-link" onclick="window.location.href='discovery.html'">View all →</div>
+      </div>
+      <div class="communities-scroll">
+        <a href="community-page.html?name=pro-gamers" class="comm-card delay-05">
+          <div class="comm-card-banner banner-purple">
+            <div class="comm-card-icon grad-purple">⚡</div>
+          </div>
+          <div class="comm-card-name">Pro Gamers</div>
+          <div class="comm-card-meta"><span>2,451 members</span><span class="unread-pill">4</span></div>
+        </a>
+        <a href="community-page.html?name=rpg-tavern" class="comm-card delay-10">
+          <div class="comm-card-banner banner-orange">
+            <div class="comm-card-icon grad-orange">🎨</div>
+          </div>
+          <div class="comm-card-name">RPG Tavern</div>
+          <div class="comm-card-meta"><span>1,120 members</span><span class="unread-pill">8</span></div>
+        </a>
+        <a href="community-page.html?name=gamezone" class="comm-card delay-15">
+          <div class="comm-card-banner banner-cyan">
+            <div class="comm-card-icon grad-cyan">🎮</div>
+          </div>
+          <div class="comm-card-name">GameZone</div>
+          <div class="comm-card-meta"><span>8,712 members</span></div>
+        </a>
+        <a href="community-page.html?name=fps-masters" class="comm-card delay-20">
+          <div class="comm-card-banner banner-green">
+            <div class="comm-card-icon grad-green">🌿</div>
+          </div>
+          <div class="comm-card-name">FPS Masters</div>
+          <div class="comm-card-meta"><span>540 members</span></div>
+        </a>
+        <a href="community-page.html?name=speedrunners" class="comm-card delay-25">
+          <div class="comm-card-banner banner-pink">
+            <div class="comm-card-icon grad-pink">🎵</div>
+          </div>
+          <div class="comm-card-name">SpeedRunners</div>
+          <div class="comm-card-meta"><span>3,210 members</span><span class="unread-pill">1</span></div>
+        </a>
+        <a href="community-page.html?name=strategy-gods" class="comm-card delay-30">
+          <div class="comm-card-banner banner-violet">
+            <div class="comm-card-icon grad-violet">📚</div>
+          </div>
+          <div class="comm-card-name">Strategy Gods</div>
+          <div class="comm-card-meta"><span>920 members</span></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Recommended Communities -->
+    <div>
+      <div class="section-header">
+        <div class="section-title">Recommended for You</div>
+        <div class="section-link" onclick="window.location.href='discovery.html'">Browse all →</div>
+      </div>
+      <div class="rec-grid">
+        <div class="rec-card delay-10">
+          <div class="rec-card-top">
+            <div class="rec-icon rec-bg-red">🚀</div>
+            <div class="rec-info"><div class="rec-name">Startup Founders</div><div class="rec-cat">Business · Entrepreneurship</div></div>
+          </div>
+          <div class="rec-desc">A tight-knit community for startup founders to share challenges, wins, and resources.</div>
+          <div class="rec-footer">
+            <div class="rec-members">👥 15.2k members</div>
+            <button class="btn-join" onclick="toggleJoin(this)">Join</button>
+          </div>
         </div>
+        <div class="rec-card delay-15">
+          <div class="rec-card-top">
+            <div class="rec-icon rec-bg-cyan">🤖</div>
+            <div class="rec-info"><div class="rec-name">AI & ML Hub</div><div class="rec-cat">Gaming · Research</div></div>
+          </div>
+          <div class="rec-desc">Cutting-edge discussions on artificial intelligence, machine learning models and deployments.</div>
+          <div class="rec-footer">
+            <div class="rec-members">👥 42.7k members</div>
+            <button class="btn-join" onclick="toggleJoin(this)">Join</button>
+          </div>
+        </div>
+        <div class="rec-card delay-20">
+          <div class="rec-card-top">
+            <div class="rec-icon rec-bg-orange">📸</div>
+            <div class="rec-info"><div class="rec-name">Lens & Light</div><div class="rec-cat">Photography · Art</div></div>
+          </div>
+          <div class="rec-desc">Share your photography, get feedback, and learn from a community of passionate visual storytellers.</div>
+          <div class="rec-footer">
+            <div class="rec-members">👥 9.1k members</div>
+            <button class="btn-join" onclick="toggleJoin(this)">Join</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <!-- Upcoming Events -->
-        <aside class="right-section dashboard-right-rail">
-          <section class="section-box section-block events-panel upcoming-events">
-            <div class="section-header">
-              <div class="section-title">📅 Upcoming Events</div>
-              <div class="section-link" onclick="window.location.href='events.html'">View all →</div>
+    <!-- Two Column: Notifications + Events -->
+    <div class="two-col">
+
+      <!-- Notifications -->
+      <div class="section-box">
+        <div class="section-header">
+          <div class="section-title">🔔 Recent Notifications</div>
+          <div class="section-link">Mark all read</div>
+        </div>
+        <div class="notif-list">
+          <div class="notif-item unread">
+            <div class="notif-avatar grad-purple">JK</div>
+            <div class="notif-body">
+              <div class="notif-text"><strong>Jake Kim</strong> <span>reacted ❤️ to your message in</span> <strong>#general</strong></div>
+              <div class="notif-time">2 minutes ago</div>
             </div>
-            <div class="event-list">
-            <div class="event-card">
-              <div class="event-date-box"><div class="event-month">Mar</div><div class="event-day">07</div></div>
-              <div class="event-info">
-                <div class="event-name">Pro Gamers Hackathon</div>
-                <div class="event-meta">
-                  <span class="event-tag">🕐 2:00 PM</span>
-                  <span class="event-tag">🌐 Online</span>
-                </div>
-              </div>
-              <button class="btn-event">View</button>
+            <div class="notif-unread-dot"></div>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-avatar grad-green">SL</div>
+            <div class="notif-body">
+              <div class="notif-text"><strong>Sara Lee</strong> <span>invited you to</span> <strong>AI & ML Hub</strong></div>
+              <div class="notif-time">18 minutes ago</div>
             </div>
-            <div class="event-card">
-              <div class="event-date-box"><div class="event-month">Mar</div><div class="event-day">10</div></div>
-              <div class="event-info">
-                <div class="event-name">UI Design Workshop</div>
-                <div class="event-meta">
-                  <span class="event-tag">🕐 5:00 PM</span>
-                  <span class="event-tag">📍 Chennai</span>
-                </div>
-              </div>
-              <button class="btn-event">View</button>
+            <div class="notif-unread-dot"></div>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-avatar grad-pink">🎵</div>
+            <div class="notif-body">
+              <div class="notif-text"><strong>SpeedRunners</strong> <span>posted a new event: </span><strong>Beat Battle Night</strong></div>
+              <div class="notif-time">1 hour ago</div>
             </div>
-            <div class="event-card">
-              <div class="event-date-box"><div class="event-month">Mar</div><div class="event-day">14</div></div>
-              <div class="event-info">
-                <div class="event-name">Beat Battle Night</div>
-                <div class="event-meta">
-                  <span class="event-tag">🕐 8:00 PM</span>
-                  <span class="event-tag">🌐 Online</span>
-                </div>
-              </div>
-              <button class="btn-event">View</button>
-            </div>
-            <div class="event-card">
-              <div class="event-date-box"><div class="event-month">Mar</div><div class="event-day">18</div></div>
-              <div class="event-info">
-                <div class="event-name">AI Research Meetup</div>
-                <div class="event-meta">
-                  <span class="event-tag">🕐 3:30 PM</span>
-                  <span class="event-tag">📍 Bangalore</span>
-                </div>
-              </div>
-              <button class="btn-event">View</button>
+            <div class="notif-unread-dot"></div>
+          </div>
+          <div class="notif-item read">
+            <div class="notif-avatar grad-orange">MP</div>
+            <div class="notif-body">
+              <div class="notif-text"><strong>Mia Park</strong> <span>mentioned you in</span> <strong>#design-feedback</strong></div>
+              <div class="notif-time">3 hours ago</div>
             </div>
           </div>
-        </section>
-      </aside>
+          <div class="notif-item read">
+            <div class="notif-avatar grad-violet">⚡</div>
+            <div class="notif-body">
+              <div class="notif-text"><strong>Pro Gamers</strong> <span>channel </span><strong>#releases</strong><span> has 5 new messages</span></div>
+              <div class="notif-time">5 hours ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming Events -->
+      <div>
+        <div class="section-header">
+          <div class="section-title">📅 Upcoming Events</div>
+          <div class="section-link" onclick="window.location.href='events.html'">View all →</div>
+        </div>
+        <div class="event-list">
+          <div class="event-card">
+            <div class="event-date-box"><div class="event-month">Mar</div><div class="event-day">07</div></div>
+            <div class="event-info">
+              <div class="event-name">Pro Gamers Hackathon</div>
+              <div class="event-meta">
+                <span class="event-tag">🕐 2:00 PM</span>
+                <span class="event-tag">🌐 Online</span>
+              </div>
+            </div>
+            <button class="btn-event">View</button>
+          </div>
+          <div class="event-card">
+            <div class="event-date-box"><div class="event-month">Mar</div><div class="event-day">10</div></div>
+            <div class="event-info">
+              <div class="event-name">UI Design Workshop</div>
+              <div class="event-meta">
+                <span class="event-tag">🕐 5:00 PM</span>
+                <span class="event-tag">📍 Chennai</span>
+              </div>
+            </div>
+            <button class="btn-event">View</button>
+          </div>
+          <div class="event-card">
+            <div class="event-date-box"><div class="event-month">Mar</div><div class="event-day">14</div></div>
+            <div class="event-info">
+              <div class="event-name">Beat Battle Night</div>
+              <div class="event-meta">
+                <span class="event-tag">🕐 8:00 PM</span>
+                <span class="event-tag">🌐 Online</span>
+              </div>
+            </div>
+            <button class="btn-event">View</button>
+          </div>
+          <div class="event-card">
+            <div class="event-date-box"><div class="event-month">Mar</div><div class="event-day">18</div></div>
+            <div class="event-info">
+              <div class="event-name">AI Research Meetup</div>
+              <div class="event-meta">
+                <span class="event-tag">🕐 3:30 PM</span>
+                <span class="event-tag">📍 Bangalore</span>
+              </div>
+            </div>
+            <button class="btn-event">View</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
-</div>
 
 <script src="../js/core/auth.js"></script>
+<script src="../js/components/app-rail.js"></script>
 <script src="../js/components/rbac-nav.js"></script>
-<script type="module" src="../js/pages/dashboard.js"></script>
+<script src="../js/pages/dashboard.js"></script>
 <script src="../js/components/notifications.js"></script>
-<script>
-  function showFloatingNotification() {
-    const notif = document.getElementById('floating-notification');
-    if (!notif) return;
-    
-    // Show notification
-    setTimeout(() => {
-      notif.classList.add('show');
-    }, 500);
-
-    // Auto hide after 5 seconds
-    setTimeout(() => {
-      closeFloatingNotification();
-    }, 5500);
-  }
-
-  function closeFloatingNotification() {
-    const notif = document.getElementById('floating-notification');
-    if (notif) {
-      notif.classList.remove('show');
-      notif.classList.add('hide');
-      setTimeout(() => {
-        notif.style.display = 'none';
-      }, 400); // Wait for exit animation
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    showFloatingNotification();
-  });
-</script>
 </body>
 </html>

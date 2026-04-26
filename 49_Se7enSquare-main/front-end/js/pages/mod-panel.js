@@ -1,39 +1,36 @@
-import { api } from '../core/api.js';
+/**
+ * NexusHub — Moderator Review Panel Logic
+ * Handles real-time report triaging, cross-community switching,
+ * and automated moderation workflows.
+ */
 
 // ==========================================
 // 1. DATA & STATE
 // ==========================================
-let REPORTS_DATA = [];
+let REPORTS_DATA = [
+    { id:'#4821', user:'BadActor_X',   av:'BX', bg:'linear-gradient(135deg,#EF4444,#DC2626)', channel:'#general',       reason:'🚫 Hate Speech / Harassment',  badge:'pending',   repeat:'3× offender', time:'2m ago',  violations:3, days:48,  bans:0, warnings:2, sub:'Member since Jan 2026', unread:true  },
+    { id:'#4820', user:'SpamBot99',    av:'SP', bg:'linear-gradient(135deg,#F59E0B,#D97706)', channel:'#frontend',      reason:'📢 Spam / Self-promotion',      badge:'pending',   repeat:null,          time:'14m ago', violations:1, days:12,  bans:0, warnings:0, sub:'Member since Feb 2026', unread:true  },
+    { id:'#4819', user:'TrollX_420',   av:'TX', bg:'linear-gradient(135deg,#A78BFA,#7C3AED)', channel:'#code-review',   reason:'😡 Harassment',                badge:'review',    repeat:'2× offender', time:'31m ago', violations:2, days:90,  bans:0, warnings:1, sub:'Member since Oct 2025', unread:false },
+    { id:'#4818', user:'NewUser_874',  av:'NW', bg:'linear-gradient(135deg,#06B6D4,#0891B2)', channel:'#general',       reason:'❌ Misinformation',             badge:'pending',   repeat:null,          time:'1h ago',  violations:0, days:3,   bans:0, warnings:0, sub:'Member since Mar 2026', unread:false },
+    { id:'#4817', user:'DarkRaider',   av:'DR', bg:'linear-gradient(135deg,#F87171,#DC2626)', channel:'#off-topic',     reason:'🔞 NSFW Content',               badge:'pending', repeat:'5× offender', time:'2h ago',  violations:5, days:180, bans:1, warnings:3, sub:'Member since Sep 2025', unread:false },
+    { id:'#4816', user:'GhostHacker',  av:'GH', bg:'linear-gradient(135deg,#34D399,#059669)', channel:'#Streaming',        reason:'⚠️ Other Rule Violation',       badge:'pending',   repeat:null,          time:'3h ago',  violations:1, days:60,  bans:0, warnings:0, sub:'Member since Jan 2026', unread:false },
+    { id:'#4815', user:'FakeNews_Bot', av:'FN', bg:'linear-gradient(135deg,#FBBF24,#F59E0B)', channel:'#announcements', reason:'❌ Misinformation',             badge:'pending',   repeat:null,          time:'4h ago',  violations:1, days:22,  bans:0, warnings:0, sub:'Member since Feb 2026', unread:false },
+    { id:'#4814', user:'MemeRaider_7', av:'MR', bg:'linear-gradient(135deg,#818CF8,#4F46E5)', channel:'#introductions', reason:'📢 Spam',                       badge:'review',    repeat:null,          time:'5h ago',  violations:0, days:7,   bans:0, warnings:0, sub:'Member since Mar 2026', unread:false },
+];
 
 let activeModTab = 'pending';
 let currentReportIdx = 0;
 let toastDebounce;
 
-async function fetchReports() {
-  const response = await api.get('/reports');
-  if (response && Array.isArray(response)) {
-    REPORTS_DATA = response.map(r => ({
-      id: `#${r.id}`,
-      backendId: r.id,
-      user: `User_${r.targetId}`,
-      av: 'U',
-      bg: 'linear-gradient(135deg,#6366f1,#4f46e5)',
-      channel: `#${r.targetType}`,
-      reason: r.reason,
-      badge: r.status,
-      time: 'Just now',
-      violations: 1,
-      days: 30,
-      bans: 0,
-      warnings: 0,
-      sub: 'Member since 2026',
-      unread: true
-    }));
-    window.renderQueue();
+function hydrateNewReportsFromStorage() {
+  const pending = JSON.parse(localStorage.getItem('modPanelNewReports') || '[]');
+  if (Array.isArray(pending) && pending.length) {
+    // insert new reports at top
+    REPORTS_DATA = [...pending, ...REPORTS_DATA];
   }
 }
 
-fetchReports();
+hydrateNewReportsFromStorage();
 
 // ==========================================
 // 2. QUEUE ENGINE
@@ -230,39 +227,35 @@ function updateStoredReport(report) {
 }
 
 
-window.takeAction = async function(type) {
+window.takeAction = function(type) {
     const feedback = ACTION_FEEDBACK[type];
-    const report = REPORTS_DATA[currentReportIdx];
-    const user = report.user;
-    
+    const user = REPORTS_DATA[currentReportIdx].user;
     window.showToast(feedback.icon, `${feedback.msg} — ${user}`);
     window.updateActionStatus(type);
 
-    // Update backend
+    // Save action label on report object for detail panel
+    REPORTS_DATA[currentReportIdx].action = feedback.msg;
+
+    // Only update status for moderation actions; keep in queue unless explicitly resolved
     if (feedback.badge) {
-        try {
-            await api.patch(`/reports/${report.backendId}/status`, { status: feedback.badge === 'resolved' ? 'resolved' : 'reviewed' });
-            
-            report.badge = feedback.badge === 'resolved' ? 'resolved' : 'review';
-            report.unread = false;
-            report.action = feedback.msg;
+        REPORTS_DATA[currentReportIdx].badge = feedback.badge;
+        REPORTS_DATA[currentReportIdx].unread = false;
+        REPORTS_DATA[currentReportIdx].action = feedback.msg;
+        updateStoredReport(REPORTS_DATA[currentReportIdx]);
 
-            window.renderQueue();
+        window.renderQueue();
 
-            if (report.badge === 'resolved') {
-                const nextIdx = REPORTS_DATA.findIndex((r, i) =>
-                    i !== currentReportIdx &&
-                    ['pending', 'reviewed'].includes(r.badge)
-                );
+        if (feedback.badge === 'resolved') {
+            const nextIdx = REPORTS_DATA.findIndex((report, i) =>
+                i !== currentReportIdx &&
+                ['pending', 'escalated', 'review'].includes(report.badge)
+            );
 
-                if (nextIdx !== -1) {
-                    window.selectReport(null, nextIdx);
-                } else {
-                    currentReportIdx = -1;
-                }
+            if (nextIdx !== -1) {
+                window.selectReport(null, nextIdx);
+            } else {
+                currentReportIdx = -1;
             }
-        } catch (err) {
-            console.error("Action failed:", err);
         }
     }
 };
@@ -367,7 +360,7 @@ document.addEventListener('keydown', e => {
 // SIDEBAR TOGGLE
 // ==========================================
 
-window.toggleSidebar = function() {
+window.toggleModSidebar = function() {
     const sidebar = document.getElementById('modSidebar');
     if (sidebar) {
         sidebar.classList.toggle('collapsed');
