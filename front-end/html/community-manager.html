@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Gameunity – Community Manager Panel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
   
-  <link href="../css/global.css" rel="stylesheet" />
-  <link href="../css/pages/rbac-nav.css" rel="stylesheet" />
-  <link href="../css/pages/community-manager.css" rel="stylesheet" />
+  <link href="../css/global.css" rel="stylesheet">
+  
+  <link href="../css/pages/community-manager.css" rel="stylesheet">
 
   <style>
     .left-nav { display: none !important; }
@@ -67,11 +65,11 @@
                   
                   <div class="settings-field">
                     <label>Community Name *</label>
-                    <input type="text" id="communityNameInput" class="settings-input" required />
+                    <input type="text" id="communityNameInput" class="settings-input" required="">
                   </div>
                   <div class="settings-field">
                     <label>Community Description *</label>
-                    <textarea id="communityDescInput" class="settings-textarea" rows="3" required></textarea>
+                    <textarea id="communityDescInput" class="settings-textarea" rows="3" required=""></textarea>
                   </div>
                   <div class="settings-field">
                     <label>Community Banner</label>
@@ -113,7 +111,7 @@
                   </div>
                   <div class="settings-field" style="flex-direction: row; align-items: center; justify-content: space-between;">
                     <label>Block Suspicious Links</label>
-                    <input type="checkbox" id="modLinkBlock" style="width: 18px; height: 18px;" />
+                    <input type="checkbox" id="modLinkBlock" style="width: 18px; height: 18px;">
                   </div>
                 </div>
                 <div class="settings-group">
@@ -149,7 +147,7 @@
                   </div>
                   <div class="settings-field">
                     <label>Accent Color</label>
-                    <input type="color" id="accentColorInput" value="#5b6ef5" style="width: 50px; height: 30px; border:none; border-radius: 4px; cursor:pointer;" />
+                    <input type="color" id="accentColorInput" value="#5b6ef5" style="width: 50px; height: 30px; border:none; border-radius: 4px; cursor:pointer;">
                   </div>
                 </div>
               </div>
@@ -196,7 +194,7 @@
       <div class="modal-title">📡 Create New Channel</div>
       <div class="modal-field">
         <label>Channel Name *</label>
-        <input id="chNameInput" placeholder="e.g. resources" type="text" />
+        <input id="chNameInput" placeholder="e.g. resources" type="text">
       </div>
       <div class="modal-field">
         <label>Channel Type</label>
@@ -216,8 +214,8 @@
   <div class="modal-bg" id="eventModalBg" onclick="if(event.target===this)closeModal('eventModalBg')">
     <div class="modal">
       <div class="modal-title">📅 Create Global Event</div>
-      <div class="modal-field"><label>Event Title *</label><input id="evTitleInput" type="text" /></div>
-      <div class="modal-field"><label>Date & Time</label><input id="evDateInput" type="datetime-local" class="settings-input" /></div>
+      <div class="modal-field"><label>Event Title *</label><input id="evTitleInput" type="text"></div>
+      <div class="modal-field"><label>Date &amp; Time</label><input id="evDateInput" type="datetime-local" class="settings-input"></div>
       <div class="modal-field">
         <label>Event Type</label>
         <select id="evTypeInput">
@@ -242,8 +240,8 @@
   <div class="toast" id="toast"><span id="toastMsg">Done</span></div>
   
   <script src="../js/core/auth.js"></script>
-  <script src="../js/components/rbac-nav.js"></script>
+  <script src="../js/data/mockData.js"></script>
+  <script src="../js/data/crudService.js"></script>
   <script src="../js/pages/community-manager.js"></script>
   <script src="../js/components/notifications.js"></script>
-</body>
-</html>
+</body></html>

@@ -20,16 +20,8 @@ const requireRole = window.requireRole || function (roles) {
 // 2. STATE & DATA
 // ==========================================
 const USERS = [
-    { n: 'Alex Morgan', h: 'AM', bg: 'linear-gradient(135deg,#5B6EF5,#8B5CF6)', email: 'alex@email.com', joined: 'Jan 12, 2023', comms: 6, status: 'active' },
-    { n: 'Jake Kim', h: 'JK', bg: 'linear-gradient(135deg,#34D399,#059669)', email: 'jake@email.com', joined: 'Feb 3, 2023', comms: 4, status: 'active' },
-    { n: 'Sara Lee', h: 'SL', bg: 'linear-gradient(135deg,#F59E0B,#f97316)', email: 'sara@email.com', joined: 'Mar 8, 2023', comms: 8, status: 'active' },
-    { n: 'Mia Park', h: 'MP', bg: 'linear-gradient(135deg,#F472B6,#EC4899)', email: 'mia@email.com', joined: 'Apr 1, 2023', comms: 3, status: 'active' },
-    { n: 'DarkRaider99', h: 'DR', bg: 'linear-gradient(135deg,#F87171,#dc2626)', email: 'dark@anon.com', joined: 'Aug 14, 2023', comms: 1, status: 'banned' },
-    { n: 'FloodBot99', h: 'FB', bg: 'linear-gradient(135deg,#6B7280,#374151)', email: 'bot@spam.io', joined: 'Dec 1, 2023', comms: 12, status: 'banned' },
-    { n: 'rustwasm_dev', h: 'RW', bg: 'linear-gradient(135deg,#06B6D4,#0EA5E9)', email: 'rw@dev.io', joined: 'Jan 2, 2024', comms: 2, status: 'new' },
-    { n: 'PromoKing', h: 'PK', bg: 'linear-gradient(135deg,#A78BFA,#7C3AED)', email: 'promo@ads.com', joined: 'Jan 9, 2024', comms: 7, status: 'warn' },
-    { n: 'EcoUser42', h: 'EU', bg: 'linear-gradient(135deg,#34D399,#059669)', email: 'eco@green.org', joined: 'Jan 10, 2024', comms: 2, status: 'new' },
-    { n: 'SoundPromo22', h: 'SP', bg: 'linear-gradient(135deg,#F472B6,#EC4899)', email: 'sp@music.fm', joined: 'Jan 11, 2024', comms: 3, status: 'warn' },
+    { n: 'Rahul Kumar', h: 'RK', bg: 'linear-gradient(135deg,#5B6EF5,#8B5CF6)', email: 'rahul@email.com', joined: 'Jan 12, 2023', comms: 2, status: 'active' },
+    { n: 'Arjun Kumar', h: 'AK', bg: 'linear-gradient(135deg,#34D399,#059669)', email: 'arjun@email.com', joined: 'Feb 3, 2023', comms: 2, status: 'active' }
 ];
 
 const CHART_DATA = {

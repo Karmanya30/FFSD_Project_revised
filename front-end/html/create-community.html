@@ -1,55 +1,14 @@
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta content="width=device-width,initial-scale=1.0" name="viewport">
 <title>Gameunity — Create Community</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
-<link href="../css/global.css" rel="stylesheet"/>
-<link href="../css/pages/create-community.css" rel="stylesheet"/>
-<link href="../css/pages/rbac-nav.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<link href="../css/global.css" rel="stylesheet">
+<link href="../css/pages/create-community.css" rel="stylesheet">
+
 </head>
 <body>
-<!-- ─── APP RAIL ─── -->
-<aside class="app-rail">
-  <div class="rail-logo">⬡</div>
-  
-  <div class="rail-divider"></div>
-  
-  <!-- Main Nav -->
-  <a href="dashboard.html" class="rail-item" data-tooltip="Home">🏠</a>
-  <a href="discovery.html" class="rail-item" data-tooltip="Discover">🔍</a>
-  <a href="events.html" class="rail-item" data-tooltip="Events">📅<div class="notif-dot" style="background:var(--gold);width:6px;height:6px;"></div></a>
 
-  <a href="profile-settings.html" class="rail-item" data-tooltip="Settings">⚙️</a>
-  
-  <div class="rail-divider"></div>
-  
-  <!-- Communities -->
-  <a href="community-page.html?name=pro-gamers" class="rail-item rail-comm grad-purple" data-tooltip="Pro Gamers">
-    ⚡<div class="rail-dot bg-dot-green"></div>
-  </a>
-  <a href="community-page.html?name=rpg-tavern" class="rail-item rail-comm grad-orange" data-tooltip="RPG Tavern">
-    🎨<div class="rail-dot bg-dot-green"></div>
-  </a>
-  <a href="community-page.html?name=gamezone" class="rail-item rail-comm grad-cyan" data-tooltip="GameZone">
-    🎮<div class="rail-dot bg-dot-orange"></div>
-  </a>
-  <a href="community-page.html?name=fps-masters" class="rail-item rail-comm grad-green" data-tooltip="FPS Masters">
-    🌿<div class="rail-dot bg-dot-gray"></div>
-  </a>
-  <a href="community-page.html?name=speedrunners" class="rail-item rail-comm grad-pink" data-tooltip="SpeedRunners">
-    🎵<div class="rail-dot bg-dot-green"></div>
-  </a>
-  <a href="community-page.html?name=strategy-gods" class="rail-item rail-comm grad-violet" data-tooltip="Strategy Gods">
-    📚<div class="rail-dot bg-dot-gray"></div>
-  </a>
-  <div class="rail-item active" data-tooltip="Create" style="background:var(--accent);color:#fff;border-radius:14px;">✚</div>
-  
-  <div class="rail-footer">
-    <div class="rail-avatar" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">AM<div class="rail-dot bg-dot-green" style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-sidebar);"></div></div>
-  </div>
-</aside>
+
 <!-- MAIN -->
 <div class="main">
 <div class="header">
@@ -118,7 +77,7 @@
 <div class="section-sub">Tell people what your community is about.</div>
 <div class="fg">
 <div class="f-label">Community Name <span class="f-req">*</span></div>
-<input class="f-in" id="comm-name" maxlength="60" oninput="updatePreview()" placeholder="e.g. Pro Gamers, Indie Games…"/>
+<input class="f-in" id="comm-name" maxlength="60" oninput="updatePreview()" placeholder="e.g. Pro Gamers, Indie Games…">
 <div class="char-count"><span id="name-len">0</span>/60</div>
 </div>
 <div class="fg">
@@ -129,7 +88,7 @@
 <div class="fg-row">
 <div>
 <div class="f-label">Community URL</div>
-<input class="f-in" id="comm-slug" oninput="slugify()" placeholder="devnexus"/>
+<input class="f-in" id="comm-slug" oninput="slugify()" placeholder="devnexus">
 <div class="f-desc">nexushub.io/c/<span class="u-extracted-174" id="slug-preview">devnexus</span></div>
 </div>
 <div>
@@ -199,12 +158,12 @@
 <div class="fg-row">
 <div>
 <div class="f-label">Community Tags</div>
-<input class="f-in" placeholder="Add tags — e.g. FPS, ux, Streaming…"/>
+<input class="f-in" placeholder="Add tags — e.g. FPS, ux, Streaming…">
 <div class="f-desc">Helps members find your community</div>
 </div>
 <div>
 <div class="f-label">Website (optional)</div>
-<input class="f-in" id="comm-website" placeholder="https://yoursite.com"/>
+<input class="f-in" id="comm-website" placeholder="https://yoursite.com">
 <div id="url-error" style="display: none; color: var(--error); font-size: 11px; margin-top: 6px; font-weight: 500;">Type the correct URL</div>
 </div>
 </div>
@@ -251,11 +210,11 @@
 <div class="ch-form-row">
 <div>
 <div class="f-label">Channel Name <span class="f-req">*</span></div>
-<input class="f-in" id="new-ch-name" placeholder="e.g. resources"/>
+<input class="f-in" id="new-ch-name" placeholder="e.g. resources">
 </div>
 <div>
 <div class="f-label">Description <span class="f-req">*</span></div>
-<input class="f-in" id="new-ch-desc" placeholder="What's this channel for?"/>
+<input class="f-in" id="new-ch-desc" placeholder="What's this channel for?">
 </div>
 </div>
 <div class="ch-form-acts">
@@ -310,7 +269,11 @@
 </div>
 <div class="fg">
 <div class="f-label">Community Rules</div>
-<textarea class="f-ta u-extracted-242" placeholder="1. Be respectful to all members&#10;2. No spam or self-promotion&#10;3. Stay on topic&#10;4. No hate speech or harassment&#10;…"></textarea>
+<textarea class="f-ta u-extracted-242" placeholder="1. Be respectful to all members
+2. No spam or self-promotion
+3. Stay on topic
+4. No hate speech or harassment
+…"></textarea>
 <div class="f-desc">Shown to members when they join</div>
 </div>
 <div class="fg">
@@ -329,9 +292,7 @@
 <div class="sel-wrap">  
 <select class="f-sel" id="ch-community-select" name="community">
 <option value="pro-gamers">Pro Gamers</option>
-<option value="indie-games">Indie Games</option>
-<option value="modding-community">Modding Community</option>
-<option value="tournament-hub">Tournament Hub</option>
+<option value="gamezone">GameZone</option>
 </select>
 </div>
 </div>
@@ -348,12 +309,12 @@
 <div class="fg-row">
 <div>
 <div class="f-label">Channel Name <span class="f-req">*</span></div>
-<input class="f-in" id="ch-name-main" placeholder="e.g. resources"/>
+<input class="f-in" id="ch-name-main" placeholder="e.g. resources">
 <div class="f-desc">Lowercase, no spaces — use hyphens</div>
 </div>
 <div>
 <div class="f-label">Topic <span class="f-req">*</span></div>
-<input class="f-in" id="ch-topic-main" placeholder="What's this channel about?"/>
+<input class="f-in" id="ch-topic-main" placeholder="What's this channel about?">
 </div>
 </div>
 <div class="fg">
@@ -400,10 +361,11 @@
 </div><!-- /main -->
 <div id="toast"></div>
 <script src="../js/core/auth.js"></script>
-<script src="../js/components/app-rail.js"></script>
-<script src="../js/components/rbac-nav.js"></script>
+
+
 <script src="../js/core/validator.js"></script>
 <script src="../js/pages/create-community.js"></script>
 <script src="../js/components/notifications.js"></script>
-</body>
-</html>
+
+
+</body></html>

@@ -1,64 +1,29 @@
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>Gameunity – Community Discovery</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
-<link href="../css/global.css" rel="stylesheet"/>
-<link href="../css/pages/discovery.css" rel="stylesheet"/>
-<link href="../css/pages/rbac-nav.css" rel="stylesheet"/>
+<meta name="description" content="Discover and join gaming communities on Gameunity — browse 50,000+ communities by topic, interest, and category.">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;display=swap" rel="stylesheet">
+<link href="../css/global.css" rel="stylesheet">
+<link href="../css/components/sidebar.css" rel="stylesheet">
+<link href="../css/pages/discovery.css" rel="stylesheet">
+
 </head>
 <body>
-<!-- ─── APP RAIL ─── -->
-<aside class="app-rail">
-  <div class="rail-logo">⬡</div>
-  
-  <div class="rail-divider"></div>
-  
-  <!-- Main Nav -->
-  <a href="dashboard.html" class="rail-item" data-tooltip="Home">🏠</a>
-  <a href="discovery.html" class="rail-item active" data-tooltip="Discover">🔍</a>
-  <a href="events.html" class="rail-item" data-tooltip="Events">📅<div class="notif-dot"></div></a>
-  <a href="profile-settings.html" class="rail-item" data-tooltip="Settings">⚙️</a>
-  
-  <div class="rail-divider"></div>
-  
-  <!-- Communities -->
-  <a href="community-page.html?name=pro-gamers" class="rail-item rail-comm grad-purple" data-tooltip="Pro Gamers">
-    ⚡<div class="rail-dot bg-dot-green"></div>
-  </a>
-  <a href="community-page.html?name=rpg-tavern" class="rail-item rail-comm grad-orange" data-tooltip="RPG Tavern">
-    🎨<div class="rail-dot bg-dot-green"></div>
-  </a>
-  <a href="community-page.html?name=gamezone" class="rail-item rail-comm grad-cyan" data-tooltip="GameZone">
-    🎮<div class="rail-dot bg-dot-orange"></div>
-  </a>
-  <a href="community-page.html?name=fps-masters" class="rail-item rail-comm grad-green" data-tooltip="FPS Masters">
-    🌿<div class="rail-dot bg-dot-gray"></div>
-  </a>
-  <a href="community-page.html?name=speedrunners" class="rail-item rail-comm grad-pink" data-tooltip="SpeedRunners">
-    🎵<div class="rail-dot bg-dot-green"></div>
-  </a>
-  <a href="community-page.html?name=strategy-gods" class="rail-item rail-comm grad-violet" data-tooltip="Strategy Gods">
-    📚<div class="rail-dot bg-dot-gray"></div>
-  </a>
-  <a href="create-community.html" class="rail-item" data-tooltip="Create Community" style="background:rgba(255,255,255,0.05);color:var(--text-1);font-weight:600;border-radius:14px;">✚</a>
-  
-  <div class="rail-footer">
-    <div class="rail-avatar" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">AM<div class="rail-avatar-dot bg-dot-green"></div></div>
-  </div>
-</aside>
-<!-- ─── MAIN ─── -->
-<div class="main">
+
+<!-- ─── APP SHELL ─── -->
+<div class="app-shell">
+  <div id="sidebar-container"></div>
+
+  <!-- ─── MAIN ─── -->
+  <div class="main">
 <header class="header">
 <div class="header-title">Discover Communities</div>
-<div class="header-actions">
-<div class="icon-btn">🔔<div class="notif-dot"></div></div>
-<div class="icon-btn">📬</div>
-<div class="header-avatar">AM</div>
-</div>
+    <div class="header-actions">
+      <div class="icon-btn">🔔<div class="notif-dot"></div></div>
+      <div class="icon-btn">📬</div>
+      <div class="header-avatar" onclick="window.location.href='profile-settings.html'">RK</div>
+    </div>
 </header>
 <div class="content">
 <!-- Hero Search -->
@@ -67,21 +32,21 @@
 <div class="hero-sub">Browse 50,000+ communities across every interest, topic, and niche.</div>
 <div class="search-bar">
 <span class="search-icon">🔍</span>
-<input id="searchInput" oninput="filterCards()" placeholder="Search by name, topic, or keyword…" type="text"/>
+<input id="searchInput" oninput="filterCards()" placeholder="Search by name, topic, or keyword…" type="text">
 <span class="search-kbd">⌘K</span>
 <button class="search-btn">Search</button>
 </div>
 <div class="hero-stats">
-<div class="h-stat">🏘️ <strong>50,214</strong> communities</div>
-<div class="h-stat">👥 <strong>1.2M</strong> members</div>
-<div class="h-stat">🟢 <strong>84,320</strong> online now</div>
-<div class="h-stat">📅 <strong>1,400+</strong> events this week</div>
+<div class="h-stat">🏘️ <strong>50,214</strong>&nbsp;communities</div>
+<div class="h-stat">👥 <strong>1.2M</strong>&nbsp;members</div>
+<div class="h-stat">🟢 <strong>84,320</strong>&nbsp;online now</div>
+<div class="h-stat">📅 <strong>1,400+</strong>&nbsp;events this week</div>
 </div>
 </div>
 <!-- Filter Chips -->
 <div class="filter-bar" id="filterBar">
 <div class="chip active" data-cat="all" onclick="setChip(this,'all')"><span class="chip-icon">✦</span> All</div>
-<div class="chip" data-cat="tech" onclick="setChip(this,'tech')"><span class="chip-icon">💻</span> Gaming</div>
+<div class="chip" data-cat="tech" onclick="setChip(this,'tech')"><span class="chip-icon">💻</span> Coding</div>
 <div class="chip" data-cat="gaming" onclick="setChip(this,'gaming')"><span class="chip-icon">🎮</span> Gaming</div>
 <div class="chip" data-cat="design" onclick="setChip(this,'design')"><span class="chip-icon">🎨</span> Design</div>
 <div class="chip" data-cat="music" onclick="setChip(this,'music')"><span class="chip-icon">🎵</span> Music</div>
@@ -170,87 +135,6 @@
 </div>
 <div><div class="c-name">RPG Tavern</div><div class="c-cat">Design · UI/UX</div></div>
 <div class="c-desc">Critique, inspiration, and resources for UI/UX designers. Weekly design challenges and portfolio reviews every Friday.</div>
-<div class="c-footer">
-<div class="c-stats"><span class="c-stat">👥 1,120</span><span class="c-stat">🟢 210 online</span></div>
-<button class="btn-join joined" onclick="toggleJoin(this)">✓ Joined</button>
-</div>
-</div>
-</div>
-<div class="c-card delay-25" data-cat="music">
-<div class="c-banner banner-pink"><div class="c-banner-inner">🎵🎵🎵</div></div>
-<div class="c-card-body">
-<div class="c-top">
-<div class="c-icon grad-pink">🎵</div>
-<div class="c-badges"><span class="c-badge badge-trending">🔥 Trending</span></div>
-</div>
-<div><div class="c-name">SpeedRunners</div><div class="c-cat">Music · Production</div></div>
-<div class="c-desc">From bedroom producers to signed artists — share tracks, collaborate, get feedback, and talk about gear.</div>
-<div class="c-footer">
-<div class="c-stats"><span class="c-stat">👥 3,210</span><span class="c-stat">🟢 445 online</span></div>
-<button class="btn-join joined" onclick="toggleJoin(this)">✓ Joined</button>
-</div>
-</div>
-</div>
-<div class="c-card delay-30" data-cat="art">
-<div class="c-banner u-extracted-247"><div class="c-banner-inner">📸📸📸</div></div>
-<div class="c-card-body">
-<div class="c-top">
-<div class="c-icon u-extracted-154">📸</div>
-<div class="c-badges"><span class="c-badge badge-hot">⭐ Hot</span></div>
-</div>
-<div><div class="c-name">Lens &amp; Light</div><div class="c-cat">Art · Photography</div></div>
-<div class="c-desc">Visual storytellers united. Share your shots, learn editing techniques, and get inspired by photographers worldwide.</div>
-<div class="c-footer">
-<div class="c-stats"><span class="c-stat">👥 9,100</span><span class="c-stat">🟢 780 online</span></div>
-<button class="btn-join" onclick="toggleJoin(this)">Join</button>
-</div>
-</div>
-</div>
-<div class="c-card u-extracted-248" data-cat="science">
-<div class="c-banner u-extracted-249"><div class="c-banner-inner">🔬🔬🔬</div></div>
-<div class="c-card-body">
-<div class="c-top">
-<div class="c-icon u-extracted-208">🔬</div>
-<div class="c-badges"><span class="c-badge badge-verified">✓ Verified</span></div>
-</div>
-<div><div class="c-name">Science Daily</div><div class="c-cat">Science · Research</div></div>
-<div class="c-desc">Digest the latest scientific discoveries across biology, physics, chemistry, and space exploration.</div>
-<div class="c-footer">
-<div class="c-stats"><span class="c-stat">👥 28,400</span><span class="c-stat">🟢 2.1k online</span></div>
-<button class="btn-join" onclick="toggleJoin(this)">Join</button>
-</div>
-</div>
-</div>
-<div class="c-card u-extracted-250" data-cat="edu">
-<div class="c-banner banner-violet"><div class="c-banner-inner">📚📚📚</div></div>
-<div class="c-card-body">
-<div class="c-top">
-<div class="c-icon u-extracted-251">📚</div>
-<div class="c-badges"><span class="c-badge badge-new">✦ New</span></div>
-</div>
-<div><div class="c-name">Strategy Gods</div><div class="c-cat">Education · Literature</div></div>
-<div class="c-desc">Monthly book reads, live author AMAs, and deep discussion threads for serious readers and casual bookworms alike.</div>
-<div class="c-footer">
-<div class="c-stats"><span class="c-stat">👥 920</span><span class="c-stat">🟢 88 online</span></div>
-<button class="btn-join joined" onclick="toggleJoin(this)">✓ Joined</button>
-</div>
-</div>
-</div>
-<div class="c-card u-extracted-252" data-cat="sports">
-<div class="c-banner u-extracted-253"><div class="c-banner-inner">⚽⚽⚽</div></div>
-<div class="c-card-body">
-<div class="c-top">
-<div class="c-icon u-extracted-219">⚽</div>
-<div class="c-badges"><span class="c-badge badge-trending">🔥 Trending</span></div>
-</div>
-<div><div class="c-name">SportsArena</div><div class="c-cat">Sports · Football</div></div>
-<div class="c-desc">Live match discussions, sports news, fantasy leagues, player stats, and fan debates for every major sport.</div>
-<div class="c-footer">
-<div class="c-stats"><span class="c-stat">👥 67,000</span><span class="c-stat">🟢 5.2k online</span></div>
-<button class="btn-join" onclick="toggleJoin(this)">Join</button>
-</div>
-</div>
-</div>
 </div>
 <div class="load-more">
 <button class="btn-load" onclick="this.textContent='Loading…'; setTimeout(()=>this.textContent='Load More Communities',1500)">Load More Communities</button>
@@ -258,11 +142,16 @@
 </div>
 </div>
 </div>
+  </div><!-- /.main -->
+</div><!-- /.app-shell -->
+
 <script src="../js/core/auth.js"></script>
-<script src="../js/components/app-rail.js"></script>
-<script src="../js/components/rbac-nav.js"></script>
+<script src="../js/data/mockData.js"></script>
+<script src="../js/data/crudService.js"></script>
 <script src="../js/pages/discovery.js"></script>
 <script src="../js/components/notifications.js"></script>
-</body>
-</html>
+<script src="../js/components/sidebar.js"></script>
 
+
+
+</body></html>

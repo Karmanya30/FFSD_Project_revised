@@ -73,6 +73,11 @@ window.toggleMemberSidebar = function () {
   if (chip) chip.classList.toggle("active", isOpen);
 };
 
+window.logoutUser = function () {
+  localStorage.removeItem("nexus_user");
+  window.location.href = "login.html";
+};
+
 // ==========================================
 // 3. SEARCH BAR TOGGLE
 // ==========================================
@@ -778,6 +783,13 @@ function insertAtCursor(text) {
 // ==========================================
 // 12. UTILITIES
 // ==========================================
+function scrollToBottom() {
+  const wrap = document.getElementById("messagesWrap");
+  if (wrap) {
+    wrap.scrollTop = wrap.scrollHeight;
+  }
+}
+
 function copyCode(btn) {
   const pre = btn.closest(".code-block")?.querySelector("pre");
   if (!pre) return;

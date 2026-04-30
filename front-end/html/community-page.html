@@ -1,78 +1,16 @@
-<!doctype html>
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="description" content="Gameunity Community Page — Join discussions, view members, and explore community events." />
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="description" content="Gameunity Community Page — Join discussions, view members, and explore community events.">
     <title>Gameunity – Community Page</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
-      rel="stylesheet"
-    />
-    <link href="../css/global.css" rel="stylesheet" />
-    <link href="../css/pages/community-page.css" rel="stylesheet" />
-    <link href="../css/pages/rbac-nav.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;display=swap" rel="stylesheet">
+    <link href="../css/global.css" rel="stylesheet">
+    <link href="../css/pages/community-page.css" rel="stylesheet">
+    
   </head>
 
   <body>
-    <!-- ─── APP RAIL ─── -->
-    <aside class="app-rail" id="sidebar">
-      <div class="rail-logo">⬡</div>
-      <div class="rail-toggle"><span class="rail-toggle-icon" aria-hidden="true">⟩</span></div>
-
-      <div class="rail-divider"></div>
-
-      <!-- Main Nav -->
-      <a href="dashboard.html" class="rail-item" data-tooltip="Home">🏠</a>
-      <a href="discovery.html" class="rail-item active" data-tooltip="Discover"
-        >🔍</a
-      >
-      <a href="events.html" class="rail-item" data-tooltip="Events"
-        >📅<div class="notif-dot"></div></a>
-      <a href="profile-settings.html" class="rail-item" data-tooltip="Settings"
-        >⚙️</a
-      >
-
-      <div class="rail-divider"></div>
-
-      <!-- Communities -->
-      <div id="railCommunities"></div>
-
-      <a
-        href="create-community.html"
-        class="rail-item"
-        data-tooltip="Create Community"
-        style="
-          background: rgba(255, 255, 255, 0.05);
-          color: var(--text-1);
-          font-weight: 600;
-          border-radius: 14px;
-        "
-        >✚</a
-      >
-
-      <div class="rail-footer">
-        <div
-          class="rail-avatar"
-          onclick="window.location.href = 'profile-settings.html'"
-          data-tooltip="Profile"
-        >
-          AM
-          <div
-            class="rail-dot bg-dot-green"
-            style="
-              position: absolute;
-              bottom: -2px;
-              right: -2px;
-              width: 12px;
-              height: 12px;
-              border-radius: 50%;
-              border: 2px solid var(--bg-sidebar);
-            "
-          ></div>
-        </div>
-      </div>
-    </aside>
+    
+    
     <!-- ─── MAIN ─── -->
     <div class="main">
       <!-- Header -->
@@ -90,51 +28,37 @@
             <div class="notif-dot"></div>
           </div>
           <div class="icon-btn">📬</div>
-          <div class="header-avatar">AM</div>
+          <div class="header-avatar" onclick="window.location.href='profile-settings.html'">RK</div>
         </div>
       </header>
       <!-- Banner -->
       <div class="comm-banner-area">
         <div class="comm-banner">
           <div class="banner-pattern"></div>
-          <div class="banner-emoji">⚡</div>
+          <div class="banner-emoji" id="comm-icon">⚡</div>
         </div>
         <div class="comm-profile-row">
           <div class="comm-big-icon">⚡</div>
           <div class="comm-title-block">
             <div class="comm-title-row">
-              <div class="comm-big-name">Pro Gamers</div>
+              <h1 class="comm-big-name" id="comm-name-title">Pro Gamers</h1>
               <div class="verified-badge">✓ Verified</div>
             </div>
             <div class="comm-meta-row">
               <div class="meta-chip">
-                <span class="online-dot"></span> 312 online
+                <span class="online-dot"></span> <span id="comm-online-count">312</span> online
               </div>
-              <div class="meta-chip">👥 2,451 members</div>
-              <div class="meta-chip">💻 Esports · Competitive</div>
-              <div class="meta-chip">📅 Founded Mar 2022</div>
+              <div class="meta-chip">👥 <span id="comm-member-count">2,451</span> members</div>
+              <div class="meta-chip" id="comm-category">💻 Esports · Competitive</div>
+              <div class="meta-chip" id="comm-founded">📅 Founded Mar 2022</div>
             </div>
           </div>
           <div class="comm-actions">
-            <button
-              class="btn-joined-main"
-              id="joinMainBtn"
-              onclick="toggleMainJoin()"
-            >
+            <button class="btn-joined-main" id="joinMainBtn" onclick="toggleMainJoin()">
               ✓ Joined
             </button>
-            <a
-              href="community-manager.html"
-              class="rbac-manage-btn hidden"
-              id="rbacManageBtn"
-              title="Manage this community"
-              >⚙️ Manage Community</a
-            >
-            <button
-              class="hidden"
-              id="rbacDeleteBtn"
-              onclick="requestDeleteCommunity()"
-              style="
+            <a href="community-manager.html" class="rbac-manage-btn hidden" id="rbacManageBtn" title="Manage this community">⚙️ Manage Community</a>
+            <button class="hidden" id="rbacDeleteBtn" onclick="requestDeleteCommunity()" style="
                 background: rgba(255, 68, 68, 0.1);
                 color: var(--danger);
                 border: 1px solid rgba(255, 68, 68, 0.2);
@@ -146,8 +70,7 @@
                 display: flex;
                 align-items: center;
                 gap: 6px;
-              "
-            >
+              ">
               🗑️ Delete
             </button>
           </div>
@@ -159,10 +82,10 @@
           📋 Overview
         </button>
         <button class="tab-btn" onclick="switchTab('channels', this)">
-          📡 Channels <span class="tab-count">14</span>
+          📡 Channels <span class="tab-count" id="tab-count-channels">14</span>
         </button>
         <button class="tab-btn" onclick="switchTab('members', this)">
-          👥 Members <span class="tab-count">2,451</span>
+          👥 Members <span class="tab-count" id="tab-count-members">2,451</span>
         </button>
         <button class="tab-btn" onclick="switchTab('rules', this)">
           📜 Rules <span class="tab-count">7</span>
@@ -182,17 +105,17 @@
             </div>
             <div class="pin-footer">
               <div class="pin-author">
-                <div class="pin-av">JK</div>
-                <span>Jake Kim (Owner) · 2 days ago</span>
+                <div class="pin-av">RK</div>
+                <span>Rahul Kumar (Owner) · 2 days ago</span>
               </div>
             </div>
           </div>
           <!-- About -->
           <div class="section-card">
             <div class="sc-title">
-              <span class="sc-title-icon">ℹ</span> About Pro Gamers
+              <span class="sc-title-icon">ℹ</span> About <span class="comm-name-text">Pro Gamers</span>
             </div>
-            <div class="about-text">
+            <div class="about-text" id="comm-description">
               Pro Gamers is a thriving community for developers of all levels —
               from curious beginners to seasoned engineers. We share projects,
               debug together, discuss the latest frameworks, and support each
@@ -216,11 +139,11 @@
             </div>
             <div class="stat-grid">
               <div class="stat-box">
-                <div class="stat-val">2,451</div>
+                <div class="stat-val" id="stat-total-members">2,451</div>
                 <div class="stat-lbl">Total Members</div>
               </div>
               <div class="stat-box">
-                <div class="stat-val stat-online">312</div>
+                <div class="stat-val stat-online" id="stat-online-now">312</div>
                 <div class="stat-lbl">Online Now</div>
               </div>
               <div class="stat-box">
@@ -248,29 +171,20 @@
                   </div>
                   <div class="msg-text">
                     This looks incredible
-                    <span class="mention">@Mia Park</span>! Love the color
+                    <span class="mention">@Arjun Kumar</span>! Love the color
                     scheme. Are you using
                     <strong>Gameunity's design system</strong> or building from
                     scratch?
                   </div>
                 </div>
                 <div class="msg-actions">
-                  <button
-                    class="act-btn reaction-btn"
-                    onclick="toggleReaction(this, '😊')"
-                  >
+                  <button class="act-btn reaction-btn" onclick="toggleReaction(this, '😊')">
                     😊
                   </button>
-                  <button
-                    class="act-btn reply-btn"
-                    onclick="replyToMessage(this)"
-                  >
+                  <button class="act-btn reply-btn" onclick="replyToMessage(this)">
                     ↩
                   </button>
-                  <button
-                    class="act-btn more-btn"
-                    onclick="showMessageMenu(this)"
-                  >
+                  <button class="act-btn more-btn" onclick="showMessageMenu(this)">
                     ⋯
                   </button>
                 </div>
@@ -278,10 +192,6 @@
               <div class="msg-group">
                 <div class="msg-av grad-pink">MP</div>
                 <div class="msg-body">
-                  <div class="msg-header">
-                    <span class="msg-uname">Mia Park</span>
-                    <span class="msg-time">10:34 AM</span>
-                  </div>
                   <div class="msg-text">
                     Sharing our team's early UI mockup for the hackathon 👀
                     Still very rough but excited about the direction!
@@ -296,31 +206,22 @@
                   </div>
                 </div>
                 <div class="msg-actions">
-                  <button
-                    class="act-btn reaction-btn"
-                    onclick="toggleReaction(this, '😊')"
-                  >
+                  <button class="act-btn reaction-btn" onclick="toggleReaction(this, '😊')">
                     😊
                   </button>
-                  <button
-                    class="act-btn reply-btn"
-                    onclick="replyToMessage(this)"
-                  >
+                  <button class="act-btn reply-btn" onclick="replyToMessage(this)">
                     ↩
                   </button>
-                  <button
-                    class="act-btn more-btn"
-                    onclick="showMessageMenu(this)"
-                  >
+                  <button class="act-btn more-btn" onclick="showMessageMenu(this)">
                     ⋯
                   </button>
                 </div>
               </div>
               <div class="msg-group">
-                <div class="msg-av grad-purple">SL</div>
+                <div class="msg-av grad-purple">RK</div>
                 <div class="msg-body">
                   <div class="msg-header">
-                    <span class="msg-uname">Sara Lee</span>
+                    <span class="msg-uname">Rahul Kumar</span>
                     <span class="msg-role role-mod-badge">Mod</span>
                     <span class="msg-time">10:08 AM</span>
                   </div>
@@ -331,13 +232,10 @@
                   <div class="code-block">
                     <div class="code-block-header">
                       <span class="code-lang">bash</span>
-                      <button
-                        class="code-copy"
-                        onclick="
+                      <button class="code-copy" onclick="
                           this.textContent = 'Copied!';
                           setTimeout(() => (this.textContent = 'Copy'), 1500);
-                        "
-                      >
+                        ">
                         Copy
                       </button>
                     </div>
@@ -352,22 +250,13 @@
                   </div>
                 </div>
                 <div class="msg-actions">
-                  <button
-                    class="act-btn reaction-btn"
-                    onclick="toggleReaction(this, '😊')"
-                  >
+                  <button class="act-btn reaction-btn" onclick="toggleReaction(this, '😊')">
                     😊
                   </button>
-                  <button
-                    class="act-btn reply-btn"
-                    onclick="replyToMessage(this)"
-                  >
+                  <button class="act-btn reply-btn" onclick="replyToMessage(this)">
                     ↩
                   </button>
-                  <button
-                    class="act-btn more-btn"
-                    onclick="showMessageMenu(this)"
-                  >
+                  <button class="act-btn more-btn" onclick="showMessageMenu(this)">
                     ⋯
                   </button>
                 </div>
@@ -392,9 +281,9 @@
               <span class="sc-title-icon">👤</span> Created By
             </div>
             <div class="created-by-card">
-              <div class="created-by-avatar grad-orange">JK</div>
+              <div class="created-by-avatar grad-orange">RK</div>
               <div>
-                <div class="created-by-name">Jake Kim</div>
+                <div class="created-by-name">Rahul Kumar</div>
                 <div class="created-by-meta">Owner · Since Mar 2022</div>
               </div>
             </div>
@@ -405,48 +294,7 @@
       <div class="tab-content" id="tab-channels">
         <div class="channels-layout">
           <div class="channels-main" id="channelsList"></div>
-          <div class="ch-sidebar">
-            <div class="ch-info-card">
-              <div class="ch-info-name">
-                # <span id="activeCh">general</span>
-              </div>
-              <div class="ch-info-desc" id="activeChDesc">
-                The main hub for all things Pro Gamers. Say hello, share
-                updates, ask anything, or just vibe with the community.
-              </div>
-              <button
-                class="open-channel-btn"
-                onclick="
-                  openChannel(
-                    '#' + document.getElementById('activeCh').textContent,
-                  )
-                "
-              >
-                Open Channel
-              </button>
-              <div class="ch-perms">
-                <div class="perms-title">Your Permissions</div>
-                <div class="perm-row">
-                  <span class="perm-yes">✓</span> View messages
-                </div>
-                <div class="perm-row">
-                  <span class="perm-yes">✓</span> Send messages
-                </div>
-                <div class="perm-row">
-                  <span class="perm-yes">✓</span> Add reactions
-                </div>
-                <div class="perm-row">
-                  <span class="perm-yes">✓</span> Attach files
-                </div>
-                <div class="perm-row">
-                  <span class="perm-no">✗</span> Manage messages
-                </div>
-                <div class="perm-row">
-                  <span class="perm-no">✗</span> Mention @everyone
-                </div>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
       <!-- ── MEMBERS TAB ── -->
@@ -454,11 +302,7 @@
         <div class="members-layout">
           <div class="members-search">
             <span class="members-search-icon">🔍</span>
-            <input
-              oninput="filterMembers(this.value)"
-              placeholder="Search members…"
-              type="text"
-            />
+            <input oninput="filterMembers(this.value)" placeholder="Search members…" type="text">
           </div>
           <div class="members-groups" id="membersContainer">
             <div>
@@ -466,10 +310,10 @@
               <div class="member-grid">
                 <div class="member-card">
                   <div class="m-avatar grad-gold">
-                    JK
+                    RK
                     <div class="m-status bg-dot-green"></div>
                   </div>
-                  <div class="m-name">Jake Kim</div>
+                  <div class="m-name">Rahul Kumar</div>
                   <span class="m-role role-owner">Owner</span>
                 </div>
               </div>
@@ -479,34 +323,10 @@
               <div class="member-grid" id="modGrid">
                 <div class="member-card">
                   <div class="m-avatar grad-purple">
-                    SL
+                    AK
                     <div class="m-status bg-dot-green"></div>
                   </div>
-                  <div class="m-name">Sara Lee</div>
-                  <span class="m-role role-mod">Mod</span>
-                </div>
-                <div class="member-card">
-                  <div class="m-avatar grad-pink">
-                    MP
-                    <div class="m-status bg-dot-green"></div>
-                  </div>
-                  <div class="m-name">Mia Park</div>
-                  <span class="m-role role-mod">Mod</span>
-                </div>
-                <div class="member-card">
-                  <div class="m-avatar grad-green">
-                    RN
-                    <div class="m-status bg-dot-orange"></div>
-                  </div>
-                  <div class="m-name">Ryan Ng</div>
-                  <span class="m-role role-mod">Mod</span>
-                </div>
-                <div class="member-card">
-                  <div class="m-avatar grad-pink">
-                    ZA
-                    <div class="m-status bg-dot-green"></div>
-                  </div>
-                  <div class="m-name">Zara Ali</div>
+                  <div class="m-name">Arjun Kumar</div>
                   <span class="m-role role-mod">Mod</span>
                 </div>
               </div>
@@ -516,66 +336,18 @@
               <div class="member-grid">
                 <div class="member-card">
                   <div class="m-avatar grad-violet">
-                    AM
+                    RK
                     <div class="m-status bg-dot-green"></div>
                   </div>
-                  <div class="m-name">Alex Morgan</div>
+                  <div class="m-name">Rahul Kumar</div>
                   <span class="m-role role-member">Member</span>
                 </div>
                 <div class="member-card">
                   <div class="m-avatar grad-cyan">
-                    TC
+                    AK
                     <div class="m-status bg-dot-green"></div>
                   </div>
-                  <div class="m-name">Tom Chen</div>
-                  <span class="m-role role-member">Member</span>
-                </div>
-                <div class="member-card">
-                  <div class="m-avatar grad-orange">
-                    LP
-                    <div class="m-status bg-dot-green"></div>
-                  </div>
-                  <div class="m-name">Leo Perez</div>
-                  <span class="m-role role-member">Member</span>
-                </div>
-                <div class="member-card">
-                  <div class="m-avatar grad-violet">
-                    AJ
-                    <div class="m-status bg-dot-green"></div>
-                  </div>
-                  <div class="m-name">Amy Jo</div>
-                  <span class="m-role role-member">Member</span>
-                </div>
-                <div class="member-card">
-                  <div class="m-avatar grad-green">
-                    DK
-                    <div class="m-status bg-dot-green"></div>
-                  </div>
-                  <div class="m-name">Dan Kim</div>
-                  <span class="m-role role-member">Member</span>
-                </div>
-                <div class="member-card">
-                  <div class="m-avatar grad-orange">
-                    NV
-                    <div class="m-status bg-dot-green"></div>
-                  </div>
-                  <div class="m-name">Nina V</div>
-                  <span class="m-role role-member">Member</span>
-                </div>
-                <div class="member-card">
-                  <div class="m-avatar grad-cyan">
-                    OT
-                    <div class="m-status bg-dot-green"></div>
-                  </div>
-                  <div class="m-name">Omar T</div>
-                  <span class="m-role role-member">Member</span>
-                </div>
-                <div class="member-card">
-                  <div class="m-avatar grad-purple">
-                    BW
-                    <div class="m-status bg-dot-green"></div>
-                  </div>
-                  <div class="m-name">Beth W</div>
+                  <div class="m-name">Arjun Kumar</div>
                   <span class="m-role role-member">Member</span>
                 </div>
               </div>
@@ -692,10 +464,7 @@
                 Use the report button on any message or contact a moderator
                 directly.
               </div>
-              <button
-                class="report-btn"
-                onclick="window.location.href = 'report.html'"
-              >
+              <button class="report-btn" onclick="window.location.href = 'report.html'">
                 🚩 Report an Issue
               </button>
             </div>
@@ -772,8 +541,11 @@
       }
     </script>
 
+    <script src="../js/data/mockData.js"></script>
+    <script src="../js/data/crudService.js"></script>
     <script src="../js/pages/community-page.js"></script>
     <script src="../js/components/notifications.js"></script>
-  </body>
-</html>
+  
 
+
+</body></html>

@@ -1,91 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+﻿<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Gameunity — Super User Dashboard</title>
-    <meta name="description" content="Gameunity Super User Control Panel — Full system-level access to manage users, communities, moderation, and platform configuration."/>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
-    <link href="../css/global.css" rel="stylesheet"/>
-    <link href="../css/pages/superuser-dashboard.css" rel="stylesheet"/>
-    <link href="../css/pages/rbac-nav.css" rel="stylesheet"/>
+    <meta name="description" content="Gameunity Super User Control Panel — Full system-level access to manage users, communities, moderation, and platform configuration.">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;display=swap" rel="stylesheet">
+    <link href="../css/global.css" rel="stylesheet">
+    <link href="../css/components/sidebar.css" rel="stylesheet">
+    <link href="../css/pages/superuser-dashboard.css" rel="stylesheet">
+    
 </head>
 <body>
-    <!-- ═══ APP RAIL ═══ -->
-<aside class="app-rail">
-  <div class="rail-logo">⬡</div>
-  <div class="rail-divider"></div>
-  <a href="dashboard.html" class="rail-item" data-tooltip="Home">🏠</a>
-  <a href="discovery.html" class="rail-item" data-tooltip="Discover">🔍</a>
-  <a href="events.html" class="rail-item" data-tooltip="Events">📅</a>
+    
 
-  <a href="profile-settings.html" class="rail-item" data-tooltip="Settings">⚙️</a>
-  <div class="rail-divider"></div>
-  <a href="community-page.html?name=pro-gamers" class="rail-item rail-comm grad-purple" data-tooltip="Pro Gamers">⚡<div class="rail-dot bg-dot-green"></div></a>
-  <a href="community-page.html?name=rpg-tavern" class="rail-item rail-comm grad-orange" data-tooltip="RPG Tavern">🎨<div class="rail-dot bg-dot-green"></div></a>
-  <a href="community-page.html?name=gamezone" class="rail-item rail-comm grad-cyan" data-tooltip="GameZone">🎮<div class="rail-dot bg-dot-orange"></div></a>
-  <a href="community-page.html?name=fps-masters" class="rail-item rail-comm grad-green" data-tooltip="FPS Masters">🌿<div class="rail-dot bg-dot-gray"></div></a>
-  <a href="community-page.html?name=speedrunners" class="rail-item rail-comm grad-pink" data-tooltip="SpeedRunners">🎵<div class="rail-dot bg-dot-green"></div></a>
-  <a href="community-page.html?name=strategy-gods" class="rail-item rail-comm grad-violet" data-tooltip="Strategy Gods">📚<div class="rail-dot bg-dot-gray"></div></a>
-  <a href="create-community.html" class="rail-item" data-tooltip="Create Community" style="background:rgba(255,255,255,0.05);color:var(--text-1);font-weight:600;border-radius:14px;">✚</a>
-  
-  <div class="rail-footer">
-    <div class="rail-avatar" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">AM<div class="rail-dot bg-dot-green" style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-sidebar);"></div></div>
-  </div>
-</aside>
 
-    <!-- ═══ SUB-SIDEBAR (collapsible) ═══ -->
+    
     <div class="su-nav-backdrop" id="suNavBackdrop" aria-hidden="true"></div>
-    <aside class="sub-sidebar su-nav-panel" id="suSubSidebar" aria-label="Super user navigation">
-        <div class="su-nav-surface">
-            <header class="su-nav-header">
-                <div class="su-nav-brand">
-                    <div class="su-nav-brand-text">
-                        <span class="su-nav-brand-name">Gameunity</span>
-                        <span class="su-nav-brand-badge">Super</span>
-                    </div>
-                </div>
-                <button type="button" class="su-nav-collapse-toggle" id="suNavCollapseBtn" onclick="toggleSuNavPanel()" aria-controls="suSubSidebar" aria-expanded="true" title="Collapse panel">
-                    <span class="su-nav-collapse-icon" aria-hidden="true">⟨</span>
-                </button>
-            </header>
-            <nav class="su-nav-scroll" aria-label="Dashboard sections">
-                <div class="su-nav-section" data-section="system">
-                    <button type="button" class="su-nav-section-head" onclick="toggleSuNavSection(this)" aria-expanded="true">
-                        <span class="su-nav-section-chevron" aria-hidden="true"></span>
-                        <span class="su-nav-section-title">System Control</span>
-                    </button>
-                    <div class="su-nav-section-panel">
-                        <div class="su-nav-section-panel-inner">
-                            <a class="nav-item active" href="#" onclick="event.preventDefault(); navTo('overview', this);" data-tooltip="Overview"><span class="nav-icon">📊</span><span class="nav-item-text">Overview</span></a>
-                            <a class="nav-item" href="#" onclick="event.preventDefault(); navTo('users', this);" data-tooltip="User Management"><span class="nav-icon">👤</span><span class="nav-item-text">User Management</span><span class="nav-badge">148K</span></a>
-                            <a class="nav-item" href="#" onclick="event.preventDefault(); navTo('communities', this);" data-tooltip="Communities"><span class="nav-icon">🏘️</span><span class="nav-item-text">Communities</span></a>
-                            <a class="nav-item" href="#" onclick="event.preventDefault(); navTo('moderation', this);" data-tooltip="Moderation"><span class="nav-icon">🛡️</span><span class="nav-item-text">Moderation</span></a>
-                            <a class="nav-item" href="#" onclick="event.preventDefault(); navTo('events-mgmt', this);" data-tooltip="Events"><span class="nav-icon">📅</span><span class="nav-item-text">Events</span></a>
-                            <a class="nav-item" href="#" onclick="event.preventDefault(); navTo('audit', this);" data-tooltip="Audit Log"><span class="nav-icon">📋</span><span class="nav-item-text">Audit Log</span></a>
-                            <a class="nav-item" href="#" onclick="event.preventDefault(); navTo('config', this);" data-tooltip="Platform Config"><span class="nav-icon">⚙️</span><span class="nav-item-text">Platform Config</span></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="su-nav-section" data-section="links">
-                    <button type="button" class="su-nav-section-head" onclick="toggleSuNavSection(this)" aria-expanded="true">
-                        <span class="su-nav-section-chevron" aria-hidden="true"></span>
-                        <span class="su-nav-section-title">Quick Links</span>
-                    </button>
-                    <div class="su-nav-section-panel">
-                        <div class="su-nav-section-panel-inner">
-                            <a href="dashboard.html" class="nav-item" data-tooltip="End-User View"><span class="nav-icon">🏠</span><span class="nav-item-text">End-User View</span></a>
-                            <a href="admin-dashboard.html" class="nav-item" data-tooltip="Admin Dashboard"><span class="nav-icon">📈</span><span class="nav-item-text">Admin Dashboard</span></a>
-                            <a href="mod-panel.html" class="nav-item" data-tooltip="Mod Panel"><span class="nav-icon">🔍</span><span class="nav-item-text">Mod Panel</span></a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </aside>
+    
 
-    <!-- ═══ MAIN ═══ -->
-    <div class="main">
+    <!-- ─── APP SHELL ─── -->
+    <div class="app-shell">
+      <div id="sidebar-container"></div>
+
+      <!-- ═══ MAIN ═══ -->
+      <div class="main">
         <header class="header">
             <div class="header-left">
                 <button type="button" class="su-drawer-trigger" id="suDrawerOpenBtn" onclick="openSuSidebarDrawer()" aria-label="Open navigation menu">
@@ -97,8 +34,9 @@
             <div class="header-right">
                 <div class="icon-btn" onclick="toast('🔔 No new system alerts')">🔔</div>
                 <div class="search-box">
-                    <input type="text" placeholder="Search anything..." id="globalSearch" oninput="handleGlobalSearch(this.value)"/>
+                    <input type="text" placeholder="Search anything..." id="globalSearch" oninput="handleGlobalSearch(this.value)">
                 </div>
+                <div class="header-avatar" id="su-avatar" onclick="window.location.href='profile-settings.html'">SA</div>
             </div>
         </header>
 
@@ -172,7 +110,7 @@
                     <button class="filter-btn" onclick="filterUsers('warned', this)">Warned</button>
                 </div>
                 <div class="toolbar-right">
-                    <input type="text" class="search-input" placeholder="Search users..." oninput="searchUsers(this.value)"/>
+                    <input type="text" class="search-input" placeholder="Search users..." oninput="searchUsers(this.value)">
                     <button class="btn-primary" onclick="openAddUserModal()">+ Add User</button>
                 </div>
             </div>
@@ -203,10 +141,10 @@
                     <button class="filter-btn on" onclick="filterComms('all', this)">All</button>
                     <button class="filter-btn" onclick="filterComms('Gaming', this)">Gaming</button>
                     <button class="filter-btn" onclick="filterComms('Design', this)">Design</button>
-                    <button class="filter-btn" onclick="filterComms('Gaming', this)">Gaming</button>
+                    <button class="filter-btn" onclick="filterComms('Education', this)">Education</button>
                 </div>
                 <div class="toolbar-right">
-                    <input type="text" class="search-input" placeholder="Search communities..." oninput="searchComms(this.value)"/>
+                    <input type="text" class="search-input" placeholder="Search communities..." oninput="searchComms(this.value)">
                     <button class="btn-primary" onclick="openAddCommModal()">+ Create Community</button>
                 </div>
             </div>
@@ -277,24 +215,24 @@
                     <div class="config-item">
                         <label>AutoMod Enabled</label>
                         <label class="toggle-switch">
-                            <input type="checkbox" id="cfg-automod" checked onchange="updateConfig('autoModEnabled', this.checked)"/>
+                            <input type="checkbox" id="cfg-automod" checked="" onchange="updateConfig('autoModEnabled', this.checked)">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
                     <div class="config-item">
                         <label>Public Registration</label>
                         <label class="toggle-switch">
-                            <input type="checkbox" id="cfg-registration" checked onchange="updateConfig('allowPublicRegistration', this.checked)"/>
+                            <input type="checkbox" id="cfg-registration" checked="" onchange="updateConfig('allowPublicRegistration', this.checked)">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
                     <div class="config-item">
                         <label>Max Communities / User</label>
-                        <input type="number" class="config-input" id="cfg-maxcomm" value="10" onchange="updateConfig('maxCommunitiesPerUser', parseInt(this.value))"/>
+                        <input type="number" class="config-input" id="cfg-maxcomm" value="10" onchange="updateConfig('maxCommunitiesPerUser', parseInt(this.value))">
                     </div>
                     <div class="config-item">
                         <label>Max Channels / Community</label>
-                        <input type="number" class="config-input" id="cfg-maxch" value="50" onchange="updateConfig('maxChannelsPerCommunity', parseInt(this.value))"/>
+                        <input type="number" class="config-input" id="cfg-maxch" value="50" onchange="updateConfig('maxChannelsPerCommunity', parseInt(this.value))">
                     </div>
                     <button class="btn-primary" onclick="toast('✅ Configuration saved')">Save Configuration</button>
                 </div>
@@ -302,7 +240,7 @@
                     <div class="card-header"><h3>Moderation Policies</h3></div>
                     <div id="policies-list"></div>
                     <div class="add-policy-row">
-                        <input type="text" class="config-input" id="new-policy" placeholder="Add new policy..."/>
+                        <input type="text" class="config-input" id="new-policy" placeholder="Add new policy...">
                         <button class="btn-sm" onclick="addPolicy()">Add</button>
                     </div>
                 </div>
@@ -315,7 +253,7 @@
         <div class="modal-container">
             <div class="modal-header">
                 <h3 id="modal-title">Modal</h3>
-                <button class="modal-x" onclick="closeModal()">&times;</button>
+                <button class="modal-x" onclick="closeModal()">×</button>
             </div>
             <div class="modal-body" id="modal-body"></div>
             <div class="modal-footer">
@@ -332,12 +270,14 @@
     </div>
 
     <script src="../js/core/auth.js"></script>
-    <script src="../js/components/app-rail.js"></script>
-    <script src="../js/components/rbac-nav.js"></script>
+    
+    
     <script src="../js/data/mockData.js"></script>
     <script src="../js/data/crudService.js"></script>
     <script src="../js/core/validator.js"></script>
     <script src="../js/pages/superuser-dashboard.js"></script>
 <script src="../js/components/notifications.js"></script>
-</body>
-</html>
+
+
+<script src="../js/components/sidebar.js"></script>
+</body></html>

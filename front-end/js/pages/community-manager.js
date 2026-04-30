@@ -15,11 +15,11 @@ let state = {
 
   currentUser: {
     id: 101,
-    firstName: "Jake",
-    lastName: "Kim",
-    fullName: "Jake Kim",
-    handle: "jakekim",
-    initials: "JK",
+    firstName: "Rahul",
+    lastName: "Kumar",
+    fullName: "Rahul Kumar",
+    handle: "rahulk",
+    initials: "RK",
     roleLevel: 5, // 5: Owner, 4: Manager, 3: Mod, 2: Event, 1: Member
     role: "👑 Community Owner",
   },
@@ -42,21 +42,8 @@ let state = {
   ],
 
   members: [
-    { id: 101, av: "JK", name: "Jake Kim", handle: "@jakekim", role: "👑 Community Owner", roleLevel: 5, date: "Mar 1, 2022", status: "Online" },
-    { id: 102, av: "SL", name: "Sara Lee", handle: "@saralee", role: "🛡 Community Manager", roleLevel: 4, date: "Jun 12, 2022", status: "Away" },
-    { id: 103, av: "AM", name: "Alex Morgan", handle: "@alexm", role: "🔨 Moderator", roleLevel: 3, date: "Jan 5, 2023", status: "Online" },
-    { id: 104, av: "TJ", name: "Tom Jones", handle: "@tomj", role: "📅 Event Manager", roleLevel: 2, date: "Feb 10, 2023", status: "Offline" },
-    { id: 105, av: "RK", name: "Raj Kumar", handle: "@rajk", role: "✅ Verified Member", roleLevel: 1, date: "Mar 15, 2023", status: "Online" },
-    { id: 106, av: "EB", name: "Emily Blunt", handle: "@emilyb", role: "👤 Member", roleLevel: 1, date: "Apr 20, 2023", status: "Offline" },
-    { id: 107, av: "CD", name: "Chris Doe", handle: "@chrisd", role: "👤 Member", roleLevel: 1, date: "May 25, 2023", status: "Online" },
-    { id: 108, av: "MJ", name: "Mary Jane", handle: "@maryj", role: "👤 Member", roleLevel: 1, date: "Jun 30, 2023", status: "Away" },
-    { id: 109, av: "PB", name: "Peter Parker", handle: "@peterp", role: "👤 Member", roleLevel: 1, date: "Jul 5, 2023", status: "Online" },
-    { id: 110, av: "BW", name: "Bruce Wayne", handle: "@brucew", role: "✅ Verified Member", roleLevel: 1, date: "Aug 10, 2023", status: "Offline" },
-    { id: 111, av: "CK", name: "Clark Kent", handle: "@clarkk", role: "👤 Member", roleLevel: 1, date: "Sep 15, 2023", status: "Online" },
-    { id: 112, av: "DP", name: "Diana Prince", handle: "@dianap", role: "🔨 Moderator", roleLevel: 3, date: "Oct 20, 2023", status: "Online" },
-    { id: 113, av: "BA", name: "Barry Allen", handle: "@barrya", role: "👤 Member", roleLevel: 1, date: "Nov 25, 2023", status: "Away" },
-    { id: 114, av: "HJ", name: "Hal Jordan", handle: "@halj", role: "👤 Member", roleLevel: 1, date: "Dec 30, 2023", status: "Offline" },
-    { id: 115, av: "AC", name: "Arthur Curry", handle: "@arthurc", role: "👤 Member", roleLevel: 1, date: "Jan 5, 2024", status: "Online" },
+    { id: 101, av: "RK", name: "Rahul Kumar", handle: "@rahulk", role: "👑 Community Owner", roleLevel: 5, date: "Mar 1, 2022", status: "Online" },
+    { id: 102, av: "AK", name: "Arjun Kumar", handle: "@arjunk", role: "👤 Member", roleLevel: 1, date: "Jun 12, 2022", status: "Online" },
   ],
 
   events: [
@@ -66,12 +53,12 @@ let state = {
   reports: [
     { id: 4821, user: "BadActor_X", reason: "🚫 Hate Speech", status: "Pending" },
     { id: 4820, user: "SpamBot99", reason: "📢 Spam", status: "Pending" },
-    { id: 4819, user: "ToxicGamer", reason: "Harassment", status: "Resolved", resolvedBy: "Sara Lee" },
+    { id: 4819, user: "ToxicGamer", reason: "Harassment", status: "Resolved", resolvedBy: "Rahul Kumar" },
   ],
 
   modHistory: [
-    { id: 1, mod: "Sara Lee", target: "ToxicGamer", action: "Warned", date: "Oct 24, 2023" },
-    { id: 2, mod: "Alex Morgan", target: "SpamBot99", action: "Deleted Messages", date: "Oct 23, 2023" },
+    { id: 1, mod: "Rahul Kumar", target: "ToxicGamer", action: "Warned", date: "Oct 24, 2023" },
+    { id: 2, mod: "Arjun Kumar", target: "SpamBot99", action: "Deleted Messages", date: "Oct 23, 2023" },
   ],
 
   roles: [

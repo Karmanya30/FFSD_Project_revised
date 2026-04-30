@@ -1,57 +1,20 @@
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+﻿<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>NexusHub – Report Content</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
-<link href="../css/global.css" rel="stylesheet"/>
-<link href="../css/pages/report.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="../css/global.css" rel="stylesheet">
+<link href="../css/components/sidebar.css" rel="stylesheet">
+<link href="../css/pages/report.css" rel="stylesheet">
 </head>
 <body>
-<!-- ─── APP RAIL ─── -->
-<aside class="app-rail">
-  <div class="rail-logo">⬡</div>
-  
-  <div class="rail-divider"></div>
-  
-  <!-- Main Nav -->
-  <a href="dashboard.html" class="rail-item" data-tooltip="Home">🏠</a>
-  <a href="discovery.html" class="rail-item" data-tooltip="Discover">🔍</a>
-  <a href="events.html" class="rail-item" data-tooltip="Events">📅<div class="notif-dot" style="background:var(--gold);width:6px;height:6px;"></div></a>
 
-  <a href="profile-settings.html" class="rail-item" data-tooltip="Settings">⚙️</a>
-  
-  <div class="rail-divider"></div>
-  
-  <!-- Communities -->
-  <div class="rail-item rail-comm grad-purple" data-tooltip="Pro Gamers">
-    ⚡<div class="rail-dot bg-dot-green"></div>
-  </div>
-  <div class="rail-item rail-comm grad-orange" data-tooltip="RPG Tavern">
-    🎨<div class="rail-dot bg-dot-green"></div>
-  </div>
-  <div class="rail-item rail-comm grad-cyan" data-tooltip="GameZone">
-    🎮<div class="rail-dot bg-dot-orange"></div>
-  </div>
-  <div class="rail-item rail-comm grad-green" data-tooltip="FPS Masters">
-    🌿<div class="rail-dot bg-dot-gray"></div>
-  </div>
-  <div class="rail-item rail-comm grad-pink" data-tooltip="SpeedRunners">
-    🎵<div class="rail-dot bg-dot-green"></div>
-  </div>
-  <div class="rail-item rail-comm grad-violet" data-tooltip="Strategy Gods">
-    📚<div class="rail-dot bg-dot-gray"></div>
-  </div>
-  <a href="create-community.html" class="rail-item" data-tooltip="Create Community" style="background:rgba(255,255,255,0.05);color:var(--text-1);font-weight:600;border-radius:14px;">✚</a>
-  
-  <div class="rail-footer">
-    <div class="rail-avatar" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">AM<div class="rail-dot bg-dot-green" style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-sidebar);"></div></div>
-  </div>
-</aside>
-<!-- ─── MAIN ─── -->
-<div class="main">
+<!-- ─── APP SHELL ─── -->
+<div class="app-shell">
+  <div id="sidebar-container"></div>
+
+  <!-- ─── MAIN ─── -->
+  <div class="main">
 <header class="header">
 <div class="breadcrumb">
 <span>Pro Gamers</span>
@@ -60,10 +23,10 @@
 <span class="sep">›</span>
 <span class="current">🚩 Report Content</span>
 </div>
-<div class="header-actions">
-<div class="icon-btn">🔔<div class="notif-dot"></div></div>
-<div class="header-avatar">AM</div>
-</div>
+      <div class="header-actions">
+        <div class="icon-btn" onclick="toggleNotifications(event)">🔔<div class="notif-dot"></div></div>
+        <div class="header-avatar" onclick="window.location.href='profile-settings.html'">RK</div>
+      </div>
 </header>
 <div class="page-wrap">
 <div class="report-container">
@@ -258,7 +221,7 @@
 </div>
 </div>
 <div class="confirm-row">
-<input id="confirmCheck" onchange="document.getElementById('submitBtn').disabled=!this.checked" type="checkbox"/>
+<input id="confirmCheck" onchange="document.getElementById('submitBtn').disabled=!this.checked" type="checkbox">
 <label for="confirmCheck">I confirm that this report is <strong>accurate and made in good faith</strong>. I understand that submitting false or malicious reports is a violation of NexusHub's Terms of Service and may result in action against my account.</label>
 </div>
 <div class="btn-row">
@@ -285,8 +248,11 @@
 </div>
 </div>
 </div>
-<script src="../js/components/app-rail.js"></script>
+
+<script src="../js/core/auth.js"></script>
 <script src="../js/pages/report.js"></script>
 <script src="../js/components/notifications.js"></script>
-</body>
-</html>
+
+
+<script src="../js/components/sidebar.js"></script>
+</body></html>

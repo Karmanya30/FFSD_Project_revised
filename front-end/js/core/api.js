@@ -16,18 +16,15 @@ const API_BASE = 'http://localhost:3000/api';
 // Centralized mock data to keep the fetch logic clean
 const MOCK_DATA = {
     '/chat/history': [
-        { sender: "System Bot", message: "Welcome to the Pro Gamers channel! 👋", role: "bot", timestamp: "10:00 AM" },
-        { sender: "ProGamer99", message: "Anyone up for a raid in the #gaming channel later?", role: "member", timestamp: "10:05 AM" },
-        { sender: "Sara Lee", message: "Check out the new #announcements for the hackathon rules.", role: "mod", timestamp: "10:12 AM" }
+        { sender: "Rahul Kumar", message: "Welcome to the Pro Gamers channel! 👋", role: "superuser", timestamp: "10:00 AM" },
+        { sender: "Arjun Kumar", message: "Anyone up for a raid later?", role: "member", timestamp: "10:05 AM" }
     ],
     '/moderation/reports': [
-        { id: 1, user: "ToxicPlayer", reason: "Harassment", reportedBy: "User_88", status: "Pending", time: "5m ago" },
-        { id: 2, user: "SpamBot", reason: "Phishing links", reportedBy: "System", status: "Flagged", time: "12m ago" },
-        { id: 3, user: "Troll_X", reason: "Hate Speech", reportedBy: "Alex Morgan", status: "In Review", time: "1h ago" }
+        { id: 1, user: "Arjun Kumar", reason: "Spam", reportedBy: "Rahul Kumar", status: "Pending", time: "5m ago" }
     ],
     '/user/notifications': [
-        { id: 101, type: 'mention', from: 'Jake Kim', text: 'mentioned you in #general', time: '2m ago', unread: true },
-        { id: 102, type: 'reaction', from: 'Sara Lee', text: 'reacted ❤️ to your message', time: '15m ago', unread: true }
+        { id: 101, type: 'mention', from: 'Rahul Kumar', text: 'mentioned you in #general', time: '2m ago', unread: true },
+        { id: 102, type: 'reaction', from: 'Arjun Kumar', text: 'reacted ❤️ to your message', time: '15m ago', unread: true }
     ]
 };
 
