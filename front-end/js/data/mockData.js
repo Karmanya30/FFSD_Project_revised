@@ -15,7 +15,7 @@ function getDefaultData() {
     return {
         // ── USERS ──
         users: [
-            { id: 'u1', name: 'Rahul Kumar', handle: 'rahulk', email: 'rahul@email.com', avatar: 'RK', bg: 'linear-gradient(135deg,#5B6EF5,#8B5CF6)', role: 'superuser', status: 'active', joined: 'Jan 12, 2023', communities: 2, warnings: 0, bans: 0, violations: 0 },
+            { id: 'u1', name: 'Rahul Kumar', handle: 'rahulk', email: 'rahul@email.com', avatar: 'RK', bg: 'linear-gradient(135deg,#5B6EF5,#8B5CF6)', role: 'admin', status: 'active', joined: 'Jan 12, 2023', communities: 2, warnings: 0, bans: 0, violations: 0 },
             { id: 'u2', name: 'Arjun Kumar', handle: 'arjunk', email: 'arjun@email.com', avatar: 'AK', bg: 'linear-gradient(135deg,#34D399,#059669)', role: 'gamer', status: 'active', joined: 'Feb 3, 2023', communities: 2, warnings: 0, bans: 0, violations: 0 }
         ],
 
@@ -50,7 +50,7 @@ function getDefaultData() {
 
         // ── MESSAGES (Chat) ──
         messages: [
-            { id: 'm1', channelId: 'ch1', userId: 'u1', sender: 'Rahul Kumar', message: 'Welcome to the Pro Gamers channel! 👋', role: 'superuser', timestamp: '2026-03-30T10:00:00' },
+            { id: 'm1', channelId: 'ch1', userId: 'u1', sender: 'Rahul Kumar', message: 'Welcome to the Pro Gamers channel! 👋', role: 'admin', timestamp: '2026-03-30T10:00:00' },
             { id: 'm2', channelId: 'ch1', userId: 'u2', sender: 'Arjun Kumar', message: 'Anyone up for a raid later?', role: 'gamer', timestamp: '2026-03-30T10:05:00' }
         ],
 
@@ -66,7 +66,7 @@ function getDefaultData() {
             { id: 'n2', type: 'reaction', from: 'Arjun Kumar', text: 'reacted ❤️ to your message', time: '15m ago', unread: true }
         ],
 
-        // ── PLATFORM CONFIG (Super User only) ──
+        // ── PLATFORM CONFIG (System Admin only) ──
         platformConfig: {
             autoModEnabled: true,
             autoModAccuracy: 97.3,

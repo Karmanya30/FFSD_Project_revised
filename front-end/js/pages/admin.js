@@ -359,9 +359,9 @@ window.location.href = 'landing.html';
 // 9. INITIALIZATION
 // ==========================================
 document.addEventListener('DOMContentLoaded', async () => {
-    // STRICT access control: Only Superusers allowed here
-    if (!requireRole(['superuser'])) {
-        document.body.innerHTML = '<h1>403 Forbidden</h1><p>Superuser access required.</p>';
+    // STRICT access control: Only Admins allowed here
+    if (!requireRole(['admin'])) {
+        document.body.innerHTML = '<h1>403 Forbidden</h1><p>Admin access required.</p>';
         return;
     }
 

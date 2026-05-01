@@ -57,8 +57,8 @@ let state = {
   ],
 
   modHistory: [
-    { id: 1, mod: "Rahul Kumar", target: "ToxicGamer", action: "Warned", date: "Oct 24, 2023" },
-    { id: 2, mod: "Arjun Kumar", target: "SpamBot99", action: "Deleted Messages", date: "Oct 23, 2023" },
+    { id: 1, moderator: "Rahul Kumar", target: "ToxicGamer", action: "Warned", date: "Oct 24, 2023" },
+    { id: 2, moderator: "Arjun Kumar", target: "SpamBot99", action: "Deleted Messages", date: "Oct 23, 2023" },
   ],
 
   roles: [
@@ -261,7 +261,7 @@ function renderReports() {
 function renderModHistory() {
   const list = document.getElementById("modHistoryList");
   list.innerHTML = state.modHistory.map(h => `
-    <tr><td>${h.date}</td><td>${h.mod}</td><td>${h.action}</td><td>${h.target}</td></tr>
+    <tr><td>${h.date}</td><td>${h.moderator}</td><td>${h.action}</td><td>${h.target}</td></tr>
   `).join("");
 }
 

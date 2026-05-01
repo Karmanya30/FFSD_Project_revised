@@ -133,8 +133,11 @@
 
         <!-- Messages Scroller -->
         <div class="messages-wrap" id="messagesWrap">
+          <div class="chat-empty-state" id="chatEmptyState" style="display: none;">
+            <div class="empty-icon">👋</div>
+            <div class="empty-text">Start the conversation</div>
+          </div>
           <div class="day-divider"><span>May 1, 2026</span></div>
-          
           <div class="msg-group">
             <div class="msg-av grad-purple">RK</div>
             <div class="msg-body">
@@ -201,9 +204,17 @@
       </main>
 
       <!-- ─── RIGHT: MEMBER SIDEBAR ─── -->
-      <aside class="mem-sidebar open" id="memberSidebar">
+      <aside class="mem-sidebar" id="memberSidebar">
         <div class="mem-header">
-          <div class="mem-title">Members <span class="online-count">3</span></div>
+          <div class="mem-title">
+            <span class="mem-title-text">Members</span>
+            <div class="mem-toggle-area">
+              <span class="online-count">3</span>
+              <button class="mem-toggle-btn" onclick="toggleMemberSidebar()" title="Toggle Sidebar">
+                <span class="toggle-icon">❯</span>
+              </button>
+            </div>
+          </div>
         </div>
         <div class="mem-list">
           <div class="mem-group-title">Online — 3</div>
@@ -218,7 +229,7 @@
             <div class="m-av grad-orange">AK <span class="m-stat" style="background:var(--success)"></span></div>
             <div class="m-info">
               <div class="m-name">Arjun Kumar</div>
-              <div class="m-role-tag mod-c">Moderator</div>
+              <div class="m-role-tag moderator-c">Moderator</div>
             </div>
           </div>
           <div class="mem-row">

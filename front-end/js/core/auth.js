@@ -2,17 +2,18 @@
  * Gameunity — Authentication & RBAC Logic
  * Handles session persistence via localStorage and Role-Based Access Control (RBAC).
  * 
- * ROLES (4 total):
- *   superuser — System Admin, full platform access
- *   mod       — System Moderator, end-user + mod panel
+ * ROLES (3 total):
+ *   admin     — System Admin, full platform access
+ *   moderator — System Moderator, end-user + mod panel
  *   gamer     — Regular user, can create/own communities
- *   audience  — View-only user
  * 
  * COMMUNITY OWNERSHIP:
  *   A gamer who creates a community becomes its Owner.
  *   Ownership is stored in localStorage as `nexus_owned_communities`.
  *   Owners see the Community Manager panel for that community only.
- *   Super Users can manage ANY community.
+ *   Admin can manage ANY community.
+ *
+ * Store final role in: localStorage.getItem("role")
  */
 
 // ==========================================
@@ -23,28 +24,27 @@
  * Role power levels — higher number = more access
  */
 const ROLE_LEVELS = {
-    audience:  1,
-    gamer:     2,
-    mod:       3,
-    superuser: 4
+    gamer:     1,
+    moderator: 2,
+    admin:     3
 };
 
 /**
  * Page-level access rules — which roles can access each page
  */
 const PAGE_ACCESS = {
-    'dashboard.html':           ['audience', 'gamer', 'mod', 'superuser'],
-    'discovery.html':           ['audience', 'gamer', 'mod', 'superuser'],
-    'events.html':              ['audience', 'gamer', 'mod', 'superuser'],
-    'chat.html':                ['audience', 'gamer', 'mod', 'superuser'],
-    'profile-settings.html':    ['audience', 'gamer', 'mod', 'superuser'],
-    'community-page.html':      ['audience', 'gamer', 'mod', 'superuser'],
-    'create-community.html':    ['gamer', 'mod', 'superuser'],
-    'community-manager.html':   ['gamer', 'superuser'],  // gamer only if they own the community
-    'mod-panel.html':           ['mod', 'superuser'],
-    'superuser-dashboard.html': ['superuser'],
-    'report.html':              ['audience', 'gamer', 'mod', 'superuser'],
-    'appeal.html':              ['audience', 'gamer', 'mod', 'superuser'],
+    'dashboard.html':           ['gamer', 'moderator', 'admin'],
+    'discovery.html':           ['gamer', 'moderator', 'admin'],
+    'events.html':              ['gamer', 'moderator', 'admin'],
+    'chat.html':                ['gamer', 'moderator', 'admin'],
+    'profile-settings.html':    ['gamer', 'moderator', 'admin'],
+    'community-page.html':      ['gamer', 'moderator', 'admin'],
+    'create-community.html':    ['gamer', 'moderator', 'admin'],
+    'community-manager.html':   ['gamer', 'admin'],  // gamer only if they own the community
+    'mod-panel.html':           ['moderator', 'admin'],
+    'admin-dashboard.html':     ['admin'],
+    'report.html':              ['gamer', 'moderator', 'admin'],
+    'appeal.html':              ['gamer', 'moderator', 'admin'],
 };
 
 // ==========================================
@@ -54,24 +54,28 @@ const PAGE_ACCESS = {
 /**
  * Initializes a user session
  * @param {string} username 
- * @param {string} role - 'superuser', 'mod', 'gamer', or 'audience'
+ * @param {string} role - 'admin', 'moderator', or 'gamer'
  */
 function loginUser(username, role) {
+    // Assign role directly
+    const normalizedRole = role;
+
     const user = { 
         username, 
-        role, 
+        role: normalizedRole, 
         loginTime: new Date().toISOString(),
         token: `mock_token_${Math.random().toString(36).substr(2)}`
     };
     
     localStorage.setItem('nexus_user', JSON.stringify(user));
+    localStorage.setItem('role', normalizedRole);
     
-    console.log(`%c[AUTH] %cLogged in as: ${username} (${role})`, "color: #10B981; font-weight: bold;", "color: #fff;");
+    console.log(`%c[AUTH] %cLogged in as: ${username} (${normalizedRole})`, "color: #10B981; font-weight: bold;", "color: #fff;");
     return user;
 }
 
 /**
- * Retrieves the currently logged-in user object
+ * Retrieves the currently logged-in user object and normalizes the role
  * @returns {Object|null}
  */
 function getCurrentUser() {
@@ -79,10 +83,13 @@ function getCurrentUser() {
     if (!session) return null;
     
     try {
-        return JSON.parse(session);
+        const user = JSON.parse(session);
+        localStorage.setItem('role', user.role); // Sync to global role
+        return user;
     } catch (e) {
         console.error("Malformed session data. Clearing storage.");
         localStorage.removeItem('nexus_user');
+        localStorage.removeItem('role');
         return null;
     }
 }
@@ -92,6 +99,7 @@ function getCurrentUser() {
  */
 function logoutUser() {
     localStorage.removeItem('nexus_user');
+    localStorage.removeItem('role');
     
     if (window.toast) window.toast("Logging out...");
     
@@ -107,7 +115,7 @@ function logoutUser() {
 /**
  * Acts as a Gatekeeper for protected pages.
  * Use this at the top of your page-specific JS files.
- * @param {Array} allowedRoles - e.g., ['mod', 'superuser']
+ * @param {Array} allowedRoles - e.g., ['moderator', 'admin']
  * @returns {boolean}
  */
 function requireRole(allowedRoles) {
@@ -120,8 +128,8 @@ function requireRole(allowedRoles) {
         return false;
     }
 
-    // 2. Super User bypasses all role checks
-    if (user.role === 'superuser') return true;
+    // 2. Admin bypasses all role checks
+    if (user.role === 'admin') return true;
 
     // 3. Role check
     if (allowedRoles && !allowedRoles.includes(user.role)) {
@@ -135,13 +143,13 @@ function requireRole(allowedRoles) {
 
 /**
  * Non-blocking check for UI elements (e.g., showing/hiding buttons)
- * Super User always has permission.
+ * Admin always has permission.
  * @param {string|Array} roles - single role string or array of roles
  */
 function hasPermission(roles) {
     const user = getCurrentUser();
     if (!user) return false;
-    if (user.role === 'superuser') return true;
+    if (user.role === 'admin') return true;
     if (Array.isArray(roles)) return roles.includes(user.role);
     return user.role === roles;
 }
@@ -192,8 +200,8 @@ function isOwnerOfCommunity(communityName) {
     const user = getCurrentUser();
     if (!user) return false;
 
-    // Super User can manage any community
-    if (user.role === 'superuser') return true;
+    // Admin can manage any community
+    if (user.role === 'admin') return true;
 
     // Only gamers can own communities
     if (user.role !== 'gamer') return false;
@@ -225,8 +233,8 @@ function getAccessiblePanels() {
 
     const panels = [];
 
-    // Mod Panel — mod only
-    if (user.role === 'mod') {
+    // Mod Panel — moderator only
+    if (user.role === 'moderator' || user.role === 'admin') {
         panels.push({
             id: 'mod-panel',
             label: 'Mod Panel',
@@ -236,14 +244,14 @@ function getAccessiblePanels() {
         });
     }
 
-    // Super User Dashboard — superuser only
-    if (user.role === 'superuser') {
+    // Admin Dashboard — admin only
+    if (user.role === 'admin') {
         panels.push({
-            id: 'super-dashboard',
+            id: 'admin-dashboard',
             label: 'System Admin',
             icon: '🔴',
-            href: 'superuser-dashboard.html',
-            badgeClass: 'rbac-badge-super'
+            href: 'admin-dashboard.html',
+            badgeClass: 'rbac-badge-admin'
         });
     }
 
@@ -257,12 +265,11 @@ function getAccessiblePanels() {
  */
 function getRoleDisplay(role) {
     const displays = {
-        superuser: { label: 'SUPER USER', icon: '🛡️', color: '#ef4444' },
-        mod:       { label: 'MODERATOR',  icon: '🔍', color: '#f59e0b' },
-        gamer:     { label: 'GAMER',      icon: '🎮', color: '#8b5cf6' },
-        audience:  { label: 'AUDIENCE',   icon: '👀', color: '#64748b' }
+        admin:     { label: 'ADMIN',      icon: '🛡️', color: '#ef4444' },
+        moderator: { label: 'MODERATOR',  icon: '🔍', color: '#f59e0b' },
+        gamer:     { label: 'GAMER',      icon: '🎮', color: '#8b5cf6' }
     };
-    return displays[role] || displays.audience;
+    return displays[role] || displays.gamer;
 }
 
 // ==========================================

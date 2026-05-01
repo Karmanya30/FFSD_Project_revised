@@ -222,7 +222,7 @@
                 <div class="msg-body">
                   <div class="msg-header">
                     <span class="msg-uname">Rahul Kumar</span>
-                    <span class="msg-role role-mod-badge">Mod</span>
+                    <span class="msg-role role-moderator-badge">Moderator</span>
                     <span class="msg-time">10:08 AM</span>
                   </div>
                   <div class="msg-text">
@@ -327,7 +327,7 @@
                     <div class="m-status bg-dot-green"></div>
                   </div>
                   <div class="m-name">Arjun Kumar</div>
-                  <span class="m-role role-mod">Mod</span>
+                  <span class="m-role role-moderator">Moderator</span>
                 </div>
               </div>
             </div>
@@ -494,7 +494,7 @@
           }
         }
 
-        // Show/hide Manage & Delete buttons based on ownership and superuser role
+        // Show/hide Manage & Delete buttons based on ownership and admin role
         const userObj = window.getCurrentUser ? window.getCurrentUser() : null;
         const manageBtn = document.getElementById("rbacManageBtn");
         const deleteBtn = document.getElementById("rbacDeleteBtn");
@@ -505,13 +505,13 @@
           const isOwner = window.isOwnerOfCommunity
             ? window.isOwnerOfCommunity(communityName)
             : false;
-          const isSuperUser = userObj.role === "superuser";
+          const isAdmin = userObj.role === "admin";
 
-          if (manageBtn && (isOwner || isSuperUser)) {
+          if (manageBtn && (isOwner || isAdmin)) {
             manageBtn.classList.remove("hidden");
             manageBtn.href = `community-manager.html?name=${communityName}`;
           }
-          if (deleteBtn && (isOwner || isSuperUser)) {
+          if (deleteBtn && (isOwner || isAdmin)) {
             deleteBtn.classList.remove("hidden");
           }
         }

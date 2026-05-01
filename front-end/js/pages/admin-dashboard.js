@@ -1,5 +1,5 @@
 /**
- * Gameunity — Super User Dashboard Logic
+ * Gameunity — System Admin Dashboard Logic
  * Full system-level CRUD across all modules.
  */
 
@@ -20,12 +20,12 @@ let toastTimer;
 // ==========================================
 (function checkAuth() {
     const user = JSON.parse(localStorage.getItem('nexus_user'));
-    if (!user || (user.role !== 'superuser' && user.role !== 'admin')) {
+    if (!user || user.role !== 'admin') {
         window.location.href = 'login.html';
         return;
     }
     const usernameEl = document.getElementById('su-username');
-    if (usernameEl) usernameEl.textContent = user.username || 'Super Admin';
+    if (usernameEl) usernameEl.textContent = user.username || 'System Admin';
 })();
 
 // ==========================================
@@ -154,7 +154,7 @@ window.openAddUserModal = function() {
         <div class="form-group"><label class="form-label">Handle</label><input class="form-input" id="m-handle" placeholder="e.g. johndoe"/></div>
         <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="m-email" type="email" placeholder="user@example.com"/></div>
         <div class="form-group"><label class="form-label">Role</label><select class="form-input" id="m-role">
-            <option value="gamer">Gamer</option><option value="audience">Audience</option><option value="manager">Community Manager</option><option value="mod">Moderator</option><option value="admin">Admin</option><option value="superuser">Super User</option>
+            <option value="gamer">Gamer</option><option value="manager">Community Manager</option><option value="moderator">Moderator</option><option value="admin">Admin</option>
         </select></div>`;
     document.getElementById('modal-confirm').textContent = 'Create User';
     document.getElementById('modal').style.display = 'flex';
@@ -171,11 +171,9 @@ window.openEditUserModal = function(userId) {
         <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="m-email" type="email" value="${esc(user.email)}"/></div>
         <div class="form-group"><label class="form-label">Role</label><select class="form-input" id="m-role">
             <option value="gamer" ${user.role==='gamer'?'selected':''}>Gamer</option>
-            <option value="audience" ${user.role==='audience'?'selected':''}>Audience</option>
             <option value="manager" ${user.role==='manager'?'selected':''}>Community Manager</option>
-            <option value="mod" ${user.role==='mod'?'selected':''}>Moderator</option>
+            <option value="moderator" ${user.role==='moderator'?'selected':''}>Moderator</option>
             <option value="admin" ${user.role==='admin'?'selected':''}>Admin</option>
-            <option value="superuser" ${user.role==='superuser'?'selected':''}>Super User</option>
         </select></div>
         <div class="form-group"><label class="form-label">Status</label><select class="form-input" id="m-status">
             <option value="active" ${user.status==='active'?'selected':''}>Active</option>
@@ -190,7 +188,7 @@ window.banUser = function(userId) {
     const user = NexusCRUD.getById('users', userId);
     if (!user) return;
     NexusCRUD.update('users', userId, { status: 'banned', bans: (user.bans || 0) + 1 });
-    NexusCRUD.logAction({ action: 'User Banned', target: user.name, moderator: 'Super Admin', reason: 'Banned by Super User', community: 'Platform' });
+    NexusCRUD.logAction({ action: 'User Banned', target: user.name, moderator: 'System Admin', reason: 'Banned by System Admin', community: 'Platform' });
     toast('🚫 ' + user.name + ' has been banned');
     renderUsers();
 };
@@ -199,7 +197,7 @@ window.restoreUser = function(userId) {
     const user = NexusCRUD.getById('users', userId);
     if (!user) return;
     NexusCRUD.update('users', userId, { status: 'active' });
-    NexusCRUD.logAction({ action: 'User Restored', target: user.name, moderator: 'Super Admin', reason: 'Restored by Super User', community: 'Platform' });
+    NexusCRUD.logAction({ action: 'User Restored', target: user.name, moderator: 'System Admin', reason: 'Restored by System Admin', community: 'Platform' });
     toast('✅ ' + user.name + ' has been restored');
     renderUsers();
 };
@@ -209,7 +207,7 @@ window.deleteUser = function(userId) {
     if (!user) return;
     if (!confirm('Are you sure you want to delete ' + user.name + '? This cannot be undone.')) return;
     NexusCRUD.remove('users', userId);
-    NexusCRUD.logAction({ action: 'User Deleted', target: user.name, moderator: 'Super Admin', reason: 'Deleted by Super User', community: 'Platform' });
+    NexusCRUD.logAction({ action: 'User Deleted', target: user.name, moderator: 'System Admin', reason: 'Deleted by System Admin', community: 'Platform' });
     toast('🗑️ ' + user.name + ' has been deleted');
     renderUsers();
 };
@@ -304,7 +302,7 @@ window.deleteCommunity = function(commId) {
     if (!comm) return;
     if (!confirm('Delete community "' + comm.name + '"? This cannot be undone.')) return;
     NexusCRUD.remove('communities', commId);
-    NexusCRUD.logAction({ action: 'Community Deleted', target: comm.name, moderator: 'Super Admin', reason: 'Deleted by Super User', community: comm.name });
+    NexusCRUD.logAction({ action: 'Community Deleted', target: comm.name, moderator: 'System Admin', reason: 'Deleted by System Admin', community: comm.name });
     toast('🗑️ Community "' + comm.name + '" deleted');
     renderCommunities();
 };
@@ -348,7 +346,7 @@ window.filterReports = function(filter, el) {
 
 window.resolveReport = function(reportId) {
     NexusCRUD.update('reports', reportId, { status: 'resolved' });
-    NexusCRUD.logAction({ action: 'Report Resolved', target: reportId, moderator: 'Super Admin', reason: 'Resolved by Super User', community: 'Platform' });
+    NexusCRUD.logAction({ action: 'Report Resolved', target: reportId, moderator: 'System Admin', reason: 'Resolved by System Admin', community: 'Platform' });
     toast('✅ Report resolved');
     renderReports();
 };
@@ -565,7 +563,7 @@ window.confirmModal = function() {
             status: 'active', joined: new Date().toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}),
             communities: 0, warnings: 0, bans: 0, violations: 0
         });
-        NexusCRUD.logAction({ action: 'User Created', target: name, moderator: 'Super Admin', reason: 'Created by Super User', community: 'Platform' });
+        NexusCRUD.logAction({ action: 'User Created', target: name, moderator: 'System Admin', reason: 'Created by System Admin', community: 'Platform' });
         toast('✅ User "' + name + '" created');
         renderUsers();
     }
@@ -591,7 +589,7 @@ window.confirmModal = function() {
             privacy: document.getElementById('m-privacy')?.value || 'public',
             members: 0, status: 'active', createdBy: 'u9'
         });
-        NexusCRUD.logAction({ action: 'Community Created', target: name, moderator: 'Super Admin', reason: 'Created by Super User', community: name });
+        NexusCRUD.logAction({ action: 'Community Created', target: name, moderator: 'System Admin', reason: 'Created by System Admin', community: name });
         toast('✅ Community "' + name + '" created');
         renderCommunities();
     }
@@ -716,5 +714,5 @@ function toast(msg) {
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     renderOverview();
-    console.log('%c[Gameunity] %cSuper User Dashboard loaded.', 'color: #5B6EF5; font-weight: bold;', 'color: #F59E0B;');
+    console.log('%c[Gameunity] %cSystem Admin Dashboard loaded.', 'color: #5B6EF5; font-weight: bold;', 'color: #F59E0B;');
 });

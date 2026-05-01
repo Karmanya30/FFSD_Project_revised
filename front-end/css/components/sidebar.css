@@ -16,8 +16,8 @@
   --sb-text:        #9ca3af;
   --sb-text-h:      #f3f4f6;
   --sb-accent:      #6366f1;
-  --sb-dur:         0.22s;
-  --sb-ease:        cubic-bezier(0.4, 0, 0.2, 1);
+  --sb-dur:         0.2s;
+  --sb-ease:        ease;
 }
 
 /* ── Container reset ─────────────────────────────── */
@@ -219,10 +219,10 @@
   overflow: hidden;
   white-space: nowrap;
   transition:
-    background var(--sb-dur),
-    color      var(--sb-dur),
-    border-color var(--sb-dur),
-    transform  0.12s ease;
+    background var(--sb-dur) var(--sb-ease),
+    color      var(--sb-dur) var(--sb-ease),
+    border-color var(--sb-dur) var(--sb-ease),
+    transform  var(--sb-dur) var(--sb-ease);
 }
 
 /* Hover state */
@@ -230,7 +230,11 @@
   background: var(--sb-surface-h);
   color: var(--sb-text-h);
   border-color: rgba(99, 102, 241, 0.12);
-  transform: translateX(2px);
+}
+
+/* Click feedback */
+.sb-item:active {
+  transform: scale(0.97);
 }
 
 /* Active state */
@@ -239,7 +243,7 @@
   color: var(--sb-text-h) !important;
   border-color: var(--sb-active-bd) !important;
   font-weight: 600;
-  transform: none !important;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.15); /* Slight glow */
 }
 
 /* Active indicator pill */
@@ -263,7 +267,7 @@
   text-align: center;
   flex-shrink: 0;
   filter: saturate(0.5);
-  transition: filter var(--sb-dur), transform 0.18s ease;
+  transition: all var(--sb-dur) var(--sb-ease);
 }
 
 .sb-item:hover  .sb-item__icon,
@@ -272,7 +276,7 @@
 }
 
 .sb-item:hover .sb-item__icon {
-  transform: scale(1.12);
+  transform: scale(1.08);
 }
 
 /* Label */
@@ -465,12 +469,12 @@
 }
 
 /* Tooltips on collapsed items */
-.nexus-sidebar.collapsed .sb-item[data-tooltip] {
+.nexus-sidebar.collapsed .sb-item[data-sb-tooltip] {
   position: relative;
 }
 
-.nexus-sidebar.collapsed .sb-item[data-tooltip]::after {
-  content: attr(data-tooltip);
+.nexus-sidebar.collapsed .sb-item[data-sb-tooltip]::after {
+  content: attr(data-sb-tooltip);
   position: fixed;
   left: calc(var(--sb-w-collapsed) + 10px);
   top: auto;
@@ -491,7 +495,7 @@
   transition: opacity 0.15s ease;
 }
 
-.nexus-sidebar.collapsed .sb-item[data-tooltip]:hover::after {
+.nexus-sidebar.collapsed .sb-item[data-sb-tooltip]:hover::after {
   opacity: 1;
 }
 
@@ -598,8 +602,8 @@
   }
 
   /* Enable tooltip in auto-collapsed state too */
-  .nexus-sidebar:not(.mobile-open) .sb-item[data-tooltip]::after {
-    content: attr(data-tooltip);
+  .nexus-sidebar:not(.mobile-open) .sb-item[data-sb-tooltip]::after {
+    content: attr(data-sb-tooltip);
     position: fixed;
     left: calc(var(--sb-w-collapsed) + 10px);
     transform: translateY(-50%);
@@ -619,7 +623,7 @@
     transition: opacity 0.15s ease;
   }
 
-  .nexus-sidebar:not(.mobile-open) .sb-item[data-tooltip]:hover::after {
+  .nexus-sidebar:not(.mobile-open) .sb-item[data-sb-tooltip]:hover::after {
     opacity: 1;
   }
 }
@@ -662,7 +666,7 @@
   .nexus-sidebar.mobile-open .sb-section { padding: 0 8px; }
 
   /* Kill tooltips in open drawer */
-  .nexus-sidebar.mobile-open .sb-item[data-tooltip]::after { display: none; }
+  .nexus-sidebar.mobile-open .sb-item[data-sb-tooltip]::after { display: none; }
 
   .sb-mobile-open  { display: flex; }
   .sb-toggle-btn   { display: none; }

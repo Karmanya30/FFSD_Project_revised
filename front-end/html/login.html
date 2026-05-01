@@ -79,10 +79,9 @@
                     <label class="form-label" for="login-role">Sign in as</label>
                     <select class="form-input form-select" id="login-role" required>
                         <option value="">Select your role</option>
-                        <option value="superuser">🛡️ Super User (System Admin)</option>
-                        <option value="mod">🔍 Moderator</option>
+                        <option value="admin">🛡️ Admin (System Administrator)</option>
+                        <option value="moderator">🔍 Moderator</option>
                         <option value="gamer">🎮 Gamer</option>
-                        <option value="audience">👀 Audience</option>
                     </select>
                     <span class="form-error" id="login-role-error"></span>
                 </div>
@@ -95,11 +94,9 @@
                 <!-- Quick Demo Access -->
                 <div class="demo-personas">
                     <span class="demo-label">Quick access:</span>
-                    <button type="button" class="demo-pill" onclick="quickLogin('rajat', 'superuser')">🛡️ RAJAT JAIN</button>
-                    <button type="button" class="demo-pill" onclick="quickLogin('karmanya', 'mod')">🔍 KARMANYA BELSARE</button>
-                    <button type="button" class="demo-pill" onclick="quickLogin('awadhesh', 'gamer')">🎮 AWADHESH</button>
-                    <button type="button" class="demo-pill" onclick="quickLogin('anant', 'gamer')">🎮 ANANT GARG</button>
-                    <button type="button" class="demo-pill" onclick="quickLogin('sanidhya', 'audience')">👀 SANIDHYA JOSHI</button>
+                    <button type="button" class="demo-pill" onclick="quickLogin('rajat', 'admin')">🛡️ RAJAT JAIN (ADMIN)</button>
+                    <button type="button" class="demo-pill" onclick="quickLogin('karmanya', 'moderator')">🔍 KARMANYA (MOD)</button>
+                    <button type="button" class="demo-pill" onclick="quickLogin('awadhesh', 'gamer')">🎮 AWADHESH (GAMER)</button>
                 </div>
 
                 <div class="auth-divider">
@@ -182,7 +179,6 @@
                     <select class="form-input form-select" id="reg-role" required>
                         <option value="">Select account type</option>
                         <option value="gamer">🎮 Gamer</option>
-                        <option value="audience">👀 Audience</option>
                     </select>
                     <span class="form-error" id="reg-role-error"></span>
                 </div>

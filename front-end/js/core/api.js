@@ -16,7 +16,7 @@ const API_BASE = 'http://localhost:3000/api';
 // Centralized mock data to keep the fetch logic clean
 const MOCK_DATA = {
     '/chat/history': [
-        { sender: "Rahul Kumar", message: "Welcome to the Pro Gamers channel! 👋", role: "superuser", timestamp: "10:00 AM" },
+        { sender: "Rahul Kumar", message: "Welcome to the Pro Gamers channel! 👋", role: "admin", timestamp: "10:00 AM" },
         { sender: "Arjun Kumar", message: "Anyone up for a raid later?", role: "member", timestamp: "10:05 AM" }
     ],
     '/moderation/reports': [

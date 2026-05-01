@@ -4,12 +4,12 @@
  * Architecture: section-based, role-inherited navigation.
  *
  * Tier hierarchy (additive):
- *   audience / gamer  →  USER tier
- *   mod               →  USER + MODERATION section
- *   superuser         →  USER + MODERATION + ADMIN section
+ *   gamer             →  USER tier
+ *   moderator         →  USER + MODERATION section
+ *   admin             →  USER + MODERATION + ADMIN section
  *
- * Session key: localStorage['nexus_user']  →  { username, role, ... }
- * Roles used:  audience | gamer | mod | superuser
+ * Session key: localStorage['role'] and localStorage['nexus_user']
+ * Roles used:  gamer | moderator | admin
  */
 
 // ═══════════════════════════════════════════════════
@@ -31,53 +31,42 @@ const NAV_USER = {
   ],
 };
 
-/** Extra items for audience (no Chat) — overrides gamer's Chat item */
-const NAV_AUDIENCE_ITEMS = ['dashboard', 'discovery', 'events', 'profile'];
-
-/** Moderation section — only mod + superuser */
+/** Moderation section — only moderator + admin */
 const NAV_MOD = {
   label: 'Moderation',
-  sectionId: 'mod',
+  sectionId: 'moderator',
   items: [
-    { id: 'mod-panel', name: 'Mod Panel', link: 'mod-panel.html', icon: '🛡️', badge: 'MOD' },
+    { id: 'mod-panel', name: 'Moderator Panel', link: 'mod-panel.html', icon: '🛡️', badge: 'MODERATOR' },
     { id: 'report',    name: 'Reports',   link: 'report.html',    icon: '🚩' },
   ],
 };
 
-/** Admin section — only superuser */
+/** Admin section — only admin */
 const NAV_ADMIN = {
   label: 'Admin',
   sectionId: 'admin',
   items: [
-    { id: 'superuser', name: 'Admin Dashboard',   link: 'superuser-dashboard.html', icon: '⚡', badge: 'ADMIN' },
-    { id: 'users',     name: 'User Management',   link: 'superuser-dashboard.html#users',   icon: '👤' },
-    { id: 'comms',     name: 'Communities',       link: 'superuser-dashboard.html#comms',   icon: '🏘️' },
-    { id: 'settings',  name: 'Platform Settings', link: 'superuser-dashboard.html#settings',icon: '🔧' },
-    { id: 'audit',     name: 'Audit Logs',        link: 'superuser-dashboard.html#audit',   icon: '📋' },
+        { id: 'admin-dash',name: 'Admin Dashboard',   link: 'admin-dashboard.html', icon: '⚡', badge: 'ADMIN' },
+        { id: 'users',     name: 'User Management',   link: 'admin-dashboard.html#users',   icon: '👤' },
+        { id: 'comms',     name: 'Communities',       link: 'admin-dashboard.html#comms',   icon: '🏘️' },
+        { id: 'settings',  name: 'Platform Settings', link: 'admin-dashboard.html#settings',icon: '🔧' },
+        { id: 'audit',     name: 'Audit Logs',        link: 'admin-dashboard.html#audit',   icon: '📋' },
   ],
 };
 
 /**
  * Returns ordered section array for the given role.
- * audience / gamer  →  [USER-subset]
- * mod               →  [USER] + [MOD]
- * superuser         →  [USER] + [MOD] + [ADMIN]
+ * gamer      →  [USER]
+ * moderator  →  [USER] + [MOD]
+ * admin      →  [USER] + [MOD] + [ADMIN]
  */
 function _getSections(role) {
-  const isAudience  = role === 'audience';
-  const isMod       = role === 'mod' || role === 'superuser';
-  const isSuperuser = role === 'superuser';
+  const isModerator = role === 'moderator' || role === 'admin';
+  const isAdmin     = role === 'admin';
 
-  // Build user section: audience has no Chat
-  let userItems = NAV_USER.items;
-  if (isAudience) {
-    userItems = NAV_USER.items.filter(i => NAV_AUDIENCE_ITEMS.includes(i.id));
-  }
-  const userSection = { ...NAV_USER, items: userItems };
-
-  const sections = [userSection];
-  if (isMod)       sections.push(NAV_MOD);
-  if (isSuperuser) sections.push(NAV_ADMIN);
+  const sections = [NAV_USER];
+  if (isModerator) sections.push(NAV_MOD);
+  if (isAdmin)     sections.push(NAV_ADMIN);
 
   return sections;
 }
@@ -87,10 +76,9 @@ function _getSections(role) {
 // ═══════════════════════════════════════════════════
 
 const ROLE_META = {
-  audience:  { tier: 'Member',      color: '#9ca3af', accent: null,      badge: null     },
   gamer:     { tier: 'Gamer',       color: '#34d399', accent: '#34d399', badge: null     },
-  mod:       { tier: 'Moderator',   color: '#818cf8', accent: '#6366f1', badge: 'MOD'   },
-  superuser: { tier: 'Admin',       color: '#f59e0b', accent: '#f59e0b', badge: 'ADMIN' },
+  moderator: { tier: 'Moderator',   color: '#818cf8', accent: '#6366f1', badge: 'MODERATOR'   },
+  admin:     { tier: 'Admin',       color: '#f59e0b', accent: '#f59e0b', badge: 'ADMIN' },
 };
 
 // ═══════════════════════════════════════════════════
@@ -117,7 +105,7 @@ function _renderItem(item) {
     <a href="${item.link}"
        class="sb-item${active ? ' sb-item--active' : ''}"
        data-id="${item.id}"
-       data-tooltip="${item.name}">
+       data-sb-tooltip="${item.name}">
       <span class="sb-item__icon" aria-hidden="true">${item.icon}</span>
       <span class="sb-item__label">${item.name}</span>
       ${badge}
@@ -138,11 +126,11 @@ function _renderSection(section) {
 }
 
 function _renderSidebar(user) {
-  const role     = (user?.role) || 'audience';
+  const role     = localStorage.getItem('role') || user?.role || 'gamer';
   const username = user?.username || 'Guest';
   const initials = username.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
                    || username.slice(0, 2).toUpperCase();
-  const meta     = ROLE_META[role] || ROLE_META.audience;
+  const meta     = ROLE_META[role] || ROLE_META.gamer;
   const sections = _getSections(role);
   const colClass = _collapsed ? ' collapsed' : '';
 
@@ -158,13 +146,12 @@ function _renderSidebar(user) {
       <!-- ── Brand ── -->
       <div class="sb-brand">
         <div class="sb-brand__logo" onclick="location.href='dashboard.html'"
-             title="Gameunity home" aria-label="Go to dashboard">
+             aria-label="Go to dashboard">
           <span class="sb-brand__icon">🎮</span>
           <span class="sb-brand__name">Gameunity</span>
         </div>
         <button class="sb-toggle-btn" id="sbToggleBtn"
                 onclick="SidebarComponent.toggle(event)"
-                title="Toggle sidebar (Ctrl+B)"
                 aria-label="Toggle sidebar">
           <svg class="sb-toggle-icon" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="2.5"
@@ -183,7 +170,6 @@ function _renderSidebar(user) {
       <div class="sb-profile" id="sbProfile">
         <div class="sb-profile__av${meta.accent ? '' : ''}"
              onclick="location.href='profile-settings.html'"
-             title="${username} — go to profile"
              style="${meta.accent ? `box-shadow:0 0 0 2px ${meta.accent}55` : ''}">
           ${initials}
         </div>
@@ -203,7 +189,6 @@ function _renderSidebar(user) {
         </div>
         <button class="sb-profile__logout"
                 onclick="typeof logoutUser === 'function' ? logoutUser() : (location.href='login.html')"
-                title="Log out"
                 aria-label="Log out">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -281,6 +266,7 @@ window.SidebarComponent = {
     user.role = role;
     if (!user.username) user.username = 'Demo User';
     localStorage.setItem('nexus_user', JSON.stringify(user));
+    localStorage.setItem('role', role);
     window.location.reload();
   },
 
