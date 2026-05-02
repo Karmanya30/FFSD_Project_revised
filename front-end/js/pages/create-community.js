@@ -268,21 +268,49 @@ window.nextStep = function () {
     return;
   }
 
-  // Community Creation Wizard Progression
-  if (currentStep < totalSteps) {
-    window.goStep(currentStep + 1);
-  } else {
-    // Submitting on final step
-    if (window.isStepValid(currentStep)) {
-      window.toast("🎉 Community created! Redirecting to dashboard…");
+    // Community Creation Wizard Progression
+    if (currentStep < totalSteps) {
+        window.goStep(currentStep + 1);
+    } else {
+        // Submitting on final step
+        if (window.isStepValid(currentStep)) {
+            // ✅ Gathering and Saving Data
+            const communityName = document.getElementById('comm-name').value;
+            const communityDesc = document.getElementById('comm-desc').value;
+            const categoryEl = document.querySelector('.cat-item.on .cat-lbl');
+            const category = categoryEl ? categoryEl.textContent : 'Other';
 
-      // --- NEW REDIRECT LOGIC ---
-      setTimeout(() => {
-        window.location.href = "dashboard.html";
-      }, 1500); // 1.5 second delay so the user can read the toast
-      // --------------------------
+            const newComm = {
+                name: communityName,
+                slug: communityName.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                description: communityDesc,
+                category: category,
+                icon: document.getElementById('pc-ico').textContent || '⚡',
+                members: 1,
+                online: 1,
+                grad: 'grad-purple', // Default for new
+                status: 'active'
+            };
+
+            if (window.NexusCRUD) {
+                window.NexusCRUD.create('communities', newComm);
+                
+                // ✅ Auto-join the newly created community
+                let joinedList = JSON.parse(localStorage.getItem('nexus_joined_communities') || '["pro-gamers"]');
+                if (!joinedList.includes(newComm.slug)) {
+                    joinedList.push(newComm.slug);
+                    localStorage.setItem('nexus_joined_communities', JSON.stringify(joinedList));
+                }
+            }
+
+            window.toast("🎉 Community created successfully! Redirecting…");
+
+            // ✅ Redirect AFTER save
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 1500); 
+        }
     }
-  }
 };
 
 window.prevStep = function() {

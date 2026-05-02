@@ -85,28 +85,13 @@
             </div>
           </div>
 
-          <div class="ch-category" data-category="coding">
-            <div class="ch-group-lbl" onclick="toggleCategory('coding')">
-              <span class="cat-arrow">▾</span> DEVELOPMENT
-            </div>
-            <div class="ch-category-items">
-              <div class="ch-row" onclick="setChannel(this, 'frontend', '#')">
-                <span class="ch-type">#</span>
-                <span class="ch-lbl">frontend</span>
-              </div>
-              <div class="ch-row" onclick="setChannel(this, 'code-review', '#')">
-                <span class="ch-type">#</span>
-                <span class="ch-lbl">code-review</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div class="ch-footer">
           <div class="user-av grad-purple">RK</div>
           <div class="user-av-name">Rahul Kumar</div>
-          <div class="mic-btn" title="Mute Mic">🎤</div>
-          <div class="mic-btn" title="Deafen">🎧</div>
+          <div class="mic-btn" id="muteMicBtn" title="Mute Mic" onclick="toggleMute(this)">🎤</div>
+          <div class="mic-btn" id="deafenBtn" title="Deafen" onclick="toggleDeafen(this)">🎧</div>
         </div>
       </nav>
 
@@ -184,8 +169,8 @@
             </div>
             <div class="input-row">
               <button class="tb-btn" title="Attach File" onclick="triggerFileAttach()">➕</button>
-              <textarea id="msgInput" placeholder="Message #general" rows="1" onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); /* send logic */ }"></textarea>
-              <button class="send-btn">🚀</button>
+              <textarea id="msgInput" placeholder="Message #general" rows="1" onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }"></textarea>
+              <button class="send-btn" onclick="sendMessage()">🚀</button>
             </div>
           </div>
           <input type="file" id="fileInput" style="display:none" onchange="handleFileAttach(this)" />
