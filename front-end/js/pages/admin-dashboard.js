@@ -33,15 +33,35 @@ let toastTimer;
 // ==========================================
 window.navTo = function(page, el) {
     currentPage = page;
+
+    // Update URL hash without jumping
+    const newHash = page === 'overview' ? '' : '#' + page;
+    if (window.location.hash !== newHash) {
+        history.pushState(null, null, newHash || window.location.pathname);
+    }
+
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sb-item').forEach(n => n.classList.remove('sb-item--active'));
     document.querySelectorAll('#suSubSidebar .nav-item').forEach(n => n.classList.remove('active'));
 
     const target = document.getElementById('page-' + page);
     if (target) target.classList.add('active');
+
+    const sbMap = { overview: 'admin-dash', users: 'users', communities: 'communities', moderation: 'report', 'events-mgmt': 'events', audit: 'audit', config: 'settings' };
+    const sbId = sbMap[page];
+    if (sbId) {
+        const sbItem = document.querySelector(`.sb-item[data-id="${sbId}"]`);
+        if (sbItem) sbItem.classList.add('sb-item--active');
+    }
+
     if (el) el.classList.add('active');
 
     const titles = { overview: 'System Overview', users: 'User Management', communities: 'Communities', moderation: 'Moderation', 'events-mgmt': 'Events Management', audit: 'Audit Log', config: 'Platform Configuration' };
     document.getElementById('page-title').textContent = titles[page] || page;
+
+    const icons = { overview: '⚡', users: '👤', communities: '🏘️', moderation: '🛡️', 'events-mgmt': '📅', audit: '📋', config: '🔧' };
+    const pageIcon = document.getElementById('page-icon');
+    if (pageIcon) pageIcon.textContent = icons[page] || '⚡';
 
     // Re-render on nav
     if (page === 'overview') renderOverview();
@@ -53,6 +73,7 @@ window.navTo = function(page, el) {
     if (page === 'config') renderConfig();
 
     if (window.innerWidth <= 900) window.closeSuSidebarDrawer?.();
+    if (window.innerWidth <= 900 && window.SidebarComponent) window.SidebarComponent.closeMobile?.();
 };
 
 // ==========================================
@@ -61,7 +82,7 @@ window.navTo = function(page, el) {
 function renderOverview() {
     const users = NexusCRUD.getAll('users');
     const comms = NexusCRUD.getAll('communities');
-    const reports = NexusCRUD.getWhere('reports', r => r.status === 'pending' || r.status === 'review');
+    const reports = NexusCRUD.getWhere('reports', r => r.status === 'pending' || r.status === 'review' || r.status === 'escalated');
     const events = NexusCRUD.getWhere('events', e => e.status === 'upcoming');
     const auditLog = NexusCRUD.getAll('auditLog');
 
@@ -712,7 +733,19 @@ function toast(msg) {
 // ==========================================
 // 15. INIT
 // ==========================================
+function handleHash() {
+    const hash = window.location.hash.substring(1);
+    const validPages = ['overview', 'users', 'communities', 'moderation', 'events-mgmt', 'audit', 'config'];
+    if (hash && validPages.includes(hash)) {
+        navTo(hash);
+    } else {
+        navTo('overview');
+    }
+}
+
+window.addEventListener('hashchange', handleHash);
+
 document.addEventListener('DOMContentLoaded', () => {
-    renderOverview();
+    setTimeout(handleHash, 50);
     console.log('%c[Gameunity] %cSystem Admin Dashboard loaded.', 'color: #5B6EF5; font-weight: bold;', 'color: #F59E0B;');
 });

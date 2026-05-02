@@ -48,8 +48,7 @@ const NAV_ADMIN = {
   items: [
         { id: 'admin-dash',name: 'Admin Dashboard',   link: 'admin-dashboard.html', icon: '⚡', badge: 'ADMIN' },
         { id: 'users',     name: 'User Management',   link: 'admin-dashboard.html#users',   icon: '👤' },
-        { id: 'comms',     name: 'Communities',       link: 'admin-dashboard.html#comms',   icon: '🏘️' },
-        { id: 'settings',  name: 'Platform Settings', link: 'admin-dashboard.html#settings',icon: '🔧' },
+        { id: 'communities',name: 'Communities',       link: 'admin-dashboard.html#communities',   icon: '🏘️' },
         { id: 'audit',     name: 'Audit Logs',        link: 'admin-dashboard.html#audit',   icon: '📋' },
   ],
 };
