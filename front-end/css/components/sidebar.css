@@ -261,18 +261,19 @@
 
 /* Icon */
 .sb-item__icon {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
   font-size: 16px;
   width: 26px;
   min-width: 26px;
   text-align: center;
   flex-shrink: 0;
-  filter: saturate(0.5);
+  opacity: 0.65;
   transition: all var(--sb-dur) var(--sb-ease);
 }
 
 .sb-item:hover  .sb-item__icon,
 .sb-item--active .sb-item__icon {
-  filter: saturate(1);
+  opacity: 1;
 }
 
 .sb-item:hover .sb-item__icon {

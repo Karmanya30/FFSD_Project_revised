@@ -1,3 +1,31 @@
+:root {
+  --bg-main: #0F172A;
+  --bg-sidebar: #1E293B;
+  --bg-card: #111827;
+  --bg-card-hover: #1E293B;
+  --bg-deep: #0F172A;
+  --bg-input: #111827;
+  --bg-hover: #1E293B;
+  --border: #1F2937;
+  --border-2: #374151;
+  --text-1: #E5E7EB;
+  --text-2: #9CA3AF;
+  --text-3: #6B7280;
+  --text-primary: #E5E7EB;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --accent: #3B82F6;
+  --accent-hover: #2563EB;
+  --accent-2: #2563EB;
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --warn: #F59E0B;
+  --gold: #F59E0B;
+  --danger: #EF4444;
+  --error: #EF4444;
+  --info: #38BDF8;
+}
+
 .panel-layout {
   flex: 1;
   display: flex;

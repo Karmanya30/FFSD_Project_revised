@@ -25,14 +25,12 @@
       <div class="main">
         <header class="header">
             <div class="header-left">
-                <button type="button" class="su-drawer-trigger" id="suDrawerOpenBtn" onclick="openSuSidebarDrawer()" aria-label="Open navigation menu">
-                    <span aria-hidden="true">☰</span>
-                </button>
+                <div class="header-icon" id="page-icon">⚡</div>
                 <h1 class="header-title" id="page-title">System Overview</h1>
                 <span class="header-badge">ADMIN</span>
             </div>
             <div class="header-right">
-                <div class="icon-btn" onclick="toast('🔔 No new system alerts')">🔔</div>
+
                 <div class="search-box">
                     <input type="text" placeholder="Search anything..." id="globalSearch" oninput="handleGlobalSearch(this.value)">
                 </div>
@@ -43,7 +41,7 @@
         <!-- ═══ OVERVIEW PAGE ═══ -->
         <div class="page active" id="page-overview">
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card" onclick="navTo('users')" style="cursor: pointer;" title="Go to User Management">
                     <div class="stat-icon bg-purple">👤</div>
                     <div class="stat-data">
                         <div class="stat-value" id="sv-users">0</div>
@@ -51,7 +49,7 @@
                     </div>
                     <div class="stat-trend up">↑ 12.4%</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="navTo('communities')" style="cursor: pointer;" title="Go to Communities">
                     <div class="stat-icon bg-cyan">🏘️</div>
                     <div class="stat-data">
                         <div class="stat-value" id="sv-comms">0</div>
@@ -59,7 +57,7 @@
                     </div>
                     <div class="stat-trend up">↑ 8.2%</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="navTo('moderation')" style="cursor: pointer;" title="Go to Moderation">
                     <div class="stat-icon bg-orange">🚩</div>
                     <div class="stat-data">
                         <div class="stat-value" id="sv-reports">0</div>
@@ -67,7 +65,7 @@
                     </div>
                     <div class="stat-trend down">↓ 3.1%</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="navTo('events-mgmt')" style="cursor: pointer;" title="Go to Events Management">
                     <div class="stat-icon bg-green">📅</div>
                     <div class="stat-data">
                         <div class="stat-value" id="sv-events">0</div>
@@ -145,7 +143,7 @@
                 </div>
                 <div class="toolbar-right">
                     <input type="text" class="search-input" placeholder="Search communities..." oninput="searchComms(this.value)">
-                    <button class="btn-primary" onclick="openAddCommModal()">+ Create Community</button>
+
                 </div>
             </div>
             <div class="comm-grid" id="comm-grid"></div>
@@ -182,7 +180,7 @@
         <div class="page" id="page-events-mgmt">
             <div class="page-toolbar">
                 <div class="toolbar-right" style="margin-left:auto;">
-                    <button class="btn-primary" onclick="openAddEventModal()">+ Create Event</button>
+
                 </div>
             </div>
             <div class="events-grid" id="events-grid"></div>
