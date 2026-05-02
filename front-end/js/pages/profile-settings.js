@@ -45,7 +45,7 @@ function loadUserData() {
     const sidebarHandle = document.getElementById('navHandle');
     const initials = (user.firstName?.[0] || "") + (user.lastName?.[0] || "");
 
-    if (sidebarName) sidebarName.innerText = `${user.firstName} ${user.lastName}`.trim() || user.username;
+    if (sidebarName) sidebarName.innerText = user.fullName || `${user.firstName} ${user.lastName}`.trim() || user.username;
     if (sidebarHandle) sidebarHandle.innerText = `@${user.handle || user.username}`;
 
     // Update Avatars
@@ -53,8 +53,15 @@ function loadUserData() {
     avatarIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
-            el.innerText = initials || user.username.substring(0, 2).toUpperCase();
-            el.style.backgroundImage = 'none';
+            if (user.avatar) {
+                el.style.backgroundImage = `url(${user.avatar})`;
+                el.style.backgroundSize = 'cover';
+                el.style.backgroundPosition = 'center';
+                el.innerText = '';
+            } else {
+                el.innerText = initials || user.username.substring(0, 2).toUpperCase();
+                el.style.backgroundImage = 'none';
+            }
         }
     });
 
@@ -62,7 +69,7 @@ function loadUserData() {
     const fieldMap = {
         'inpFirstName': user.firstName || "",
         'inpLastName': user.lastName || "",
-        'inpFullName': `${user.firstName} ${user.lastName}`.trim() || "",
+        'inpFullName': user.fullName || `${user.firstName} ${user.lastName}`.trim() || "",
         'inpHandle': user.handle || user.username || "",
         'inpEmail': user.email || "",
         'inpPhone': user.phone || ""
@@ -100,6 +107,42 @@ window.saveAllChanges = function () {
     const saveBtn = document.getElementById('btnSaveAll');
     if (!saveBtn) return;
 
+    const reqFields = ['inpFirstName', 'inpLastName', 'inpHandle', 'inpFullName', 'inpEmail', 'inpPhone'];
+    let hasError = false;
+
+    // Check required fields
+    reqFields.forEach(id => {
+        const el = document.getElementById(id);
+        const errEl = document.getElementById('err-' + id);
+        if (el && el.value.trim() === "") {
+            hasError = true;
+            if (errEl) { errEl.style.display = 'block'; }
+        } else if (errEl) {
+            errEl.style.display = 'none';
+        }
+    });
+
+    // Check email contains '@'
+    const emailEl = document.getElementById('inpEmail');
+    if (emailEl && emailEl.value.trim() !== "" && !emailEl.value.includes('@')) {
+        hasError = true;
+        const errEl = document.getElementById('err-inpEmail');
+        if (errEl) { errEl.textContent = "Valid email is required (must contain '@')."; errEl.style.display = 'block'; }
+    }
+
+    // Check phone has no letters
+    const phoneEl = document.getElementById('inpPhone');
+    if (phoneEl && phoneEl.value.trim() !== "" && /[a-zA-Z]/.test(phoneEl.value)) {
+        hasError = true;
+        const errEl = document.getElementById('err-inpPhone');
+        if (errEl) { errEl.textContent = "Phone number cannot contain letters."; errEl.style.display = 'block'; }
+    }
+
+    if (hasError) {
+        window.toast("❌ Please fix errors before saving.");
+        return;
+    }
+
     saveBtn.textContent = "Saving...";
     
     const sessionUser = window.getCurrentUser();
@@ -107,10 +150,15 @@ window.saveAllChanges = function () {
         ...sessionUser,
         firstName: document.getElementById('inpFirstName').value.trim(),
         lastName: document.getElementById('inpLastName').value.trim(),
+        fullName: document.getElementById('inpFullName').value.trim(),
         handle: document.getElementById('inpHandle').value.trim(),
         email: document.getElementById('inpEmail').value.trim(),
-        phone: document.getElementById('inpPhone').value.trim()
+        phone: document.getElementById('inpPhone').value.trim(),
+        avatar: window.tempAvatarData !== undefined ? window.tempAvatarData : sessionUser.avatar
     };
+    if (window.tempAvatarData === null) {
+        delete updatedUser.avatar;
+    }
 
     // Update Local Storage
     localStorage.setItem('nexus_user', JSON.stringify(updatedUser));
@@ -130,45 +178,74 @@ window.saveAllChanges = function () {
         hasUnsavedChanges = false;
         window.toast("✅ Profile settings updated.");
         loadUserData();
+        if (window.SidebarComponent) window.SidebarComponent.init();
     }, 800);
 };
 
 // --- 5. MODALS & STATUS ---
 window.openPhotoModal = function(e) {
     if (e) e.stopPropagation();
-    const modal = document.getElementById('photoModal');
-    if (modal) modal.classList.add('active');
+    let fileInput = document.getElementById('profileImageInput');
+    if (!fileInput) {
+        fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.id = 'profileImageInput';
+        fileInput.style.display = 'none';
+        fileInput.accept = 'image/*';
+        fileInput.onchange = window.handleFileSelect;
+        document.body.appendChild(fileInput);
+    }
+    fileInput.click();
 };
 
-window.closePhotoModal = function() {
-    const modal = document.getElementById('photoModal');
-    if (modal) modal.classList.remove('active');
-};
+window.closePhotoModal = function() {}; // No longer needed but kept to avoid breaking HTML references
 
 window.handleFileSelect = function(e) {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = function(event) {
-        const preview = document.getElementById('filePreview');
-        const img = document.getElementById('imgPreview');
-        const name = document.getElementById('fileName');
-        const btn = document.getElementById('btnApplyPhoto');
-        if (img) img.src = event.target.result;
-        if (name) name.textContent = file.name;
-        if (preview) preview.style.display = 'block';
-        if (btn) btn.disabled = false;
+        window.tempAvatarData = event.target.result;
+        const avatars = ['topBarAvatar', 'navMainAvatar', 'mainAvatarPreview'];
+        avatars.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.style.backgroundImage = `url(${event.target.result})`;
+                el.style.backgroundSize = 'cover';
+                el.style.backgroundPosition = 'center';
+                el.innerText = '';
+            }
+        });
+        window.toast("📷 Photo uploaded successfully!");
+        markAsDirty();
     };
     reader.readAsDataURL(file);
 };
 
-window.applyUploadedPhoto = function() {
-    window.toast("📷 Photo uploaded successfully!");
-    closePhotoModal();
-};
+window.applyUploadedPhoto = function() {}; // No longer needed
 
 window.removePhoto = function() {
+    window.tempAvatarData = null;
+    const sessionUser = window.getCurrentUser() || {};
+    const displayName = document.getElementById('inpFullName')?.value.trim() || sessionUser.fullName || `${sessionUser.firstName || ''} ${sessionUser.lastName || ''}`.trim() || sessionUser.username;
+    
+    let initials = "U";
+    if (document.getElementById('inpFirstName')?.value.trim() || document.getElementById('inpLastName')?.value.trim()) {
+        initials = (document.getElementById('inpFirstName').value.trim()?.[0] || "") + (document.getElementById('inpLastName').value.trim()?.[0] || "");
+    } else if (displayName && displayName !== 'Guest') {
+        initials = displayName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || displayName.slice(0, 2).toUpperCase();
+    }
+    
+    const avatars = ['topBarAvatar', 'navMainAvatar', 'mainAvatarPreview'];
+    avatars.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.backgroundImage = 'none';
+            el.innerText = initials;
+        }
+    });
     window.toast("🗑️ Profile photo removed.");
+    markAsDirty();
 };
 
 window.setStatus = function(el) {
