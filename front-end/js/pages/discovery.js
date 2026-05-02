@@ -1,29 +1,30 @@
-/**
- * Gameunity — Community Discovery Logic
- * Handles dynamic data rendering, category filtering, and real-time search.
- */
-
 // --- 1. STATE ---
 let activeCategory = 'all';
 let searchQuery = '';
+let currentSort = 'active'; // Default sort
 
 // --- 2. DYNAMIC RENDERING ---
 function renderCommunities() {
     updateHeroStats();
+    renderFeaturedCommunity();
+    
     const grid = document.getElementById('commGrid');
     if (!grid) return;
 
     const allCommunities = window.NexusCRUD.getAll('communities');
-    const joinedList = JSON.parse(localStorage.getItem('nexus_joined_communities') || '["pro-gamers"]');
+    const joinedList = JSON.parse(localStorage.getItem('nexus_joined_communities') || '[]');
 
-    // Filter by category and search query
-    const filtered = allCommunities.filter(c => {
+    // 1. Filter by category and search query
+    let filtered = allCommunities.filter(c => {
         const matchesCat = activeCategory === 'all' || c.category.toLowerCase() === activeCategory;
         const matchesSearch = !searchQuery || 
             c.name.toLowerCase().includes(searchQuery) || 
             c.description.toLowerCase().includes(searchQuery);
         return matchesCat && matchesSearch;
     });
+
+    // 2. Apply Gaming-Focused Sorting
+    filtered = applySortingLogic(filtered);
 
     // Update count display
     const countDisplay = document.getElementById('gridCount');
@@ -55,7 +56,7 @@ function renderCommunities() {
                     </div>
                     <div>
                         <div class="c-name">${c.name}</div>
-                        <div class="c-cat">${c.category} · Platform</div>
+                        <div class="c-cat">${c.category} · Gaming</div>
                     </div>
                     <div class="c-desc">${c.description}</div>
                     <div class="c-footer">
@@ -73,6 +74,56 @@ function renderCommunities() {
     }).join('');
 }
 
+function renderFeaturedCommunity() {
+    const container = document.getElementById('featuredSection');
+    if (!container) return;
+
+    const allCommunities = window.NexusCRUD.getAll('communities');
+    if (allCommunities.length === 0) {
+        container.style.display = 'none';
+        return;
+    }
+
+    // Rule: Pick the highest activity community
+    const feat = [...allCommunities].sort((a, b) => b.online - a.online)[0];
+    const joinedList = JSON.parse(localStorage.getItem('nexus_joined_communities') || '[]');
+    const isJoined = joinedList.includes(feat.slug);
+
+    container.innerHTML = `
+        <div class="featured-banner" onclick="navigateToCommunity(event, '${feat.slug}')">
+            <div class="feat-icon ${feat.grad}">${feat.icon}</div>
+            <div class="feat-info">
+                <div class="feat-name">${feat.name}</div>
+                <div class="feat-desc">${feat.description}</div>
+                <div class="feat-meta">
+                    <div class="feat-tag"><span class="dot"></span> ${feat.online.toLocaleString()} online</div>
+                    <div class="feat-tag">👥 ${feat.members.toLocaleString()} members</div>
+                    <div class="feat-tag">📍 ${feat.category} · Gaming</div>
+                </div>
+            </div>
+            <button class="btn-join-feat ${isJoined ? 'joined' : ''}" onclick="toggleJoin(event, '${feat.slug}')">
+                ${isJoined ? '✓ Joined' : 'Join Community'}
+            </button>
+        </div>
+    `;
+}
+
+function applySortingLogic(list) {
+    switch (currentSort) {
+        case 'active':
+            return list.sort((a, b) => b.online - a.online);
+        case 'members':
+            return list.sort((a, b) => b.members - a.members);
+        case 'trending':
+            // Simple heuristic for trending: high activity relative to size
+            return list.sort((a, b) => (b.online / b.members) - (a.online / a.members));
+        case 'newest':
+            return list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        default:
+            return list;
+    }
+}
+
 function updateHeroStats() {
     const allCommunities = window.NexusCRUD.getAll('communities');
     const totalMembers = allCommunities.reduce((sum, c) => sum + c.members, 0);
@@ -82,13 +133,25 @@ function updateHeroStats() {
     const stats = document.querySelectorAll('.h-stat strong');
     if (stats.length >= 4) {
         stats[0].textContent = allCommunities.length.toLocaleString();
-        stats[1].textContent = (totalMembers / 1000).toFixed(1) + 'k'; 
+        stats[1].textContent = totalMembers > 1000 ? (totalMembers / 1000).toFixed(1) + 'k' : totalMembers; 
         stats[2].textContent = totalOnline.toLocaleString();
         stats[3].textContent = allEvents.length + '+';
     }
 }
 
 // --- 3. EVENT HANDLERS ---
+window.toggleSortDropdown = function() {
+    const dropdown = document.getElementById('sortDropdown');
+    dropdown.classList.toggle('show');
+};
+
+window.applySort = function(type, label) {
+    currentSort = type;
+    document.getElementById('sortBtn').textContent = `⇅ Sort: ${label}`;
+    document.getElementById('sortDropdown').classList.remove('show');
+    renderCommunities();
+};
+
 window.setChip = function(el, category) {
     document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
     el.classList.add('active');
@@ -102,26 +165,21 @@ window.filterCards = function() {
 };
 
 window.toggleJoin = function(event, slug) {
-    event.stopPropagation(); // Prevent card click navigation
+    event.stopPropagation();
     const btn = event.currentTarget;
-    let joinedList = JSON.parse(localStorage.getItem('nexus_joined_communities') || '["pro-gamers"]');
+    let joinedList = JSON.parse(localStorage.getItem('nexus_joined_communities') || '[]');
     const isJoined = joinedList.includes(slug);
 
     if (isJoined) {
         joinedList = joinedList.filter(s => s !== slug);
-        btn.classList.remove('joined');
-        btn.textContent = 'Join';
     } else {
         joinedList.push(slug);
-        btn.classList.add('joined');
-        btn.textContent = '✓ Joined';
         const comm = window.NexusCRUD.getAll('communities').find(c => c.slug === slug);
         if (window.toast) window.toast(`Welcome to ${comm.name}! ⚡`);
     }
 
     localStorage.setItem('nexus_joined_communities', JSON.stringify(joinedList));
-    
-    // Update the dashboard counts if possible
+    renderCommunities(); // Re-render to update all buttons (feat and grid)
     if (window.renderDashboard) window.renderDashboard();
     updateHeroStats();
 };
@@ -131,14 +189,18 @@ window.navigateToCommunity = function(event, slug) {
     window.location.href = `community-page.html?name=${slug}`;
 };
 
+// Close dropdown on click outside
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.sort-container')) {
+        document.getElementById('sortDropdown')?.classList.remove('show');
+    }
+});
+
 // --- 4. STARTUP ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Ensure store is ready
     if (window.NexusData) window.NexusData.getStore();
-    
     renderCommunities();
     
-    // Search focus shortcut
     window.addEventListener('keydown', (e) => {
         if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
             e.preventDefault();
@@ -146,5 +208,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    console.log("%c[Discovery] %cSynchronized with Store.", "color: #5B6EF5; font-weight: bold;", "color: #10B981;");
+    console.log("%c[Discovery] %cDynamic System Activated.", "color: #5B6EF5; font-weight: bold;", "color: #10B981;");
 });

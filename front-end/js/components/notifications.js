@@ -59,7 +59,12 @@ function renderDropdownContent() {
     }
 
     body.innerHTML = notifs.map(n => `
-        <div class="notif-item ${n.unread ? 'unread' : ''}">
+        <div class="notif-item ${n.unread ? 'unread' : ''}" 
+             data-id="${n.id}"
+             data-channel="${n.channel || 'general'}" 
+             role="button" 
+             tabindex="0"
+             aria-label="Notification from ${n.from || 'System'}">
             <div class="notif-icon">${n.type === 'mention' ? '💬' : (n.type === 'reaction' ? '❤️' : '🛡')}</div>
             <div class="notif-content">
                 <div class="notif-text"><strong>${n.from || 'System'}</strong> ${n.text}</div>
@@ -67,14 +72,36 @@ function renderDropdownContent() {
             </div>
         </div>
     `).join('');
+
+    // Attach click listeners for navigation
+    body.querySelectorAll('.notif-item').forEach(item => {
+        const handleNavigation = () => {
+            const id = item.getAttribute('data-id');
+            const channel = item.getAttribute('data-channel');
+            
+            // Mark as Read in Data Store
+            if (window.NexusCRUD) {
+                window.NexusCRUD.update('notifications', id, { unread: false });
+            }
+
+            console.log(`[Notifications] Marked ${id} as read. Navigating to channel: ${channel}`);
+            window.location.href = `chat.html?channel=${channel}`;
+        };
+
+        item.addEventListener('click', handleNavigation);
+        
+        // Support Enter key for accessibility
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleNavigation();
+        });
+    });
 }
 
 window.markAllNotifRead = function() {
     if (window.NexusCRUD) {
         const unread = window.NexusCRUD.getWhere('notifications', n => n.unread === true);
         unread.forEach(n => {
-            n.unread = false;
-            // In a real app, update the store here
+            window.NexusCRUD.update('notifications', n.id, { unread: false });
         });
     }
 
@@ -85,7 +112,7 @@ window.markAllNotifRead = function() {
         dot.style.display = 'none';
     });
     
-    if (window.toast) window.toast("Notifications marked as read.");
+    if (window.toast) window.toast("All notifications marked as read.");
 };
 
 document.addEventListener('click', (e) => {

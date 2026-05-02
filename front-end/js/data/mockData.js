@@ -9,7 +9,7 @@
 // 1. STORAGE KEY & INITIALIZATION
 // ==========================================
 const STORAGE_KEY = 'nexus_data_store';
-const DATA_VERSION = '1.1'; // Increment to force reset legacy data
+const DATA_VERSION = '1.2'; // Increment to force reset legacy data
 
 function getDefaultData() {
     return {
@@ -31,10 +31,9 @@ function getDefaultData() {
             { id: 'ch2', communityId: 'c1', name: 'announcements', type: 'text', description: 'Official announcements' }
         ],
 
-        // ── EVENTS ──
         events: [
-            { id: 'e1', title: 'Gaming Hackathon', communityId: 'c1', date: '2026-03-07', time: '2:00 PM', description: 'Monthly hackathon for all developers.', type: 'hackathon', attendees: 248, maxAttendees: 500, status: 'upcoming', createdBy: 'u1' },
-            { id: 'e2', title: 'UI Design Workshop', communityId: 'c2', date: '2026-03-10', time: '5:00 PM', description: 'Learn UI design for games.', type: 'workshop', attendees: 120, maxAttendees: 150, status: 'upcoming', createdBy: 'u2' }
+            { id: 'e1', title: 'Gaming Hackathon', communityId: 'c1', date: '2026-03-07', time: '2:00 PM', description: 'Monthly hackathon for all developers.', type: 'hackathon', category: 'Hackathon', attendees: 248, maxAttendees: 500, status: 'upcoming', createdBy: 'u1' },
+            { id: 'e2', title: 'UI Design Workshop', communityId: 'c2', date: '2026-03-10', time: '5:00 PM', description: 'Learn UI design for games.', type: 'workshop', category: 'Workshop', attendees: 120, maxAttendees: 150, status: 'upcoming', createdBy: 'u2' }
         ],
 
         // ── REPORTS ──
@@ -62,8 +61,8 @@ function getDefaultData() {
 
         // ── NOTIFICATIONS ──
         notifications: [
-            { id: 'n1', type: 'mention', from: 'Rahul Kumar', text: 'mentioned you in #general', time: '2m ago', unread: true },
-            { id: 'n2', type: 'reaction', from: 'Arjun Kumar', text: 'reacted ❤️ to your message', time: '15m ago', unread: true }
+            { id: 'n1', type: 'mention', from: 'Rahul Kumar', text: 'mentioned you in #general', channel: 'general', time: '2m ago', unread: true },
+            { id: 'n2', type: 'reaction', from: 'Arjun Kumar', text: 'reacted ❤️ to your message', channel: 'frontend', time: '15m ago', unread: true }
         ],
 
         // ── PLATFORM CONFIG (System Admin only) ──

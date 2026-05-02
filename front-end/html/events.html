@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html><html lang="en"><head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Gameunity – Events</title>
@@ -95,190 +95,49 @@
         </div>
       </div>
       <!-- Events Grid -->
-      <div class="events-grid">
-
-        <!-- 1. Tournament — Gaming Hackathon -->
-        <div class="ev-card delay-05">
-          <div class="ev-card-banner banner-cyan">
-            <div class="ev-card-banner-inner">🎮🎮</div>
-            <div class="ev-card-badges"><span class="ev-badge badge-free">Free</span></div>
-          </div>
-          <div class="ev-card-body">
-            <div class="ev-card-top">
-              <div class="ev-date-box">
-                <div class="ev-date-mon">Mar</div>
-                <div class="ev-date-day">07</div>
-              </div>
-              <div>
-                <div class="ev-card-title">Gaming Hackathon</div>
-                <div class="ev-card-comm u-extracted-256">
-                  <div class="ev-comm-av grad-purple">⚡</div>
-                  <div class="ev-comm-name">Pro Gamers</div>
-                </div>
-              </div>
-            </div>
-            <div class="ev-card-meta">
-              <div class="ev-meta-tag">⏰ 2:00 PM IST</div>
-              <div class="ev-meta-tag">🌐 Online</div>
-              <div class="ev-meta-tag">🏆 Hackathon</div>
-            </div>
-            <div class="ev-card-footer">
-              <div class="ev-attendees">👥 248 going</div>
-              <button class="btn-ev" aria-label="Register for event" onclick="toggleReg(this)">Register</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. Workshop — UI Design Workshop -->
-        <div class="ev-card delay-10">
-          <div class="ev-card-banner" style="background:linear-gradient(135deg,#1a0520,#3d0a35,#1a0530);">
-            <div class="ev-card-banner-inner">🎨🎨</div>
-            <div class="ev-card-badges"><span class="ev-badge badge-free">Free</span></div>
-          </div>
-          <div class="ev-card-body">
-            <div class="ev-card-top">
-              <div class="ev-date-box">
-                <div class="ev-date-mon">Mar</div>
-                <div class="ev-date-day">10</div>
-              </div>
-              <div>
-                <div class="ev-card-title">UI Design Workshop</div>
-                <div class="ev-card-comm u-extracted-256">
-                  <div class="ev-comm-av grad-cyan">🎮</div>
-                  <div class="ev-comm-name">GameZone</div>
-                </div>
-              </div>
-            </div>
-            <div class="ev-card-meta">
-              <div class="ev-meta-tag">⏰ 5:00 PM IST</div>
-              <div class="ev-meta-tag">📍 Chennai</div>
-              <div class="ev-meta-tag">🎓 Workshop</div>
-            </div>
-            <div class="ev-card-footer">
-              <div class="ev-attendees">👥 120 going</div>
-              <button class="btn-ev registered" onclick="toggleReg(this)">✓ Registered</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Load More Button -->
-        <div class="load-more-wrap" style="grid-column: 1 / -1; display:flex; justify-content:center; padding-top:12px;">
-          <button id="load-more-events-btn" class="btn-ghost" onclick="toggleLoadMoreEvents()">Load more</button>
-        </div>
-
+      <div class="events-grid" id="upcomingGrid">
+        <!-- Dynamic Cards Injected by events.js -->
       </div>
     </div>
+
   <!-- ── MY REGISTRATIONS TAB ── -->
   <div class="content" id="tab-registered">
     <div class="section-header">
       <div>
         <div class="section-title">🎟 My Registrations</div>
-        <div class="section-sub u-extracted-255">2 upcoming events you're registered for</div>
+        <div class="section-sub" id="reg-sub-header">0 upcoming events you're registered for</div>
       </div>
     </div>
-    <div class="reg-list">
-
-      <!-- Card 1 -->
-      <div class="reg-card">
-        <div class="reg-card-banner" style="background:linear-gradient(135deg,#0d1535,#1a0d3a,#0c2040);">
-          <div class="reg-card-banner-inner">🏆🏆</div>
-          <div class="reg-card-badges"><span class="ev-badge badge-free">Free</span><span class="ev-badge badge-online">Online</span></div>
-        </div>
-        <div class="reg-card-body">
-          <div class="reg-card-top">
-            <div class="reg-date-box">
-              <div class="reg-mon">Mar</div>
-              <div class="reg-day">07</div>
-            </div>
-            <div>
-              <div class="reg-title">Gaming Hackathon</div>
-              <div class="reg-comm">
-                <div class="reg-comm-av grad-purple">⚡</div>
-                <div class="reg-comm-name">Pro Gamers</div>
-              </div>
-            </div>
-          </div>
-          <div class="reg-meta">
-            <div class="reg-meta-item">⏰ 2:00 PM IST</div>
-            <div class="reg-meta-item">🌐 Online</div>
-            <div class="reg-meta-item">🏆 Hackathon</div>
-          </div>
-          <div class="reg-status-row">
-            <span class="reg-status status-confirmed">✓ Confirmed</span>
-            <span class="ticket-id">TKT-DNX-20250307-4821</span>
-          </div>
-          <div class="reg-card-footer">
-            <div class="ev-attendees">👥 248 going</div>
-            <div class="reg-actions">
-              <button class="btn-add-cal">📅 Calendar</button>
-              <button class="btn-cancel">Cancel</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="reg-card">
-        <div class="reg-card-banner" style="background:linear-gradient(135deg,#0c1a2e,#1a1040,#0d2040);">
-          <div class="reg-card-banner-inner">🎨🎨</div>
-          <div class="reg-card-badges"><span class="ev-badge badge-online">Online</span></div>
-        </div>
-        <div class="reg-card-body">
-          <div class="reg-card-top">
-            <div class="reg-date-box">
-              <div class="reg-mon">Mar</div>
-              <div class="reg-day">10</div>
-            </div>
-            <div>
-              <div class="reg-title">UI Design Workshop</div>
-              <div class="reg-comm">
-                <div class="reg-comm-av grad-cyan">🎮</div>
-                <div class="reg-comm-name">GameZone</div>
-              </div>
-            </div>
-          </div>
-          <div class="reg-meta">
-            <div class="reg-meta-item">⏰ 5:00 PM IST</div>
-            <div class="reg-meta-item">📍 Chennai</div>
-            <div class="reg-meta-item">🎓 Workshop</div>
-          </div>
-          <div class="reg-status-row">
-            <span class="reg-status status-upcoming">⏳ Upcoming</span>
-            <span class="ticket-id">TKT-AIH-20250312-1047</span>
-          </div>
-          <div class="reg-card-footer">
-            <div class="ev-attendees">👥 120 going</div>
-            <div class="reg-actions">
-              <button class="btn-add-cal">📅 Calendar</button>
-              <button class="btn-cancel">Cancel</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <div class="reg-list" id="regGrid">
+      <!-- Dynamic Cards Injected by events.js -->
     </div>
   </div>
+
   <!-- ── CREATE EVENT TAB ── -->
   <div class="content" id="tab-create">
-    <div class="create-layout">
+    <form id="createEventForm" class="create-layout">
       <div class="form-card">
         <div class="form-section-title">✦ Create a New Event</div>
         <div class="field">
           <label>Event Title *</label>
-          <input id="evTitle" oninput="updatePreview()" placeholder="e.g. MOBA Deep Dive Workshop" type="text">
+          <input id="evTitle" name="title" oninput="updatePreview()" placeholder="e.g. MOBA Deep Dive Workshop" type="text">
+          <div class="error-msg" id="err-title"></div>
         </div>
         <div class="field">
-          <label>Description</label>
-          <textarea placeholder="Tell attendees what to expect…" rows="3"></textarea>
+          <label>Description *</label>
+          <textarea id="evDesc" name="description" oninput="updatePreview()" placeholder="Tell attendees what to expect…" rows="3"></textarea>
+          <div class="error-msg" id="err-desc"></div>
         </div>
         <div class="field-row">
           <div class="field">
             <label>Date *</label>
-            <input id="evDate" oninput="updatePreview()" type="date">
+            <input id="evDate" name="date" oninput="updatePreview()" type="date">
+            <div class="error-msg" id="err-date"></div>
           </div>
           <div class="field">
             <label>Time *</label>
-            <input id="evTime" oninput="updatePreview()" type="time">
+            <input id="evTime" name="time" oninput="updatePreview()" type="time">
+            <div class="error-msg" id="err-time"></div>
           </div>
         </div>
         <div class="field">
@@ -291,41 +150,46 @@
         </div>
         <div class="field-row">
           <div class="field">
-            <label>Community</label>
-            <select id="evCommunity">
-              <option>⚡ Pro Gamers</option>
-              <option>🎮 GameZone</option>
+            <label>Community *</label>
+            <select id="evCommunity" name="community">
+              <!-- Populated dynamically -->
             </select>
           </div>
           <div class="field">
-            <label>Max Attendees</label>
-            <input id="evMax" placeholder="Leave blank for unlimited" type="number">
+            <label>Max Attendees *</label>
+            <input id="evMax" name="capacity" placeholder="e.g. 50" type="number" min="1" value="50">
+            <div class="error-msg" id="err-max"></div>
           </div>
         </div>
         <div class="field">
-          <label>Category</label>
-          <select id="evCategory">
-            <option>🏆 Hackathon</option>
-            <option>🎓 Workshop</option>
-            <option>🎙 AMA / Talk</option>
-            <option>🎮 Gaming / Tournament</option>
-            <option>📖 Discussion</option>
-            <option>🎉 Social / Meetup</option>
+          <label>Category *</label>
+          <select id="evCategory" name="category">
+            <option value="Hackathon">🏆 Hackathon</option>
+            <option value="Workshop">🎓 Workshop</option>
+            <option value="AMA">🎙 AMA / Talk</option>
+            <option value="Tournament">🎮 Gaming / Tournament</option>
+            <option value="Discussion">📖 Discussion</option>
+            <option value="Social">🎉 Social / Meetup</option>
           </select>
         </div>
         <div class="field">
-          <label>Cover Image *</label>
-          <div id="uploadArea" class="upload-area" tabindex="0" role="button" aria-label="Upload cover image">
-            <div class="upload-icon">🖼</div>
-            <div class="upload-text" id="uploadText">Drag &amp; drop or click to upload</div>
-            <div class="upload-sub">PNG, JPG or WebP · Max 5MB · Recommended 1200×630px</div>
+          <label>Cover Image (Optional)</label>
+          <div id="uploadArea" class="upload-area" tabindex="0" role="button" aria-label="Upload cover image" onclick="document.getElementById('evCover').click()">
+            <div id="uploadDefault">
+                <div class="upload-icon">🖼</div>
+                <div class="upload-text" id="uploadText">Drag &amp; drop or click to upload</div>
+                <div class="upload-sub">Using default gaming banner if empty</div>
+            </div>
+            <div id="uploadPreview" class="upload-preview" style="display:none">
+                <!-- Image injected here -->
+            </div>
           </div>
-          <input id="evCover" type="file" accept="image/png,image/jpeg,image/webp" style="display:none">
-          <div id="uploadPreview" class="upload-preview" style="display:none;margin-top:10px;"></div>
+          <div class="error-msg" id="err-cover"></div>
+          <input id="evCover" type="file" accept="image/*" style="display:none" onchange="handleImageUpload(this)">
         </div>
         <div class="form-actions">
-          <button id="saveDraftBtn" class="btn-draft">Save Draft</button>
-          <button id="publishEventBtn" class="btn-publish">Publish Event</button>
+          <button type="button" id="saveDraftBtn" class="btn-draft" onclick="saveDraft()">Save Draft</button>
+          <button type="submit" id="publishEventBtn" class="btn-publish">Publish Event</button>
         </div>
       </div>
       <!-- Preview + Tips -->
@@ -362,6 +226,7 @@
   </div>
   </div><!-- end main -->
   <script src="../js/core/auth.js"></script>
+  <script src="../js/core/utils.js"></script>
   <script src="../js/data/mockData.js"></script>
   <script src="../js/data/crudService.js"></script>
   <script src="../js/pages/events.js"></script>
