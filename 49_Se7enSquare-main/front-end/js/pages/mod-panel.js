@@ -361,7 +361,7 @@ document.addEventListener('keydown', e => {
 // ==========================================
 
 window.toggleModSidebar = function() {
-    const sidebar = document.getElementById('modSidebar');
+
     if (sidebar) {
         sidebar.classList.toggle('collapsed');
         const isCollapsed = sidebar.classList.contains('collapsed');
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Restore sidebar state
     const isCollapsed = localStorage.getItem('modSidebarCollapsed') === 'true';
     if (isCollapsed) {
-        const sidebar = document.getElementById('modSidebar');
+
         if (sidebar) {
             sidebar.classList.add('collapsed');
         }

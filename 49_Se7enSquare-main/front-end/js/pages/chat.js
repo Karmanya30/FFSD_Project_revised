@@ -68,9 +68,56 @@ let attachedFile = null; // Store attached file
 window.toggleMemberSidebar = function () {
   const sidebar = document.getElementById("memberSidebar");
   const chip = document.getElementById("memberCountChip");
+  // More specific selector to avoid conflicts with other toggle icons
+  const icon = document.querySelector(".mem-toggle-btn .toggle-icon"); 
+  
   if (!sidebar) return;
-  const isOpen = sidebar.classList.toggle("open");
-  if (chip) chip.classList.toggle("active", isOpen);
+  
+  const isClosed = sidebar.classList.toggle("closed");
+  
+  // Sync Icon rotation explicitly
+  if (icon) {
+    icon.style.transform = isClosed ? "rotate(180deg)" : "rotate(0deg)";
+  }
+  
+  // Sync the header chip state (active when sidebar is open)
+  if (chip) {
+    if (isClosed) {
+      chip.classList.remove("active");
+    } else {
+      chip.classList.add("active");
+    }
+  }
+  
+  // Persist state globally
+  localStorage.setItem("memberSidebarClosed", isClosed);
+  
+  // Visual confirmation
+  if (typeof showToast === 'function') {
+    showToast(isClosed ? "Members list collapsed" : "Members list expanded");
+  }
+};
+
+// Initialize Sidebar State from LocalStorage
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById("memberSidebar");
+  const chip = document.getElementById("memberCountChip");
+  const icon = document.querySelector(".mem-toggle-btn .toggle-icon");
+  const isClosed = localStorage.getItem("memberSidebarClosed") === "true";
+  
+  if (sidebar && isClosed) {
+    sidebar.classList.add("closed");
+    if (icon) icon.style.transform = "rotate(180deg)";
+    if (chip) chip.classList.remove("active");
+  } else if (sidebar && chip) {
+    // Default state: Sidebar is open, chip is active
+    chip.classList.add("active");
+  }
+});
+
+window.logoutUser = function () {
+  localStorage.removeItem("nexus_user");
+  window.location.href = "login.html";
 };
 
 // ==========================================
@@ -778,6 +825,13 @@ function insertAtCursor(text) {
 // ==========================================
 // 12. UTILITIES
 // ==========================================
+function scrollToBottom() {
+  const wrap = document.getElementById("messagesWrap");
+  if (wrap) {
+    wrap.scrollTop = wrap.scrollHeight;
+  }
+}
+
 function copyCode(btn) {
   const pre = btn.closest(".code-block")?.querySelector("pre");
   if (!pre) return;
@@ -817,11 +871,6 @@ const parseMarkdown = (text) => {
   escaped = escaped.replace(/^\d+\.\s(.+)/gm, "<li>$1</li>");
 
   return escaped;
-};
-
-const scrollToBottom = () => {
-  const wrap = document.getElementById("messagesWrap");
-  if (wrap) wrap.scrollTop = wrap.scrollHeight;
 };
 
 function showToast(message) {
@@ -1061,6 +1110,7 @@ document.addEventListener("DOMContentLoaded", () => {
             from { opacity: 0; transform: translateY(10px); }
             to   { opacity: 1; transform: translateY(0); }
         }
+        .send-btn { color: #fff; }
     `;
   document.head.appendChild(style);
 

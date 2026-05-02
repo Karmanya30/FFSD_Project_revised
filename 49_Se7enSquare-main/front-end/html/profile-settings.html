@@ -1,110 +1,21 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+﻿<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Gameunity – Profile &amp; Settings</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
-      rel="stylesheet"
-    />
-    <link href="../css/global.css" rel="stylesheet" />
-    <link href="../css/pages/profile-settings.css" rel="stylesheet" />
-    <link href="../css/pages/rbac-nav.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;display=swap" rel="stylesheet">
+    <link href="../css/global.css" rel="stylesheet">
+    <link href="../css/components/sidebar.css" rel="stylesheet">
+    <link href="../css/pages/profile-settings.css" rel="stylesheet">
+    
   </head>
   <body>
-    <aside class="app-rail">
-      <div class="rail-logo">⬡</div>
-      <div class="rail-divider"></div>
-      <a href="dashboard.html" class="rail-item" data-tooltip="Home">🏠</a>
-      <a href="discovery.html" class="rail-item" data-tooltip="Discover">🔍</a>
-      <a href="events.html" class="rail-item" data-tooltip="Events"
-        >📅
-        <div
-          class="notif-dot"
-          style="background: var(--gold); width: 6px; height: 6px"
-        ></div
-      ></a>
-      <a
-        href="profile-settings.html"
-        class="rail-item active"
-        data-tooltip="Settings"
-        >⚙️</a
-      >
-      <div class="rail-divider"></div>
-      <a
-        href="community-page.html?name=pro-gamers"
-        class="rail-item rail-comm grad-purple"
-        data-tooltip="Pro Gamers"
-        >⚡
-        <div class="rail-dot bg-dot-green"></div
-      ></a>
-      <a
-        href="community-page.html?name=rpg-tavern"
-        class="rail-item rail-comm grad-orange"
-        data-tooltip="RPG Tavern"
-        >🎨
-        <div class="rail-dot bg-dot-green"></div
-      ></a>
-      <a
-        href="community-page.html?name=gamezone"
-        class="rail-item rail-comm grad-cyan"
-        data-tooltip="GameZone"
-        >🎮
-        <div class="rail-dot bg-dot-orange"></div
-      ></a>
-      <a
-        href="community-page.html?name=fps-masters"
-        class="rail-item rail-comm grad-green"
-        data-tooltip="FPS Masters"
-        >🌿
-        <div class="rail-dot bg-dot-gray"></div
-      ></a>
-      <a
-        href="community-page.html?name=speedrunners"
-        class="rail-item rail-comm grad-pink"
-        data-tooltip="SpeedRunners"
-        >🎵
-        <div class="rail-dot bg-dot-green"></div
-      ></a>
-      <a
-        href="community-page.html?name=strategy-gods"
-        class="rail-item rail-comm grad-violet"
-        data-tooltip="Strategy Gods"
-        >📚
-        <div class="rail-dot bg-dot-gray"></div
-      ></a>
-      <a
-        href="create-community.html"
-        class="rail-item rail-create-btn"
-        data-tooltip="Create Community"
-        >✚</a
-      >
-      <div class="rail-footer">
-        <div
-          class="rail-avatar"
-          id="sidebarBottomAvatar"
-          onclick="window.location.href = 'profile-settings.html'"
-          data-tooltip="Profile"
-        >
-          Loading
-          <div
-            class="rail-dot bg-dot-green"
-            style="
-              position: absolute;
-              bottom: -2px;
-              right: -2px;
-              width: 12px;
-              height: 12px;
-              border-radius: 50%;
-              border: 2px solid var(--bg-sidebar);
-            "
-          ></div>
-        </div>
-      </div>
-    </aside>
+    
 
-    <div class="main-column-wrapper">
+    <!-- ─── APP SHELL ─── -->
+    <div class="app-shell">
+      <div id="sidebar-container"></div>
+
+      <div class="main-column-wrapper">
       <div class="top-bar">
         <div class="tb-logo">
           <div class="tb-logo-icon">⬡</div>
@@ -114,22 +25,11 @@
         <div class="tb-page">⚙️ Profile &amp; Settings</div>
         <div class="tb-right">
           <div class="tb-btn" onclick="location.reload()">Discard</div>
-          <button
-            class="tb-btn save"
-            id="btnSaveAll"
-            onclick="saveAllChanges()"
-            disabled
-          >
+          <button class="tb-btn save" id="btnSaveAll" onclick="saveAllChanges()" disabled="">
             Save Changes
           </button>
           <div class="tb-av" id="topBarAvatar">Loading</div>
-          <button
-            type="button"
-            class="logout-btn"
-            onclick="logoutUser()"
-            aria-label="Log out"
-            data-tooltip="Logout"
-          >
+          <button type="button" class="logout-btn" onclick="logoutUser()" aria-label="Log out">
             Logout
           </button>
         </div>
@@ -137,10 +37,7 @@
 
       <div class="body-wrap">
         <nav class="left-nav">
-          <div
-            class="nav-profile"
-            onclick="switchView('profile', document.querySelector('.ln-item'))"
-          >
+          <div class="nav-profile" onclick="switchView('profile', document.querySelector('.ln-item'))">
             <div class="profile-av-wrap">
               <div class="profile-av" id="navMainAvatar">Loading</div>
               <div class="profile-av-edit" onclick="openPhotoModal(event)">
@@ -150,10 +47,7 @@
             <div style="text-align: center">
               <div class="profile-name" id="navName">Loading...</div>
               <div class="profile-handle" id="navHandle">@loading</div>
-              <div
-                class="profile-status"
-                style="justify-content: center; margin-top: 4px"
-              >
+              <div class="profile-status" style="justify-content: center; margin-top: 4px">
                 Online
               </div>
             </div>
@@ -205,14 +99,12 @@
                   </div>
                   <div class="btn-sm" onclick="removePhoto()">Remove Photo</div>
                 </div>
-                <div
-                  style="
+                <div style="
                     font-size: 11px;
                     color: var(--text-3);
                     max-width: 200px;
-                  "
-                >
-                  Recommended: Square image, min 200×200px.<br />PNG, JPG or
+                  ">
+                  Recommended: Square image, min 200×200px.<br>PNG, JPG or
                   WEBP, max 5MB.
                 </div>
               </div>
@@ -220,57 +112,29 @@
               <div class="field-row" style="margin-bottom: 16px">
                 <div class="field">
                   <label>First Name *</label>
-                  <input
-                    id="inpFirstName"
-                    type="text"
-                    value=""
-                    oninput="validateInput(this)"
-                  />
-                  <span class="error-text" id="err-inpFirstName"
-                    >First Name is required.</span
-                  >
+                  <input id="inpFirstName" type="text" value="" oninput="validateInput(this)">
+                  <span class="error-text" id="err-inpFirstName">First Name is required.</span>
                 </div>
                 <div class="field">
                   <label>Last Name *</label>
-                  <input
-                    id="inpLastName"
-                    type="text"
-                    value=""
-                    oninput="validateInput(this)"
-                  />
-                  <span class="error-text" id="err-inpLastName"
-                    >Last Name is required.</span
-                  >
+                  <input id="inpLastName" type="text" value="" oninput="validateInput(this)">
+                  <span class="error-text" id="err-inpLastName">Last Name is required.</span>
                 </div>
               </div>
 
               <div class="field-row" style="margin-bottom: 16px">
                 <div class="field">
                   <label>Username *</label>
-                  <input
-                    id="inpHandle"
-                    type="text"
-                    value=""
-                    oninput="validateInput(this)"
-                  />
-                  <span class="error-text" id="err-inpHandle"
-                    >Username is required.</span
-                  >
+                  <input id="inpHandle" type="text" value="" oninput="validateInput(this)">
+                  <span class="error-text" id="err-inpHandle">Username is required.</span>
                   <div class="field-hint">
                     nexushub.io/@<span id="hintHandle">alexmorgan</span>
                   </div>
                 </div>
                 <div class="field">
                   <label>Display Name *</label>
-                  <input
-                    id="inpFullName"
-                    type="text"
-                    value=""
-                    oninput="validateInput(this)"
-                  />
-                  <span class="error-text" id="err-inpFullName"
-                    >Display Name is required.</span
-                  >
+                  <input id="inpFullName" type="text" value="" oninput="validateInput(this)">
+                  <span class="error-text" id="err-inpFullName">Display Name is required.</span>
                 </div>
               </div>
 
@@ -317,54 +181,31 @@
               <div class="field-row" style="margin-bottom: 16px">
                 <div class="field">
                   <label>Email Address *</label>
-                  <input
-                    id="inpEmail"
-                    type="email"
-                    value=""
-                    oninput="validateInput(this)"
-                  />
-                  <span class="error-text" id="err-inpEmail"
-                    >Valid email is required.</span
-                  >
+                  <input id="inpEmail" type="email" value="" oninput="validateInput(this)">
+                  <span class="error-text" id="err-inpEmail">Valid email is required.</span>
                 </div>
                 <div class="field">
                   <label>Phone Number *</label>
-                  <input
-                    id="inpPhone"
-                    type="tel"
-                    value=""
-                    oninput="validateInput(this)"
-                  />
-                  <span class="error-text" id="err-inpPhone"
-                    >Phone number is required.</span
-                  >
+                  <input id="inpPhone" type="tel" value="" oninput="validateInput(this)">
+                  <span class="error-text" id="err-inpPhone">Phone number is required.</span>
                 </div>
               </div>
 
               <div class="field" style="margin-bottom: 24px">
                 <label>Recovery Email (Optional)</label>
-                <input
-                  id="inpRecovery"
-                  type="email"
-                  placeholder="backup@example.com"
-                  oninput="validateInput(this)"
-                />
-                <span class="error-text" id="err-inpRecovery"
-                  >Invalid email format.</span
-                >
+                <input id="inpRecovery" type="email" placeholder="backup@example.com" oninput="validateInput(this)">
+                <span class="error-text" id="err-inpRecovery">Invalid email format.</span>
               </div>
 
               <div class="divider"></div>
               <div class="card-title" style="margin-bottom: 8px">
                 🔑 Change Password
               </div>
-              <div
-                style="
+              <div style="
                   font-size: 12px;
                   color: var(--text-3);
                   margin-bottom: 16px;
-                "
-              >
+                ">
                 Leave these fields blank unless you want to change your
                 password.
               </div>
@@ -372,64 +213,28 @@
               <div class="field" style="margin-bottom: 16px">
                 <label>Current Password</label>
                 <div class="pwd-wrapper">
-                  <input
-                    id="inpCurrentPwd"
-                    type="password"
-                    placeholder="••••••••"
-                    oninput="validateInput(this)"
-                  />
-                  <span
-                    class="pwd-toggle"
-                    onclick="togglePassword('inpCurrentPwd', this)"
-                    data-tooltip="Show Password"
-                    >🙈</span
-                  >
+                  <input id="inpCurrentPwd" type="password" placeholder="••••••••" oninput="validateInput(this)">
+                  <span class="pwd-toggle" onclick="togglePassword('inpCurrentPwd', this)" data-tooltip="Show Password">🙈</span>
                 </div>
-                <span class="error-text" id="err-inpCurrentPwd"
-                  >Current password is required to set a new one.</span
-                >
+                <span class="error-text" id="err-inpCurrentPwd">Current password is required to set a new one.</span>
               </div>
 
               <div class="field-row">
                 <div class="field">
                   <label>New Password</label>
                   <div class="pwd-wrapper">
-                    <input
-                      id="inpNewPwd"
-                      type="password"
-                      placeholder="Min 8 characters"
-                      oninput="validateInput(this)"
-                    />
-                    <span
-                      class="pwd-toggle"
-                      onclick="togglePassword('inpNewPwd', this)"
-                      data-tooltip="Show Password"
-                      >🙈</span
-                    >
+                    <input id="inpNewPwd" type="password" placeholder="Min 8 characters" oninput="validateInput(this)">
+                    <span class="pwd-toggle" onclick="togglePassword('inpNewPwd', this)" data-tooltip="Show Password">🙈</span>
                   </div>
-                  <span class="error-text" id="err-inpNewPwd"
-                    >New password is required.</span
-                  >
+                  <span class="error-text" id="err-inpNewPwd">New password is required.</span>
                 </div>
                 <div class="field">
                   <label>Confirm New Password</label>
                   <div class="pwd-wrapper">
-                    <input
-                      id="inpConfirmPwd"
-                      type="password"
-                      placeholder="Repeat new password"
-                      oninput="validateInput(this)"
-                    />
-                    <span
-                      class="pwd-toggle"
-                      onclick="togglePassword('inpConfirmPwd', this)"
-                      data-tooltip="Show Password"
-                      >🙈</span
-                    >
+                    <input id="inpConfirmPwd" type="password" placeholder="Repeat new password" oninput="validateInput(this)">
+                    <span class="pwd-toggle" onclick="togglePassword('inpConfirmPwd', this)" data-tooltip="Show Password">🙈</span>
                   </div>
-                  <span class="error-text" id="err-inpConfirmPwd"
-                    >Passwords do not match.</span
-                  >
+                  <span class="error-text" id="err-inpConfirmPwd">Passwords do not match.</span>
                 </div>
               </div>
             </div>
@@ -467,14 +272,10 @@
                   <div class="tr-title">Show Email on Profile</div>
                   <div class="tr-desc">Let others see your email address.</div>
                 </div>
-                <div
-                  class="toggle"
-                  id="togEmail"
-                  onclick="
+                <div class="toggle" id="togEmail" onclick="
                     toggleSwitch(this);
                     updatePrivacySettings();
-                  "
-                ></div>
+                  "></div>
               </div>
 
               <div class="toggle-row">
@@ -482,14 +283,10 @@
                   <div class="tr-title">Show Phone Number</div>
                   <div class="tr-desc">Let others see your phone number.</div>
                 </div>
-                <div
-                  class="toggle"
-                  id="togPhone"
-                  onclick="
+                <div class="toggle" id="togPhone" onclick="
                     toggleSwitch(this);
                     updatePrivacySettings();
-                  "
-                ></div>
+                  "></div>
               </div>
 
               <div class="toggle-row">
@@ -499,14 +296,10 @@
                     Show when you are currently online or in-game.
                   </div>
                 </div>
-                <div
-                  class="toggle on"
-                  id="togActivity"
-                  onclick="
+                <div class="toggle on" id="togActivity" onclick="
                     toggleSwitch(this);
                     updatePrivacySettings();
-                  "
-                ></div>
+                  "></div>
               </div>
 
               <div class="toggle-row">
@@ -516,14 +309,10 @@
                     Allow Google to index your public profile.
                   </div>
                 </div>
-                <div
-                  class="toggle on"
-                  id="togSearch"
-                  onclick="
+                <div class="toggle on" id="togSearch" onclick="
                     toggleSwitch(this);
                     updatePrivacySettings();
-                  "
-                ></div>
+                  "></div>
               </div>
             </div>
           </div>
@@ -534,10 +323,7 @@
               <div class="card-sub">Choose your Gameunity colour theme.</div>
               <div class="theme-grid">
                 <div class="theme-opt on" onclick="setTheme(this)">
-                  <div
-                    class="theme-swatch"
-                    style="background: var(--bg-deep)"
-                  ></div>
+                  <div class="theme-swatch" style="background: var(--bg-deep)"></div>
                   <div class="theme-label">Dark (Default)</div>
                 </div>
                 <div class="theme-opt" onclick="setTheme(this)">
@@ -574,14 +360,10 @@
                     readability.
                   </div>
                 </div>
-                <div
-                  class="toggle"
-                  id="togContrast"
-                  onclick="
+                <div class="toggle" id="togContrast" onclick="
                     toggleSwitch(this);
                     updateAccessibility();
-                  "
-                ></div>
+                  "></div>
               </div>
 
               <div class="toggle-row">
@@ -591,14 +373,10 @@
                     Disable UI animations and smooth scrolling.
                   </div>
                 </div>
-                <div
-                  class="toggle"
-                  id="togMotion"
-                  onclick="
+                <div class="toggle" id="togMotion" onclick="
                     toggleSwitch(this);
                     updateAccessibility();
-                  "
-                ></div>
+                  "></div>
               </div>
 
               <div class="toggle-row">
@@ -608,14 +386,10 @@
                     Add extra labels and hints for screen reading software.
                   </div>
                 </div>
-                <div
-                  class="toggle"
-                  id="togScreenReader"
-                  onclick="
+                <div class="toggle" id="togScreenReader" onclick="
                     toggleSwitch(this);
                     updateAccessibility();
-                  "
-                ></div>
+                  "></div>
               </div>
 
               <div class="toggle-row">
@@ -625,14 +399,10 @@
                     Highlight focused elements prominently.
                   </div>
                 </div>
-                <div
-                  class="toggle"
-                  id="togKeyboard"
-                  onclick="
+                <div class="toggle" id="togKeyboard" onclick="
                     toggleSwitch(this);
                     updateAccessibility();
-                  "
-                ></div>
+                  "></div>
               </div>
             </div>
           </div>
@@ -652,10 +422,7 @@
                     or banned.
                   </div>
                 </div>
-                <button
-                  class="btn-appeal"
-                  onclick="window.location.href = 'appeal.html'"
-                >
+                <button class="btn-appeal" onclick="window.location.href = 'appeal.html'">
                   Submit Appeal
                 </button>
               </div>
@@ -667,10 +434,7 @@
                     Temporarily hide your profile and pause notifications.
                   </div>
                 </div>
-                <button
-                  class="btn-danger"
-                  onclick="toast('⚠️ Deactivation flow started…')"
-                >
+                <button class="btn-danger" onclick="toast('⚠️ Deactivation flow started…')">
                   Deactivate
                 </button>
               </div>
@@ -699,11 +463,7 @@
             <span>Upload Profile Photo</span>
             <span class="modal-close" onclick="closePhotoModal()">✕</span>
           </div>
-          <div
-            class="drop-zone"
-            id="dropZone"
-            onclick="document.getElementById('fileInput').click()"
-          >
+          <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
             <div style="font-size: 24px; margin-bottom: 10px">📁</div>
             <div style="font-size: 14px; font-weight: 600">
               Click to browse or drag file here
@@ -712,45 +472,23 @@
               Accepted formats: JPG, JPEG, PNG, WEBP (Max: 5MB)
             </div>
           </div>
-          <input
-            type="file"
-            id="fileInput"
-            accept=".jpg,.jpeg,.png,.webp"
-            style="display: none"
-            onchange="handleFileSelect(event)"
-          />
+          <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.webp" style="display: none" onchange="handleFileSelect(event)">
 
-          <div
-            id="filePreview"
-            style="display: none; text-align: center; margin-bottom: 16px"
-          >
-            <img
-              id="imgPreview"
-              src=""
-              alt="Preview"
-              style="
+          <div id="filePreview" style="display: none; text-align: center; margin-bottom: 16px">
+            <img id="imgPreview" src="" alt="Preview" style="
                 width: 100px;
                 height: 100px;
                 border-radius: 50%;
                 object-fit: cover;
                 border: 2px solid var(--accent);
                 margin-bottom: 10px;
-              "
-            />
-            <div
-              id="fileName"
-              style="font-size: 12px; color: var(--text-2)"
-            ></div>
+              ">
+            <div id="fileName" style="font-size: 12px; color: var(--text-2)"></div>
           </div>
 
           <div style="display: flex; gap: 10px; justify-content: flex-end">
             <button class="tb-btn" onclick="closePhotoModal()">Cancel</button>
-            <button
-              class="tb-btn save"
-              id="btnApplyPhoto"
-              onclick="applyUploadedPhoto()"
-              disabled
-            >
+            <button class="tb-btn save" id="btnApplyPhoto" onclick="applyUploadedPhoto()" disabled="">
               Apply Photo
             </button>
           </div>
@@ -759,8 +497,10 @@
     </div>
 
     <script src="../js/core/auth.js"></script>
-    <script src="../js/components/app-rail.js"></script>
-    <script src="../js/components/rbac-nav.js"></script>
+    <script src="../js/data/mockData.js"></script>
+    <script src="../js/data/crudService.js"></script>
     <script src="../js/pages/profile-settings.js"></script>
-  </body>
-</html>
+  
+
+<script src="../js/components/sidebar.js"></script>
+</body></html>

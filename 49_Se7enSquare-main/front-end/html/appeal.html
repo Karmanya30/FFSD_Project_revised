@@ -1,55 +1,14 @@
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>NexusHub – Appeal Submission</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
-<link href="../css/global.css" rel="stylesheet"/>
-<link href="../css/pages/appeal.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="../css/global.css" rel="stylesheet">
+<link href="../css/pages/appeal.css" rel="stylesheet">
 </head>
 <body>
-<!-- ─── APP RAIL ─── -->
-<aside class="app-rail">
-  <div class="rail-logo">⬡</div>
-  
-  <div class="rail-divider"></div>
-  
-  <!-- Main Nav -->
-  <a href="dashboard.html" class="rail-item" data-tooltip="Home">🏠</a>
-  <a href="discovery.html" class="rail-item" data-tooltip="Discover">🔍</a>
-  <a href="events.html" class="rail-item" data-tooltip="Events">📅<div class="notif-dot" style="background:var(--gold);width:6px;height:6px;"></div></a>
 
-  <a href="profile-settings.html" class="rail-item active" data-tooltip="Settings">⚙️</a>
-  
-  <div class="rail-divider"></div>
-  
-  <!-- Communities -->
-  <div class="rail-item rail-comm grad-purple" data-tooltip="Pro Gamers">
-    ⚡<div class="rail-dot bg-dot-green"></div>
-  </div>
-  <div class="rail-item rail-comm grad-orange" data-tooltip="RPG Tavern">
-    🎨<div class="rail-dot bg-dot-green"></div>
-  </div>
-  <div class="rail-item rail-comm grad-cyan" data-tooltip="GameZone">
-    🎮<div class="rail-dot bg-dot-orange"></div>
-  </div>
-  <div class="rail-item rail-comm grad-green" data-tooltip="FPS Masters">
-    🌿<div class="rail-dot bg-dot-gray"></div>
-  </div>
-  <div class="rail-item rail-comm grad-pink" data-tooltip="SpeedRunners">
-    🎵<div class="rail-dot bg-dot-green"></div>
-  </div>
-  <div class="rail-item rail-comm grad-violet" data-tooltip="Strategy Gods">
-    📚<div class="rail-dot bg-dot-gray"></div>
-  </div>
-  <a href="create-community.html" class="rail-item" data-tooltip="Create Community" style="background:rgba(255,255,255,0.05);color:var(--text-1);font-weight:600;border-radius:14px;">✚</a>
-  
-  <div class="rail-footer">
-    <div class="rail-avatar" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">AM<div class="rail-dot bg-dot-green" style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-sidebar);"></div></div>
-  </div>
-</aside>
+
 <!-- ─── MAIN ─── -->
 <div class="main">
 <header class="header">
@@ -60,10 +19,10 @@
 <span class="sep">›</span>
 <span class="current">⚖️ Submit Appeal</span>
 </div>
-<div class="header-actions">
-<div class="icon-btn">🔔<div class="notif-dot"></div></div>
-<div class="header-avatar">AM</div>
-</div>
+      <div class="header-actions">
+        <div class="icon-btn" onclick="toggleNotifications(event)">🔔<div class="notif-dot"></div></div>
+        <div class="header-avatar">RK</div>
+      </div>
 </header>
 <div class="page-wrap">
 <div class="appeal-layout">
@@ -97,7 +56,7 @@
 </div>
 <div class="detail-row">
 <div class="detail-key">Issued By</div>
-<div class="detail-val">Sara Lee <span class="u-extracted-146">(Moderator)</span></div>
+<div class="detail-val">Rahul Kumar <span class="u-extracted-146">(Moderator)</span></div>
 </div>
 <div class="detail-row">
 <div class="detail-key">Date Issued</div>
@@ -183,7 +142,7 @@
 <div class="field">
 <label>Supporting Evidence (Optional)</label>
 <div class="upload-zone" onclick="openEvidencePicker()">
-<input id="evidenceInput" accept="image/*,.pdf" class="u-extracted-151" multiple="" type="file" onchange="handleFileUpload(event)" style="display:none"/>
+<input id="evidenceInput" accept="image/*,.pdf" class="u-extracted-151" multiple="" type="file" onchange="handleFileUpload(event)" style="display:none">
 <div class="upload-icon">📎</div>
 <div class="upload-text">Attach screenshots or files</div>
 <div class="upload-sub">PNG, JPG, PDF · Max 3 files · 5MB each</div>
@@ -265,8 +224,9 @@
 </div>
 </div>
 </div>
-<script src="../js/components/app-rail.js"></script>
+
 <script src="../js/pages/appeal.js"></script>
 <script src="../js/components/notifications.js"></script>
-</body>
-</html>
+
+
+</body></html>

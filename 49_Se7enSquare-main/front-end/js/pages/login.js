@@ -10,30 +10,38 @@ let currentTab = 'login';
 let toastTimeout;
 
 const ROLE_REDIRECTS = {
-    superuser: 'dashboard.html',
-    mod: 'dashboard.html',
-    gamer: 'dashboard.html',
-    audience: 'dashboard.html'
+    admin: 'admin-dashboard.html',
+    moderator: 'dashboard.html',
+    gamer: 'dashboard.html'
 };
 
 // Default users for the first-time load
 const DEFAULT_USERS = [
-    { email: 'rajat@gameunity.com', username: 'rajat', password: 'Rajat@123', role: 'superuser' },
-    { email: 'karmanya@gameunity.com', username: 'karmanya', password: 'Karmanya@123', role: 'mod' },
-    { email: 'awadhesh@gameunity.com', username: 'awadhesh', password: 'Demo@123', role: 'gamer' },
-    { email: 'anant@gameunity.com', username: 'anant', password: 'Demo@123', role: 'gamer' },
-    { email: 'sanidhya@gameunity.com', username: 'sanidhya', password: 'Demo@123', role: 'audience' }
+    { email: 'rajat@gameunity.com', username: 'rajat', password: 'Rajat@123', role: 'admin' },
+    { email: 'karmanya@gameunity.com', username: 'karmanya', password: 'Karmanya@123', role: 'moderator' },
+    { email: 'awadhesh@gameunity.com', username: 'awadhesh', password: 'Demo@123', role: 'gamer' }
 ];
 
 /** * Persistent Mock Database Helpers 
  */
 function getAllUsers() {
-    const stored = localStorage.getItem('gameunity_accounts');
-    if (!stored) {
-        localStorage.setItem('gameunity_accounts', JSON.stringify(DEFAULT_USERS));
-        return DEFAULT_USERS;
-    }
-    return JSON.parse(stored);
+    let stored = localStorage.getItem('gameunity_accounts');
+    let users = stored ? JSON.parse(stored) : [];
+    
+    // Force Sync Default Personas (Ensure passwords/roles are always current)
+    DEFAULT_USERS.forEach(defUser => {
+        const index = users.findIndex(u => u.username.toLowerCase() === defUser.username.toLowerCase() || u.email.toLowerCase() === defUser.email.toLowerCase());
+        if (index === -1) {
+            users.push(defUser);
+        } else {
+            // Update existing record to match the default (in case of stale data)
+            users[index].password = defUser.password;
+            users[index].role = defUser.role;
+        }
+    });
+    
+    localStorage.setItem('gameunity_accounts', JSON.stringify(users));
+    return users;
 }
 
 function saveNewUser(userData) {
@@ -122,7 +130,7 @@ window.handleLogin = function(e) {
         const users = getAllUsers();
         // Check if input matches either email OR username AND password AND role
         const matchedUser = users.find(u => 
-            (u.email === inputVal || u.username === inputVal) && 
+            (u.email.toLowerCase() === inputVal.toLowerCase() || u.username.toLowerCase() === inputVal.toLowerCase()) && 
             u.password === password && 
             u.role === role
         );
@@ -141,6 +149,7 @@ window.handleLogin = function(e) {
             role: matchedUser.role,
             loginTime: new Date().toISOString()
         }));
+        localStorage.setItem('role', matchedUser.role);
 
         showToast('✅', 'Login successful!');
         setTimeout(() => { window.location.href = ROLE_REDIRECTS[role] || 'dashboard.html'; }, 800);
@@ -184,6 +193,7 @@ window.handleRegister = function(e) {
             showToast('🎉', 'Account ready!');
             // Auto-login
             localStorage.setItem('nexus_user', JSON.stringify({ username: handle, role, loginTime: new Date().toISOString() }));
+            localStorage.setItem('role', role);
             setTimeout(() => { window.location.href = ROLE_REDIRECTS[role] || 'dashboard.html'; }, 1000);
         } else {
             btn.classList.remove('loading');
@@ -238,12 +248,24 @@ window.togglePassword = function(btn) {
 };
 
 window.quickLogin = function(username, role) {
+    // 1. Ensure we are on the login tab
+    if (typeof switchAuthTab === 'function') switchAuthTab('login');
+    
     const users = getAllUsers();
     const user = users.find(u => u.username === username);
-    document.getElementById('login-email').value = username;
-    document.getElementById('login-password').value = user ? user.password : 'Demo@123';
-    document.getElementById('login-role').value = role;
-    document.getElementById('form-login').dispatchEvent(new Event('submit'));
+    
+    const emailInput = document.getElementById('login-email');
+    const passInput = document.getElementById('login-password');
+    const roleInput = document.getElementById('login-role');
+    
+    if (emailInput) emailInput.value = username;
+    if (passInput) passInput.value = user ? user.password : 'Demo@123';
+    if (roleInput) roleInput.value = role;
+    
+    // 2. Explicitly call handleLogin with a mock event
+    if (typeof handleLogin === 'function') {
+        handleLogin({ preventDefault: () => {} });
+    }
 };
 
 function shakeCard() {
