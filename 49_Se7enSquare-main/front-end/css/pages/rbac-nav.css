@@ -1,0 +1,249 @@
+/* ═══════════════════════════════════════════
+   Gameunity — RBAC Navigation Styles
+   Role-based sidebar panel links & badges
+   ═══════════════════════════════════════════ */
+
+/* ── Role Panel Section in Sidebar ── */
+
+.rbac-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 4px 0;
+}
+
+.rbac-divider {
+    width: 32px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 6px auto;
+    border-radius: 1px;
+    transition: width 0.3s ease;
+}
+
+.rbac-divider-label {
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.25);
+    text-align: center;
+    margin: 2px 0;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.app-rail.expanded .rbac-divider-label,
+.app-rail:hover .rbac-divider-label {
+    opacity: 1;
+    max-height: 20px;
+}
+
+/* ── Panel Link Items ── */
+
+.rbac-panel-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin: 2px auto;
+    border-radius: 14px;
+    font-size: 18px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid transparent;
+    animation: rbacSlideIn 0.3s ease-out both;
+}
+
+.rbac-panel-link:hover {
+    transform: scale(1.08);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.rbac-panel-link[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-4px);
+    background: rgba(15, 15, 25, 0.95);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.2s ease;
+    z-index: 1000;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.rbac-panel-link[data-tooltip]:hover::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+/* Panel-specific styles */
+.rbac-panel-link.rbac-link-super {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.08));
+}
+
+.rbac-panel-link.rbac-link-super:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.15));
+    border-color: rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
+}
+
+.rbac-panel-link.rbac-link-mod {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.08));
+}
+
+.rbac-panel-link.rbac-link-mod:hover {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.15));
+    border-color: rgba(245, 158, 11, 0.3);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+}
+
+/* Active state for current page */
+.rbac-panel-link.active {
+    transform: scale(1.05);
+}
+
+.rbac-panel-link.rbac-link-super.active {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.2));
+    border-color: rgba(239, 68, 68, 0.4);
+    box-shadow: 0 0 24px rgba(239, 68, 68, 0.2), inset 0 0 12px rgba(239, 68, 68, 0.1);
+}
+
+.rbac-panel-link.rbac-link-mod.active {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.2));
+    border-color: rgba(245, 158, 11, 0.4);
+    box-shadow: 0 0 24px rgba(245, 158, 11, 0.2), inset 0 0 12px rgba(245, 158, 11, 0.1);
+}
+
+/* ── Role Badge in Footer ── */
+
+.rbac-role-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 4px auto 0;
+    max-width: 48px;
+    text-align: center;
+    line-height: 1.2;
+    animation: rbacBadgeIn 0.4s ease-out 0.2s both;
+}
+
+.rbac-badge-super {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.rbac-badge-mod {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.rbac-badge-gamer {
+    background: rgba(139, 92, 246, 0.2);
+    color: #a78bfa;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.rbac-badge-audience {
+    background: rgba(100, 116, 139, 0.2);
+    color: #94a3b8;
+    border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+/* ── Community "Manage" Button ── */
+
+.rbac-manage-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(139, 92, 246, 0.1));
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    text-decoration: none;
+}
+
+.rbac-manage-btn:hover {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(139, 92, 246, 0.18));
+    border-color: rgba(245, 158, 11, 0.4);
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.15);
+    transform: translateY(-1px);
+}
+
+.rbac-manage-btn.hidden {
+    display: none;
+}
+
+/* ── Animations ── */
+
+@keyframes rbacSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes rbacBadgeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ── Notification pulse for panel links ── */
+
+.rbac-panel-link .rbac-pulse {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--error, #ef4444);
+    animation: rbacPulse 2s infinite;
+}
+
+@keyframes rbacPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.3); }
+}

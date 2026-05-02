@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Gameunity — Sign In</title>
+    <meta name="description"
+        content="Sign in to Gameunity — Where great communities come alive. Join 148K+ members worldwide." />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="../css/global.css" rel="stylesheet" />
+    <link href="../css/pages/login.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Background Canvas -->
+    <canvas id="bgCanvas"></canvas>
+    <div class="bg-mesh" aria-hidden="true"></div>
+    <div class="bg-vignette" aria-hidden="true"></div>
+    <svg class="bg-waves" aria-hidden="true" viewBox="0 0 1440 900" preserveAspectRatio="none">
+        <defs>
+            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#3B82F6" stop-opacity="0" />
+                <stop offset="35%" stop-color="#3B82F6" stop-opacity="0.55" />
+                <stop offset="65%" stop-color="#8B5CF6" stop-opacity="0.5" />
+                <stop offset="100%" stop-color="#38BDF8" stop-opacity="0" />
+            </linearGradient>
+            <filter id="waveBlur">
+                <feGaussianBlur stdDeviation="2.3" />
+            </filter>
+        </defs>
+        <g fill="none" stroke="url(#waveGradient)" stroke-width="1.9" filter="url(#waveBlur)">
+            <path d="M-40,670 C180,625 280,735 470,690 S820,625 1000,670 S1280,735 1480,665" />
+            <path d="M-30,735 C160,680 320,790 520,740 S850,675 1040,730 S1290,790 1480,720" />
+            <path d="M-50,800 C130,745 360,835 560,792 S870,725 1080,790 S1310,845 1490,780" />
+        </g>
+    </svg>
+    <div class="bg-streaks" aria-hidden="true"></div>
+    <div class="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" aria-hidden="true"></div>
+    <div class="cursor-trail" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Back to Home -->
+    <a href="landing.html" style="position: absolute; top: 32px; left: 40px; color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 600; font-family: 'Syne', sans-serif; display: flex; align-items: center; gap: 8px; transition: color 0.2s ease; z-index: 50;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'" title="Return to Landing Page">
+        <span style="font-size: 18px;">←</span> Back to Home
+    </a>
+
+    <!-- Ambient Glow -->
+    <div class="ambient-glow"></div>
+
+    <!-- Main Login Container -->
+    <div class="login-wrapper">
+        <div class="login-card" id="loginCard">
+            <!-- Logo -->
+            <div class="login-logo">
+                <div class="logo-hex">G</div>
+                <span class="logo-text">Gameunity</span>
+            </div>
+
+            <!-- Dynamic Subtitle -->
+            <p class="login-subtitle" id="loginSubtitle">Welcome back! Sign in to your account.</p>
+
+            <!-- Tab Switcher -->
+            <div class="auth-tabs" id="authTabs">
+                <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
+                <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Register</button>
+            </div>
+
+            <!-- ═══ LOGIN FORM ═══ -->
+            <form class="auth-form" id="form-login" onsubmit="handleLogin(event)" novalidate>
+                <div class="form-group">
+                    <label class="form-label" for="login-email">Email or Username</label>
+                    <input class="form-input" type="text" id="login-email" placeholder="Enter your email or username"
+                        autocomplete="username" required />
+                    <span class="form-error" id="login-email-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="login-password">Password</label>
+                    <div class="input-password-wrap">
+                        <input class="form-input" type="password" id="login-password" placeholder="Enter your password"
+                            autocomplete="current-password" required />
+                        <button type="button" class="password-toggle" onclick="togglePassword(this)"
+                            aria-label="Toggle password visibility">🙈</button>
+                    </div>
+                    <span class="form-error" id="login-password-error"></span>
+                </div>
+
+                <div class="form-row">
+                    <label class="checkbox-wrap">
+                        <input type="checkbox" id="remember-me" />
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-link" onclick="switchAuthTab('forgot'); return false;">Forgot
+                        password?</a>
+                </div>
+
+                <!-- Role Selector (for demo/prototype) -->
+                <div class="form-group">
+                    <label class="form-label" for="login-role">Sign in as</label>
+                    <select class="form-input form-select" id="login-role" required>
+                        <option value="">Select your role</option>
+                        <option value="superuser">🛡️ Super User (System Admin)</option>
+                        <option value="mod">🔍 Moderator</option>
+                        <option value="gamer">🎮 Gamer</option>
+                        <option value="audience">👀 Audience</option>
+                    </select>
+                    <span class="form-error" id="login-role-error"></span>
+                </div>
+
+                <button type="submit" class="btn-submit" id="login-btn">
+                    <span class="btn-text">Sign in</span>
+                    <span class="btn-spinner"></span>
+                </button>
+
+                <!-- Quick Demo Access -->
+                <div class="demo-personas">
+                    <span class="demo-label">Quick access:</span>
+                    <button type="button" class="demo-pill" onclick="quickLogin('rajat', 'superuser')">🛡️ RAJAT JAIN</button>
+                    <button type="button" class="demo-pill" onclick="quickLogin('karmanya', 'mod')">🔍 KARMANYA BELSARE</button>
+                    <button type="button" class="demo-pill" onclick="quickLogin('awadhesh', 'gamer')">🎮 AWADHESH</button>
+                    <button type="button" class="demo-pill" onclick="quickLogin('anant', 'gamer')">🎮 ANANT GARG</button>
+                    <button type="button" class="demo-pill" onclick="quickLogin('sanidhya', 'audience')">👀 SANIDHYA JOSHI</button>
+                </div>
+
+                <div class="auth-divider">
+                    <span>or continue with</span>
+                </div>
+
+                <button type="button" class="btn-google" onclick="mockGoogleLogin()">
+                    <svg width="18" height="18" viewBox="0 0 18 18">
+                        <path
+                            d="M17.64 9.2c0-.637-.057-1.252-.164-1.842H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.614z"
+                            fill="#4285F4" />
+                        <path
+                            d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"
+                            fill="#34A853" />
+                        <path
+                            d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.997 8.997 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"
+                            fill="#FBBC05" />
+                        <path
+                            d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.462.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"
+                            fill="#EA4335" />
+                    </svg>
+                    <span>Google</span>
+                </button>
+            </form>
+
+            <!-- ═══ REGISTER FORM ═══ -->
+            <form class="auth-form hidden" id="form-register" onsubmit="handleRegister(event)" novalidate>
+                <div class="form-group">
+                    <label class="form-label" for="reg-fullname">Full Name</label>
+                    <input class="form-input" type="text" id="reg-fullname" placeholder="Enter your full name"
+                        required />
+                    <span class="form-error" id="reg-fullname-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="reg-email">Email</label>
+                    <input class="form-input" type="email" id="reg-email" placeholder="Enter your email address"
+                        required />
+                    <span class="form-error" id="reg-email-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="reg-handle">Username / Handle</label>
+                    <input class="form-input" type="text" id="reg-handle" placeholder="Choose a unique handle"
+                        required />
+                    <span class="form-error" id="reg-handle-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="reg-password">Password</label>
+                    <div class="input-password-wrap">
+                        <input class="form-input" type="password" id="reg-password"
+                            placeholder="Create a strong password" required />
+                        <button type="button" class="password-toggle" onclick="togglePassword(this)"
+                            aria-label="Toggle password visibility">🙈</button>
+                    </div>
+                    <span class="form-error" id="reg-password-error"></span>
+                    <div class="password-strength" id="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strength-fill"></div>
+                        </div>
+                        <span class="strength-text" id="strength-text"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="reg-confirm">Confirm Password</label>
+                    <div class="input-password-wrap">
+                        <input class="form-input" type="password" id="reg-confirm" placeholder="Confirm your password"
+                            required />
+                        <button type="button" class="password-toggle" onclick="togglePassword(this)"
+                            aria-label="Toggle password visibility">🙈</button>
+                    </div>
+                    <span class="form-error" id="reg-confirm-error"></span>
+                </div>
+
+                <!-- Role Selector -->
+                <div class="form-group">
+                    <label class="form-label" for="reg-role">Account Type</label>
+                    <select class="form-input form-select" id="reg-role" required>
+                        <option value="">Select account type</option>
+                        <option value="gamer">🎮 Gamer</option>
+                        <option value="audience">👀 Audience</option>
+                    </select>
+                    <span class="form-error" id="reg-role-error"></span>
+                </div>
+
+                <label class="checkbox-wrap terms-check">
+                    <input type="checkbox" id="reg-terms" required />
+                    <span class="checkbox-custom"></span>
+                    <span class="checkbox-label">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy
+                            Policy</a></span>
+                </label>
+                <span class="form-error" id="reg-terms-error"></span>
+
+                <button type="submit" class="btn-submit" id="register-btn">
+                    <span class="btn-text">Create Account</span>
+                    <span class="btn-spinner"></span>
+                </button>
+
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+
+                <button type="button" class="btn-google" onclick="mockGoogleLogin()">
+                    <svg width="18" height="18" viewBox="0 0 18 18">
+                        <path
+                            d="M17.64 9.2c0-.637-.057-1.252-.164-1.842H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.614z"
+                            fill="#4285F4" />
+                        <path
+                            d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"
+                            fill="#34A853" />
+                        <path
+                            d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.997 8.997 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"
+                            fill="#FBBC05" />
+                        <path
+                            d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.462.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"
+                            fill="#EA4335" />
+                    </svg>
+                    <span>Continue with Google</span>
+                </button>
+            </form>
+
+            <!-- ═══ FORGOT PASSWORD FORM ═══ -->
+            <form class="auth-form hidden" id="form-forgot" onsubmit="handleForgotPassword(event)" novalidate>
+                <div class="forgot-icon-wrap">
+                    <div class="forgot-icon">🔒</div>
+                </div>
+                <h2 class="forgot-title">Forgot Password</h2>
+                <p class="forgot-desc">Enter your email address and we'll send you a link to reset your password.</p>
+
+                <div class="form-group">
+                    <label class="form-label" for="forgot-email">Email Address</label>
+                    <input class="form-input" type="email" id="forgot-email" placeholder="Enter your email" required />
+                    <span class="form-error" id="forgot-email-error"></span>
+                </div>
+
+                <button type="submit" class="btn-submit" id="forgot-btn">
+                    <span class="btn-text">Send Reset Link</span>
+                    <span class="btn-spinner"></span>
+                </button>
+
+                <a href="#" class="back-to-login" onclick="switchAuthTab('login'); return false;">← Back to login</a>
+            </form>
+
+            <!-- Success State (Forgot Password) -->
+            <div class="auth-form hidden" id="form-forgot-success">
+                <div class="success-icon-wrap">
+                    <div class="success-icon">✉️</div>
+                </div>
+                <h2 class="forgot-title">Check Your Email</h2>
+                <p class="forgot-desc">We've sent a password reset link to your email. Please check your inbox and
+                    follow the instructions.</p>
+                <a href="#" class="back-to-login" onclick="switchAuthTab('login'); return false;">← Back to login</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastIcon">✅</span>
+        <span id="toastMsg">Action applied</span>
+    </div>
+
+    <script src="../js/pages/login.js"></script>
+</body>
+
+</html>

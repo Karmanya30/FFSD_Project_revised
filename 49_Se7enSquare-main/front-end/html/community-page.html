@@ -1,0 +1,761 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Gameunity – Community Page</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link href="../css/global.css" rel="stylesheet" />
+    <link href="../css/pages/community-page.css" rel="stylesheet" />
+    <link href="../css/pages/rbac-nav.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <!-- ─── APP RAIL ─── -->
+    <aside class="app-rail" id="sidebar">
+  <!-- Top: Logo -->
+  <div class="rail-top">
+    <div class="rail-logo">⬡</div>
+    <div class="rail-toggle" onclick="toggleSidebar()">☰</div>
+  </div>
+  
+  <!-- Middle: Nav Icons -->
+  <div class="rail-middle">
+    <a href="dashboard.html" class="rail-item" data-tooltip="Home">🏠</a>
+    <a href="discovery.html" class="rail-item active" data-tooltip="Communities">💬</a>
+    <a href="discovery.html" class="rail-item" data-tooltip="Search">🔍</a>
+    <a href="events.html" class="rail-item" data-tooltip="Events">📅<div class="notif-dot" style="background:var(--gold);width:6px;height:6px;"></div></a>
+    <a href="profile-settings.html" class="rail-item" data-tooltip="Settings">⚙️</a>
+  </div>
+  
+  <!-- Bottom: Profile -->
+  <div class="rail-bottom">
+    <div class="rail-avatar" onclick="window.location.href='profile-settings.html'" data-tooltip="Profile">AM<div class="rail-dot bg-dot-green" style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-sidebar);"></div></div>
+  </div>
+</aside>
+    <!-- ─── MAIN ─── -->
+    <div class="main">
+      <!-- Header -->
+      <header class="header">
+        <div class="breadcrumb">
+          <span>Discover</span>
+          <span class="sep">›</span>
+          <span>Gaming</span>
+          <span class="sep">›</span>
+          <span class="current">Pro Gamers</span>
+        </div>
+        <div class="header-actions">
+          <div class="icon-btn">
+            🔔
+            <div class="notif-dot"></div>
+          </div>
+          <div class="icon-btn">📬</div>
+          <div class="header-avatar">AM</div>
+        </div>
+      </header>
+      <!-- Banner -->
+      <div class="comm-banner-area">
+        <div class="comm-banner">
+          <div class="banner-pattern"></div>
+          <div class="banner-emoji">⚡</div>
+        </div>
+        <div class="comm-profile-row">
+          <div class="comm-big-icon">⚡</div>
+          <div class="comm-title-block">
+            <div class="comm-title-row">
+              <div class="comm-big-name">Pro Gamers</div>
+              <div class="verified-badge">✓ Verified</div>
+            </div>
+            <div class="comm-meta-row">
+              <div class="meta-chip">
+                <span class="online-dot"></span> 312 online
+              </div>
+              <div class="meta-chip">👥 2,451 members</div>
+              <div class="meta-chip">💻 Esports · Competitive</div>
+              <div class="meta-chip">📅 Founded Mar 2022</div>
+            </div>
+          </div>
+          <div class="comm-actions">
+            <button
+              class="btn-joined-main"
+              id="joinMainBtn"
+              onclick="toggleMainJoin()"
+            >
+              ✓ Joined
+            </button>
+            <a
+              href="community-manager.html"
+              class="rbac-manage-btn hidden"
+              id="rbacManageBtn"
+              title="Manage this community"
+              >⚙️ Manage Community</a
+            >
+            <button
+              class="hidden"
+              id="rbacDeleteBtn"
+              onclick="requestDeleteCommunity()"
+              style="
+                background: rgba(255, 68, 68, 0.1);
+                color: var(--danger);
+                border: 1px solid rgba(255, 68, 68, 0.2);
+                border-radius: 8px;
+                padding: 0 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+              "
+            >
+              🗑️ Delete
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Tab Bar -->
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('overview', this)">
+          📋 Overview
+        </button>
+        <button class="tab-btn" onclick="switchTab('channels', this)">
+          📡 Channels <span class="tab-count">14</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('members', this)">
+          👥 Members <span class="tab-count">2,451</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('rules', this)">
+          📜 Rules <span class="tab-count">7</span>
+        </button>
+      </div>
+      <!-- ── OVERVIEW TAB ── -->
+      <div class="tab-content active" id="tab-overview">
+        <div class="overview-left">
+          <!-- Pinned Announcement -->
+          <div class="pinned-card">
+            <div class="pin-header">📌 Pinned Announcement</div>
+            <div class="pin-text">
+              Welcome to Pro Gamers! 🎉 Our monthly hackathon is back —
+              <strong>March Hack Sprint</strong> starts on March 7th. Register
+              in #events before March 6th. Prizes worth $2,000 up for grabs. All
+              skill levels welcome!
+            </div>
+            <div class="pin-footer">
+              <div class="pin-author">
+                <div class="pin-av">JK</div>
+                <span>Jake Kim (Owner) · 2 days ago</span>
+              </div>
+            </div>
+          </div>
+          <!-- About -->
+          <div class="section-card">
+            <div class="sc-title">
+              <span class="sc-title-icon">ℹ</span> About Pro Gamers
+            </div>
+            <div class="about-text">
+              Pro Gamers is a thriving community for developers of all levels —
+              from curious beginners to seasoned engineers. We share projects,
+              debug together, discuss the latest frameworks, and support each
+              other in growing our careers. Whether you're into frontend,
+              Strategy, Streaming, or mobile, there's a home for you here.
+            </div>
+            <div class="tag-row">
+              <span class="tag">MOBA</span>
+              <span class="tag">RPG</span>
+              <span class="tag">FPS</span>
+              <span class="tag">Streaming</span>
+              <span class="tag">Open Source</span>
+              <span class="tag">Career</span>
+              <span class="tag">Hackathons</span>
+            </div>
+          </div>
+          <!-- Stats -->
+          <div class="section-card">
+            <div class="sc-title">
+              <span class="sc-title-icon">📊</span> Community Stats
+            </div>
+            <div class="stat-grid">
+              <div class="stat-box">
+                <div class="stat-val">2,451</div>
+                <div class="stat-lbl">Total Members</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-val stat-online">312</div>
+                <div class="stat-lbl">Online Now</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-val">14</div>
+                <div class="stat-lbl">Channels</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-val">48k+</div>
+                <div class="stat-lbl">Messages Sent</div>
+              </div>
+            </div>
+          </div>
+          <!-- Recent Messages -->
+          <div class="section-card">
+            <div class="sc-title">
+              <span class="sc-title-icon">💬</span> Recent Messages
+            </div>
+            <div class="messages-feed">
+              <div class="msg-group">
+                <div class="msg-av grad-violet">AM</div>
+                <div class="msg-body">
+                  <div class="msg-header">
+                    <span class="msg-uname">Alex Morgan</span>
+                    <span class="msg-time">10:41 AM</span>
+                  </div>
+                  <div class="msg-text">
+                    This looks incredible
+                    <span class="mention">@Mia Park</span>! Love the color
+                    scheme. Are you using
+                    <strong>Gameunity's design system</strong> or building from
+                    scratch?
+                  </div>
+                </div>
+                <div class="msg-actions">
+                  <button
+                    class="act-btn reaction-btn"
+                    onclick="toggleReaction(this, '😊')"
+                  >
+                    😊
+                  </button>
+                  <button
+                    class="act-btn reply-btn"
+                    onclick="replyToMessage(this)"
+                  >
+                    ↩
+                  </button>
+                  <button
+                    class="act-btn more-btn"
+                    onclick="showMessageMenu(this)"
+                  >
+                    ⋯
+                  </button>
+                </div>
+              </div>
+              <div class="msg-group">
+                <div class="msg-av grad-pink">MP</div>
+                <div class="msg-body">
+                  <div class="msg-header">
+                    <span class="msg-uname">Mia Park</span>
+                    <span class="msg-time">10:34 AM</span>
+                  </div>
+                  <div class="msg-text">
+                    Sharing our team's early UI mockup for the hackathon 👀
+                    Still very rough but excited about the direction!
+                  </div>
+                  <div class="reactions">
+                    <div class="FPS-pill" onclick="toggleFPS(this)">
+                      <span>🔥</span><span class="FPS-count">22</span>
+                    </div>
+                    <div class="FPS-pill" onclick="toggleFPS(this)">
+                      <span>😍</span><span class="FPS-count">8</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="msg-actions">
+                  <button
+                    class="act-btn reaction-btn"
+                    onclick="toggleReaction(this, '😊')"
+                  >
+                    😊
+                  </button>
+                  <button
+                    class="act-btn reply-btn"
+                    onclick="replyToMessage(this)"
+                  >
+                    ↩
+                  </button>
+                  <button
+                    class="act-btn more-btn"
+                    onclick="showMessageMenu(this)"
+                  >
+                    ⋯
+                  </button>
+                </div>
+              </div>
+              <div class="msg-group">
+                <div class="msg-av grad-purple">SL</div>
+                <div class="msg-body">
+                  <div class="msg-header">
+                    <span class="msg-uname">Sara Lee</span>
+                    <span class="msg-role role-mod-badge">Mod</span>
+                    <span class="msg-time">10:08 AM</span>
+                  </div>
+                  <div class="msg-text">
+                    Also dropping this here for anyone getting started with our
+                    new <code>nexus-cli</code> tool. Here's the setup snippet:
+                  </div>
+                  <div class="code-block">
+                    <div class="code-block-header">
+                      <span class="code-lang">bash</span>
+                      <button
+                        class="code-copy"
+                        onclick="
+                          this.textContent = 'Copied!';
+                          setTimeout(() => (this.textContent = 'Copy'), 1500);
+                        "
+                      >
+                        Copy
+                      </button>
+                    </div>
+                    <pre><span class="cm"># Install globally</span>
+<span class="fn">npm</span> install -g nexus-cli
+
+<span class="cm"># Login with your Gameunity token</span>
+<span class="fn">nexus</span> login --token <span class="str">YOUR_TOKEN_HERE</span>
+
+<span class="cm"># Bootstrap a new project</span>
+<span class="fn">nexus</span> init my-project --template <span class="str">FPS-ts</span></pre>
+                  </div>
+                </div>
+                <div class="msg-actions">
+                  <button
+                    class="act-btn reaction-btn"
+                    onclick="toggleReaction(this, '😊')"
+                  >
+                    😊
+                  </button>
+                  <button
+                    class="act-btn reply-btn"
+                    onclick="replyToMessage(this)"
+                  >
+                    ↩
+                  </button>
+                  <button
+                    class="act-btn more-btn"
+                    onclick="showMessageMenu(this)"
+                  >
+                    ⋯
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="view-more-messages">
+              <a href="chat.html" class="view-more-btn">View All Messages →</a>
+            </div>
+          </div>
+        </div>
+        <div class="overview-right">
+          <!-- Upcoming Events -->
+          <div class="section-card">
+            <div class="sc-title">
+              <span class="sc-title-icon">📅</span> Active Events
+            </div>
+            <div id="activeEventsList"></div>
+          </div>
+          <!-- Created by -->
+          <div class="section-card">
+            <div class="sc-title">
+              <span class="sc-title-icon">👤</span> Created By
+            </div>
+            <div class="created-by-card">
+              <div class="created-by-avatar grad-orange">JK</div>
+              <div>
+                <div class="created-by-name">Jake Kim</div>
+                <div class="created-by-meta">Owner · Since Mar 2022</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ── CHANNELS TAB ── -->
+      <div class="tab-content" id="tab-channels">
+        <div class="channels-layout">
+          <div class="channels-main" id="channelsList"></div>
+          <div class="ch-sidebar">
+            <div class="ch-info-card">
+              <div class="ch-info-name">
+                # <span id="activeCh">general</span>
+              </div>
+              <div class="ch-info-desc" id="activeChDesc">
+                The main hub for all things Pro Gamers. Say hello, share
+                updates, ask anything, or just vibe with the community.
+              </div>
+              <button
+                class="open-channel-btn"
+                onclick="
+                  openChannel(
+                    '#' + document.getElementById('activeCh').textContent,
+                  )
+                "
+              >
+                Open Channel
+              </button>
+              <div class="ch-perms">
+                <div class="perms-title">Your Permissions</div>
+                <div class="perm-row">
+                  <span class="perm-yes">✓</span> View messages
+                </div>
+                <div class="perm-row">
+                  <span class="perm-yes">✓</span> Send messages
+                </div>
+                <div class="perm-row">
+                  <span class="perm-yes">✓</span> Add reactions
+                </div>
+                <div class="perm-row">
+                  <span class="perm-yes">✓</span> Attach files
+                </div>
+                <div class="perm-row">
+                  <span class="perm-no">✗</span> Manage messages
+                </div>
+                <div class="perm-row">
+                  <span class="perm-no">✗</span> Mention @everyone
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ── MEMBERS TAB ── -->
+      <div class="tab-content" id="tab-members">
+        <div class="members-layout">
+          <div class="members-search">
+            <span class="members-search-icon">🔍</span>
+            <input
+              oninput="filterMembers(this.value)"
+              placeholder="Search members…"
+              type="text"
+            />
+          </div>
+          <div class="members-groups" id="membersContainer">
+            <div>
+              <div class="member-group-title">👑 Owner — 1</div>
+              <div class="member-grid">
+                <div class="member-card">
+                  <div class="m-avatar grad-gold">
+                    JK
+                    <div class="m-status bg-dot-green"></div>
+                  </div>
+                  <div class="m-name">Jake Kim</div>
+                  <span class="m-role role-owner">Owner</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="member-group-title">🛡 Moderators — 4</div>
+              <div class="member-grid" id="modGrid">
+                <div class="member-card">
+                  <div class="m-avatar grad-purple">
+                    SL
+                    <div class="m-status bg-dot-green"></div>
+                  </div>
+                  <div class="m-name">Sara Lee</div>
+                  <span class="m-role role-mod">Mod</span>
+                </div>
+                <div class="member-card">
+                  <div class="m-avatar grad-pink">
+                    MP
+                    <div class="m-status bg-dot-green"></div>
+                  </div>
+                  <div class="m-name">Mia Park</div>
+                  <span class="m-role role-mod">Mod</span>
+                </div>
+                <div class="member-card">
+                  <div class="m-avatar grad-green">
+                    RN
+                    <div class="m-status bg-dot-orange"></div>
+                  </div>
+                  <div class="m-name">Ryan Ng</div>
+                  <span class="m-role role-mod">Mod</span>
+                </div>
+                <div class="member-card">
+                  <div class="m-avatar grad-pink">
+                    ZA
+                    <div class="m-status bg-dot-green"></div>
+                  </div>
+                  <div class="m-name">Zara Ali</div>
+                  <span class="m-role role-mod">Mod</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="member-group-title">🟢 Online — 8</div>
+              <div class="member-grid">
+                <div class="member-card">
+                  <div class="m-avatar grad-violet">
+                    AM
+                    <div class="m-status bg-dot-green"></div>
+                  </div>
+                  <div class="m-name">Alex Morgan</div>
+                  <span class="m-role role-member">Member</span>
+                </div>
+                <div class="member-card">
+                  <div class="m-avatar grad-cyan">
+                    TC
+                    <div class="m-status bg-dot-green"></div>
+                  </div>
+                  <div class="m-name">Tom Chen</div>
+                  <span class="m-role role-member">Member</span>
+                </div>
+                <div class="member-card">
+                  <div class="m-avatar grad-orange">
+                    LP
+                    <div class="m-status bg-dot-green"></div>
+                  </div>
+                  <div class="m-name">Leo Perez</div>
+                  <span class="m-role role-member">Member</span>
+                </div>
+                <div class="member-card">
+                  <div class="m-avatar grad-violet">
+                    AJ
+                    <div class="m-status bg-dot-green"></div>
+                  </div>
+                  <div class="m-name">Amy Jo</div>
+                  <span class="m-role role-member">Member</span>
+                </div>
+                <div class="member-card">
+                  <div class="m-avatar grad-green">
+                    DK
+                    <div class="m-status bg-dot-green"></div>
+                  </div>
+                  <div class="m-name">Dan Kim</div>
+                  <span class="m-role role-member">Member</span>
+                </div>
+                <div class="member-card">
+                  <div class="m-avatar grad-orange">
+                    NV
+                    <div class="m-status bg-dot-green"></div>
+                  </div>
+                  <div class="m-name">Nina V</div>
+                  <span class="m-role role-member">Member</span>
+                </div>
+                <div class="member-card">
+                  <div class="m-avatar grad-cyan">
+                    OT
+                    <div class="m-status bg-dot-green"></div>
+                  </div>
+                  <div class="m-name">Omar T</div>
+                  <span class="m-role role-member">Member</span>
+                </div>
+                <div class="member-card">
+                  <div class="m-avatar grad-purple">
+                    BW
+                    <div class="m-status bg-dot-green"></div>
+                  </div>
+                  <div class="m-name">Beth W</div>
+                  <span class="m-role role-member">Member</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ── RULES TAB ── -->
+      <div class="tab-content" id="tab-rules">
+        <div class="rules-layout">
+          <div class="rules-main">
+            <div class="rule-card">
+              <div class="rule-num">1</div>
+              <div class="rule-body">
+                <div class="rule-title">Be Respectful</div>
+                <div class="rule-desc">
+                  Treat every member with kindness and respect. Personal
+                  attacks, harassment, hate speech, and discriminatory language
+                  of any kind are strictly prohibited.
+                </div>
+              </div>
+            </div>
+            <div class="rule-card">
+              <div class="rule-num">2</div>
+              <div class="rule-body">
+                <div class="rule-title">Stay On Topic</div>
+                <div class="rule-desc">
+                  Keep discussions relevant to each channel's purpose. Use
+                  #off-topic for casual conversations not related to
+                  development.
+                </div>
+              </div>
+            </div>
+            <div class="rule-card">
+              <div class="rule-num">3</div>
+              <div class="rule-body">
+                <div class="rule-title">No Spam or Self-Promotion</div>
+                <div class="rule-desc">
+                  Unsolicited advertisements, excessive self-promotion, and
+                  repetitive posting are not allowed. Use #job-board for
+                  professional opportunities.
+                </div>
+              </div>
+            </div>
+            <div class="rule-card">
+              <div class="rule-num">4</div>
+              <div class="rule-body">
+                <div class="rule-title">Share Knowledge Generously</div>
+                <div class="rule-desc">
+                  When answering questions, be thorough and patient. We were all
+                  beginners once. Encourage learning at every level.
+                </div>
+              </div>
+            </div>
+            <div class="rule-card">
+              <div class="rule-num">5</div>
+              <div class="rule-body">
+                <div class="rule-title">Credit Original Work</div>
+                <div class="rule-desc">
+                  Always credit the original author when sharing code, articles,
+                  or other content. Do not claim others' work as your own.
+                </div>
+              </div>
+            </div>
+            <div class="rule-card">
+              <div class="rule-num">6</div>
+              <div class="rule-body">
+                <div class="rule-title">No Piracy or Illegal Content</div>
+                <div class="rule-desc">
+                  Sharing pirated software, cracked licenses, or any illegal
+                  content is grounds for immediate permanent ban.
+                </div>
+              </div>
+            </div>
+            <div class="rule-card">
+              <div class="rule-num">7</div>
+              <div class="rule-body">
+                <div class="rule-title">Listen to Moderators</div>
+                <div class="rule-desc">
+                  Moderator decisions are final. If you disagree with an action,
+                  use the appeal process rather than arguing in public channels.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="rules-aside">
+            <div class="rules-note">
+              <div class="rules-note-title">✓ Safe Community</div>
+              <div class="rules-note-text">
+                Pro Gamers has zero tolerance for hate speech, harassment, or
+                discrimination. Violations result in immediate action.
+              </div>
+            </div>
+            <div class="section-card">
+              <div class="sc-title">⚖️ Enforcement</div>
+              <div class="enforcement-list">
+                <div class="enforcement-item">
+                  <span class="enforcement-icon">⚠️</span> 1st offense: Warning
+                </div>
+                <div class="enforcement-item">
+                  <span class="enforcement-icon">🔇</span> 2nd offense: 24h mute
+                </div>
+                <div class="enforcement-item">
+                  <span class="enforcement-icon">🚫</span> 3rd offense: Temp ban
+                </div>
+                <div class="enforcement-item enforcement-item--severe">
+                  <span class="enforcement-icon">⛔</span> Severe: Permanent ban
+                </div>
+              </div>
+            </div>
+            <div class="section-card">
+              <div class="sc-title">📬 Report a Problem</div>
+              <div class="report-text">
+                Use the report button on any message or contact a moderator
+                directly.
+              </div>
+              <button
+                class="report-btn"
+                onclick="window.location.href = 'report.html'"
+              >
+                🚩 Report an Issue
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const storedUser = localStorage.getItem("nexus_current_user");
+
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+
+          const railAv = document.getElementById("railUserAvatar");
+          const headerAv = document.getElementById("headerUserAvatar");
+
+          if (railAv) {
+            railAv.innerHTML = `${user.initials}<div class="rail-dot bg-dot-green" style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-sidebar);"></div>`;
+            railAv.className = `rail-avatar ${user.bgClass || ""}`;
+            if (user.bgClass === "grad-orange" || user.initials === "JK") {
+              railAv.style.background =
+                "linear-gradient(135deg, var(--gold), #d97706)";
+            }
+          }
+
+          if (headerAv) {
+            headerAv.innerText = user.initials;
+            headerAv.className = `header-avatar ${user.bgClass || ""}`;
+            if (user.bgClass === "grad-orange" || user.initials === "JK") {
+              headerAv.style.background =
+                "linear-gradient(135deg, var(--gold), #d97706)";
+            }
+          }
+        }
+      });
+    </script>
+
+    <script src="../js/core/auth.js"></script>
+    <script src="../js/components/rbac-nav.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Show/hide Manage & Delete buttons based on ownership and superuser role
+        const user = window.getCurrentUser ? window.getCurrentUser() : null;
+        const manageBtn = document.getElementById("rbacManageBtn");
+        const deleteBtn = document.getElementById("rbacDeleteBtn");
+
+        if (user) {
+          const params = new URLSearchParams(window.location.search);
+          const communityName = params.get("name") || "pro-gamers";
+          const isOwner = window.isOwnerOfCommunity
+            ? window.isOwnerOfCommunity(communityName)
+            : false;
+          const isSuperUser = user.role === "superuser";
+
+          // Let owners and superusers manage
+          if (manageBtn && (isOwner || isSuperUser)) {
+            manageBtn.classList.remove("hidden");
+            manageBtn.href = `community-manager.html?name=${communityName}`;
+          }
+
+          // Let owners and superusers delete
+          if (deleteBtn && (isOwner || isSuperUser)) {
+            deleteBtn.classList.remove("hidden");
+          }
+        }
+      });
+
+      function requestDeleteCommunity() {
+        const conf = confirm(
+          "Are you sure you want to permanently delete this community? This action cannot be undone.",
+        );
+        if (conf) {
+          // Usually this would call an API, we will just simulate it and redirect to dashboard
+          const params = new URLSearchParams(window.location.search);
+          const communityName = params.get("name") || "pro-gamers";
+
+          // Remove from session local storage to simulate deletion
+          let owned = JSON.parse(
+            localStorage.getItem("nexus_owned_communities") ||
+              '{"pro-gamers":true}',
+          );
+          delete owned[communityName];
+          localStorage.setItem(
+            "nexus_owned_communities",
+            JSON.stringify(owned),
+          );
+
+          alert("Community has been successfully deleted.");
+          window.location.href = "dashboard.html";
+        }
+      }
+    </script>
+
+    <script src="../js/pages/community-page.js"></script>
+    <script src="../js/components/notifications.js"></script>
+  </body>
+</html>
