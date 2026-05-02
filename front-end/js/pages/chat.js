@@ -931,6 +931,14 @@ window.handleKey = function (e) {
   }
 };
 
+window.toggleMute = function (btn) {
+  btn.classList.toggle("muted");
+};
+
+window.toggleDeafen = function (btn) {
+  btn.classList.toggle("deafened");
+};
+
 window.sendMessage = function () {
   const input = document.getElementById("msgInput");
   const text = input.value.trim();
