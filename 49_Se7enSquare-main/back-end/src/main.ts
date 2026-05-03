@@ -16,6 +16,16 @@ async function bootstrap() {
     }),
   );
 
+  // ← Must be set BEFORE createDocument so Swagger picks up the /api prefix
+  app.setGlobalPrefix('api');
+
+  app.enableCors({
+    origin: true, // allow all origins (dev/demo mode)
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'x-role', 'Authorization'],
+    credentials: false,
+  });
+
   const config = new DocumentBuilder()
     .setTitle('Se7enSquare Backend API')
     .setDescription('In-memory NestJS backend for frontend integration and academic evaluation')
@@ -38,14 +48,6 @@ async function bootstrap() {
   const docsPath = join(process.cwd(), 'docs');
   mkdirSync(docsPath, { recursive: true });
   writeFileSync(join(docsPath, 'swagger.json'), JSON.stringify(document, null, 2), 'utf8');
-
-  app.setGlobalPrefix('api');
-  app.enableCors({
-    origin: true, // allow all origins (dev/demo mode)
-    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'x-role', 'Authorization'],
-    credentials: false,
-  });
 
   await app.listen(3000);
 }

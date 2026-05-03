@@ -10,7 +10,6 @@ const NAV_USER = {
     { id: 'dashboard', name: 'Dashboard', link: 'dashboard.html', icon: '🏠' },
     { id: 'discovery', name: 'Discover', link: 'discovery.html', icon: '🔭' },
     { id: 'events', name: 'Events', link: 'events.html', icon: '📅' },
-    { id: 'chat', name: 'Chat', link: 'chat.html', icon: '💬' },
     { id: 'profile', name: 'Profile', link: 'profile-settings.html', icon: '⚙️' },
   ],
 };
@@ -163,7 +162,7 @@ window.SidebarComponent = {
     try {
       const raw = localStorage.getItem('nexus_user');
       user = raw ? JSON.parse(raw) : null;
-    } catch (e) {}
+    } catch (e) { }
 
     el.innerHTML = _renderSidebar(user);
     this._applyCollapsed();
@@ -194,7 +193,7 @@ window.SidebarComponent = {
 
   switchRole(role) {
     let user = {};
-    try { user = JSON.parse(localStorage.getItem('nexus_user') || '{}'); } catch (e) {}
+    try { user = JSON.parse(localStorage.getItem('nexus_user') || '{}'); } catch (e) { }
     user.role = _normalizeRole(role);
     user.name = user.name || user.username || 'Demo User';
     if (typeof persistCurrentUser === 'function') persistCurrentUser(user);

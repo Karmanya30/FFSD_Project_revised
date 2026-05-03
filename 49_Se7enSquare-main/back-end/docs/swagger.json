@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/users": {
+    "/api/users": {
       "get": {
         "operationId": "UsersController_findAll",
         "summary": "List all users",
@@ -97,7 +97,7 @@
         ]
       }
     },
-    "/users/{id}": {
+    "/api/users/{id}": {
       "get": {
         "operationId": "UsersController_findOne",
         "summary": "Get a single user by ID",
@@ -268,7 +268,7 @@
         ]
       }
     },
-    "/communities": {
+    "/api/communities": {
       "get": {
         "operationId": "CommunitiesController_findAll",
         "summary": "List all communities",
@@ -364,7 +364,7 @@
         ]
       }
     },
-    "/communities/{id}": {
+    "/api/communities/{id}": {
       "get": {
         "operationId": "CommunitiesController_findOne",
         "summary": "Get a single community by ID",
@@ -535,7 +535,7 @@
         ]
       }
     },
-    "/events": {
+    "/api/events": {
       "get": {
         "operationId": "EventsController_findAll",
         "summary": "List all events",
@@ -646,7 +646,7 @@
         ]
       }
     },
-    "/events/{id}": {
+    "/api/events/{id}": {
       "get": {
         "operationId": "EventsController_findOne",
         "summary": "Get a single event by ID",
@@ -817,7 +817,7 @@
         ]
       }
     },
-    "/reports": {
+    "/api/reports": {
       "get": {
         "operationId": "ReportsController_findAll",
         "summary": "List all reports",
@@ -913,7 +913,7 @@
         ]
       }
     },
-    "/reports/{id}/status": {
+    "/api/reports/{id}/status": {
       "patch": {
         "operationId": "ReportsController_updateStatus",
         "summary": "Update report status",
@@ -978,7 +978,7 @@
         ]
       }
     },
-    "/reports/{id}": {
+    "/api/reports/{id}": {
       "delete": {
         "operationId": "ReportsController_remove",
         "summary": "Delete a report",
@@ -1034,7 +1034,7 @@
         ]
       }
     },
-    "/posts": {
+    "/api/posts": {
       "get": {
         "operationId": "PostsController_findAll",
         "summary": "Get all posts",
@@ -1109,7 +1109,7 @@
         ]
       }
     },
-    "/posts/{id}": {
+    "/api/posts/{id}": {
       "get": {
         "operationId": "PostsController_findOne",
         "summary": "Get post by id",
@@ -1237,7 +1237,7 @@
         ]
       }
     },
-    "/dashboard/stats": {
+    "/api/dashboard/stats": {
       "get": {
         "operationId": "DashboardController_getStats",
         "summary": "Get dashboard stats",
@@ -1269,7 +1269,7 @@
         ]
       }
     },
-    "/memberships": {
+    "/api/memberships": {
       "get": {
         "operationId": "MembershipsController_findAll",
         "summary": "List all memberships, optionally filtered by communityId or userId",
@@ -1369,7 +1369,7 @@
         ]
       }
     },
-    "/memberships/{id}": {
+    "/api/memberships/{id}": {
       "delete": {
         "operationId": "MembershipsController_remove",
         "summary": "Leave a community (delete membership by id)",

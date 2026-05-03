@@ -1,245 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gameunity — Chat</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../css/global.css" />
-    <link rel="stylesheet" href="../css/pages/chat.css" />
-    <style>
-      /* Ensure full height layout */
-      body {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-      .chat-layout {
-        flex: 1;
-        display: flex;
-        overflow: hidden;
-      }
-      .chat-area {
-        height: 100% !important;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Standard Platform Header -->
-    <header class="header">
-      <div class="header-left" onclick="window.location.href='dashboard.html'" style="cursor:pointer">
-        <div class="header-title">Gameunity</div>
-      </div>
-      <div class="header-actions">
-        <div id="searchToggleBtn" class="hact-btn" onclick="toggleSearchBar()" title="Search Messages">🔍</div>
-        <div id="pinnedToggleBtn" class="hact-btn" onclick="togglePinnedPanel()" title="Pinned Messages">📌</div>
-        <div id="memberCountChip" class="member-count-chip" onclick="toggleMemberSidebar()" title="Members List">
-          👥 <span id="onlineCount">3</span>
-        </div>
-        <div class="header-divider" style="width:1px; height:24px; background:var(--border); margin:0 8px;"></div>
-        <div class="icon-btn" onclick="window.location.href='profile-settings.html'">
-          <div class="header-avatar user-avatar"></div>
-        </div>
-      </div>
-    </header>
 
-    <div class="chat-layout">
-      <!-- ─── LEFT: CHANNEL SIDEBAR ─── -->
-      <nav class="ch-sidebar">
-        <div class="comm-header">
-          <div class="comm-header-top">
-            <div class="comm-icon-sm">🎮</div>
-            <div class="comm-hname">Pro Gamers</div>
-          </div>
-          <div class="comm-hmeta">Online</div>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gameunity — Chat</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/pages/chat.css" />
+  <style>
+    /* Ensure full height layout */
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
-        <div class="ch-search">
-          <input type="text" placeholder="Search channels…" oninput="filterChannels(this.value)" />
-        </div>
+    .chat-layout {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
 
-        <div class="ch-list" id="channelsList">
-          <!-- Categories and Channels will be mostly static for now as per chat.js -->
-          <div class="ch-category" data-category="text">
-            <div class="ch-group-lbl" onclick="toggleCategory('text')">
-              <span class="cat-arrow">▾</span> TEXT CHANNELS
-            </div>
-            <div class="ch-category-items">
-              <div class="ch-row active" onclick="setChannel(this, 'general', '#')">
-                <span class="ch-type">#</span>
-                <span class="ch-lbl">general</span>
-                <span class="ch-unread blue">2</span>
-              </div>
-              <div class="ch-row" onclick="setChannel(this, 'introductions', '#')">
-                <span class="ch-type">#</span>
-                <span class="ch-lbl">introductions</span>
-              </div>
-              <div class="ch-row" onclick="setChannel(this, 'off-topic', '#')">
-                <span class="ch-type">#</span>
-                <span class="ch-lbl">off-topic</span>
-              </div>
-            </div>
-          </div>
+    .chat-area {
+      height: 100% !important;
+    }
+  </style>
+</head>
 
-        </div>
-
-        <div class="ch-footer">
-          <div class="user-av grad-purple user-avatar"></div>
-          <div class="user-av-name">Rahul Kumar</div>
-          <div class="mic-btn" id="muteMicBtn" title="Mute Mic" onclick="toggleMute(this)">🎤</div>
-          <div class="mic-btn" id="deafenBtn" title="Deafen" onclick="toggleDeafen(this)">🎧</div>
-        </div>
-      </nav>
-
-      <!-- ─── CENTER: CHAT AREA ─── -->
-      <main class="chat-area">
-        <!-- Chat Header -->
-        <div class="chat-header">
-          <div class="ch-name-display">
-            <span class="ch-hash" id="activeChanHash">#</span>
-            <span class="ch-name-text" id="activeChanName">general</span>
-            <span class="ch-topic" id="activeChanTopic">The main hub — say hello, share updates, ask anything 👋</span>
-          </div>
-        </div>
-
-        <!-- Search Bar (Hidden by default) -->
-        <div id="chatSearchBar" class="chat-search-bar">
-          <div class="chat-search-inner">
-            <span class="chat-search-icon">🔍</span>
-            <input type="text" id="chatSearchInput" placeholder="Search messages..." oninput="searchMessages(this.value)" />
-            <span id="chatSearchCount" class="chat-search-count"></span>
-            <button class="chat-search-close" onclick="toggleSearchBar()">✕</button>
-          </div>
-        </div>
-
-        <!-- Messages Scroller -->
-        <div class="messages-wrap" id="messagesWrap">
-          <div class="chat-empty-state" id="chatEmptyState" style="display: none;">
-            <div class="empty-icon">👋</div>
-            <div class="empty-text">Start the conversation</div>
-          </div>
-          <div class="day-divider"><span>May 1, 2026</span></div>
-          <div class="msg-group">
-            <div class="msg-av grad-purple user-avatar"></div>
-            <div class="msg-body">
-              <div class="msg-header">
-                <span class="msg-uname">Rahul Kumar</span>
-                <span class="msg-role role-owner-badge">Owner</span>
-                <span class="msg-time">10:00 AM</span>
-              </div>
-              <div class="msg-text">Welcome to the Pro Gamers community! 👋</div>
-              <div class="reactions">
-                <div class="reaction-pill mine" onclick="toggleReaction(this)">
-                  <span>🔥</span><span class="reaction-count">3</span>
-                </div>
-              </div>
-              <!-- Message Actions -->
-              <div class="msg-actions">
-                <div class="act-btn" title="Add Reaction" onclick="openEmojiPicker(this, event)">😊</div>
-                <div class="act-btn" title="Reply" onclick="replyToMessage(this)">↩️</div>
-                <div class="act-btn" title="More" onclick="showMessageMenu(this, event)">⋯</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Reply Bar (Hidden by default) -->
-        <div id="replyBar" class="reply-bar" style="display: none;">
-          <div class="reply-bar-inner">
-            <span class="reply-bar-icon">↩️</span>
-            <span class="reply-bar-text">Replying to <strong id="replyBarName">User</strong></span>
-            <button class="reply-bar-close" onclick="cancelReply()">✕</button>
-          </div>
-        </div>
-
-        <!-- Input Area -->
-        <div class="input-area">
-          <div class="input-wrap">
-            <div class="input-toolbar">
-              <div class="tb-btn" title="Bold" onclick="formatText('bold')"><strong>B</strong></div>
-              <div class="tb-btn" title="Italic" onclick="formatText('italic')"><em>I</em></div>
-              <div class="tb-btn" title="Code" onclick="formatText('code')"><span class="tb-mono">&lt;/&gt;</span></div>
-              <div class="tb-divider"></div>
-              <div class="tb-btn" title="Emoji" onclick="openToolbarEmoji()">😊</div>
-              <div class="tb-btn" title="Mention" onclick="insertMention()">@</div>
-            </div>
-            <div class="input-row">
-              <button class="tb-btn" title="Attach File" onclick="triggerFileAttach()">➕</button>
-              <textarea id="msgInput" placeholder="Message #general" rows="1" onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }"></textarea>
-              <button class="send-btn" onclick="sendMessage()">🚀</button>
-            </div>
-          </div>
-          <input type="file" id="fileInput" style="display:none" onchange="handleFileAttach(this)" />
-        </div>
-
-        <!-- Pinned Panel (Absolute) -->
-        <div id="pinnedPanel" class="pinned-panel">
-          <div class="pinned-panel-header">
-            <span>📌 Pinned Messages</span>
-            <button class="pinned-panel-close" onclick="togglePinnedPanel()">✕</button>
-          </div>
-          <div class="pinned-panel-list" id="pinnedList">
-            <div id="pinnedEmpty" class="pinned-empty">No pinned messages yet.</div>
-          </div>
-        </div>
-      </main>
-
-      <!-- ─── RIGHT: MEMBER SIDEBAR ─── -->
-      <aside class="mem-sidebar" id="memberSidebar">
-        <div class="mem-header">
-          <div class="mem-title">
-            <span class="mem-title-text">Members</span>
-            <div class="mem-toggle-area">
-              <span class="online-count">3</span>
-              <button class="mem-toggle-btn" onclick="toggleMemberSidebar()" title="Toggle Sidebar">
-                <span class="toggle-icon">❯</span>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="mem-list">
-          <div class="mem-group-title">Online — 3</div>
-          <div class="mem-row">
-            <div class="m-av grad-purple user-avatar"><span class="m-stat" style="background:var(--success)"></span></div>
-            <div class="m-info">
-              <div class="m-name">Rahul Kumar</div>
-              <div class="m-role-tag owner-c">Owner</div>
-            </div>
-          </div>
-          <div class="mem-row">
-            <div class="m-av grad-orange">AK <span class="m-stat" style="background:var(--success)"></span></div>
-            <div class="m-info">
-              <div class="m-name">Arjun Kumar</div>
-              <div class="m-role-tag moderator-c">Moderator</div>
-            </div>
-          </div>
-          <div class="mem-row">
-            <div class="m-av grad-cyan">JD <span class="m-stat" style="background:var(--success)"></span></div>
-            <div class="m-info">
-              <div class="m-name">Jane Doe</div>
-              <div class="m-role-tag">Member</div>
-            </div>
-          </div>
-        </div>
-      </aside>
+<body>
+  <!-- Standard Platform Header -->
+  <header class="header">
+    <div class="header-left" style="display:flex;align-items:center;gap:12px;">
+      <button onclick="history.length > 1 ? history.back() : window.location.href='community-page.html'"
+        style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:var(--text-secondary,#aaa);border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background 0.2s;"
+        onmouseover="this.style.background='rgba(255,255,255,0.13)'"
+        onmouseout="this.style.background='rgba(255,255,255,0.07)'" title="Go back">
+        ← Back
+      </button>
+      <div class="header-title" onclick="window.location.href='dashboard.html'" style="cursor:pointer">Gameunity</div>
     </div>
-
-    <!-- Emoji Picker (Absolute) -->
-    <div id="emojiPicker" class="emoji-picker">
-      <div class="emoji-picker-header">SELECT EMOJI</div>
-      <div class="emoji-picker-grid" id="emojiPickerGrid">
-        <!-- Injected by JS -->
+    <div class="header-actions">
+      <div id="searchToggleBtn" class="hact-btn" onclick="toggleSearchBar()" title="Search Messages">🔍</div>
+      <div id="pinnedToggleBtn" class="hact-btn" onclick="togglePinnedPanel()" title="Pinned Messages">📌</div>
+      <div id="memberCountChip" class="member-count-chip" onclick="toggleMemberSidebar()" title="Members List">
+        👥 <span id="onlineCount">3</span>
+      </div>
+      <div class="header-divider" style="width:1px; height:24px; background:var(--border); margin:0 8px;"></div>
+      <div class="icon-btn" onclick="window.location.href='profile-settings.html'">
+        <div class="header-avatar user-avatar"></div>
       </div>
     </div>
+  </header>
 
-    <script src="../js/core/utils.js"></script>
-    <script src="../js/core/auth.js"></script>
-    <script src="../js/core/apiClient.js"></script>
-    <script src="../js/pages/chat.js"></script>
-    <script src="../js/components/notifications.js"></script>
-  </body>
+  <div class="chat-layout">
+    <!-- ─── LEFT: CHANNEL SIDEBAR ─── -->
+    <nav class="ch-sidebar">
+      <div class="comm-header">
+        <div class="comm-header-top">
+          <div class="comm-icon-sm">🎮</div>
+          <div class="comm-hname">Pro Gamers</div>
+        </div>
+        <div class="comm-hmeta">Online</div>
+      </div>
+
+      <div class="ch-search">
+        <input type="text" placeholder="Search channels…" oninput="filterChannels(this.value)" />
+      </div>
+
+      <div class="ch-list" id="channelsList">
+        <!-- Categories and Channels will be mostly static for now as per chat.js -->
+        <div class="ch-category" data-category="text">
+          <div class="ch-group-lbl" onclick="toggleCategory('text')">
+            <span class="cat-arrow">▾</span> TEXT CHANNELS
+          </div>
+          <div class="ch-category-items">
+            <div class="ch-row active" onclick="setChannel(this, 'general', '#')">
+              <span class="ch-type">#</span>
+              <span class="ch-lbl">general</span>
+              <span class="ch-unread blue">2</span>
+            </div>
+            <div class="ch-row" onclick="setChannel(this, 'introductions', '#')">
+              <span class="ch-type">#</span>
+              <span class="ch-lbl">introductions</span>
+            </div>
+            <div class="ch-row" onclick="setChannel(this, 'off-topic', '#')">
+              <span class="ch-type">#</span>
+              <span class="ch-lbl">off-topic</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="ch-footer">
+        <div class="user-av grad-purple user-avatar"></div>
+        <div class="user-av-name">Rahul Kumar</div>
+        <div class="mic-btn" id="muteMicBtn" title="Mute Mic" onclick="toggleMute(this)">🎤</div>
+        <div class="mic-btn" id="deafenBtn" title="Deafen" onclick="toggleDeafen(this)">🎧</div>
+      </div>
+    </nav>
+
+    <!-- ─── CENTER: CHAT AREA ─── -->
+    <main class="chat-area">
+      <!-- Chat Header -->
+      <div class="chat-header">
+        <div class="ch-name-display">
+          <span class="ch-hash" id="activeChanHash">#</span>
+          <span class="ch-name-text" id="activeChanName">general</span>
+          <span class="ch-topic" id="activeChanTopic">The main hub — say hello, share updates, ask anything 👋</span>
+        </div>
+      </div>
+
+      <!-- Search Bar (Hidden by default) -->
+      <div id="chatSearchBar" class="chat-search-bar">
+        <div class="chat-search-inner">
+          <span class="chat-search-icon">🔍</span>
+          <input type="text" id="chatSearchInput" placeholder="Search messages..."
+            oninput="searchMessages(this.value)" />
+          <span id="chatSearchCount" class="chat-search-count"></span>
+          <button class="chat-search-close" onclick="toggleSearchBar()">✕</button>
+        </div>
+      </div>
+
+      <!-- Messages Scroller -->
+      <div class="messages-wrap" id="messagesWrap">
+        <div class="chat-empty-state" id="chatEmptyState" style="display: none;">
+          <div class="empty-icon">👋</div>
+          <div class="empty-text">Start the conversation</div>
+        </div>
+        <div class="day-divider"><span>May 1, 2026</span></div>
+        <div class="msg-group">
+          <div class="msg-av grad-purple user-avatar"></div>
+          <div class="msg-body">
+            <div class="msg-header">
+              <span class="msg-uname">Rahul Kumar</span>
+              <span class="msg-role role-owner-badge">Owner</span>
+              <span class="msg-time">10:00 AM</span>
+            </div>
+            <div class="msg-text">Welcome to the Pro Gamers community! 👋</div>
+            <div class="reactions">
+              <div class="reaction-pill mine" onclick="toggleReaction(this)">
+                <span>🔥</span><span class="reaction-count">3</span>
+              </div>
+            </div>
+            <!-- Message Actions -->
+            <div class="msg-actions">
+              <div class="act-btn" title="Add Reaction" onclick="openEmojiPicker(this, event)">😊</div>
+              <div class="act-btn" title="Reply" onclick="replyToMessage(this)">↩️</div>
+              <div class="act-btn" title="More" onclick="showMessageMenu(this, event)">⋯</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reply Bar (Hidden by default) -->
+      <div id="replyBar" class="reply-bar" style="display: none;">
+        <div class="reply-bar-inner">
+          <span class="reply-bar-icon">↩️</span>
+          <span class="reply-bar-text">Replying to <strong id="replyBarName">User</strong></span>
+          <button class="reply-bar-close" onclick="cancelReply()">✕</button>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="input-area">
+        <div class="input-wrap">
+          <div class="input-toolbar">
+            <div class="tb-btn" title="Bold" onclick="formatText('bold')"><strong>B</strong></div>
+            <div class="tb-btn" title="Italic" onclick="formatText('italic')"><em>I</em></div>
+            <div class="tb-btn" title="Code" onclick="formatText('code')"><span class="tb-mono">&lt;/&gt;</span></div>
+            <div class="tb-divider"></div>
+            <div class="tb-btn" title="Emoji" onclick="openToolbarEmoji()">😊</div>
+            <div class="tb-btn" title="Mention" onclick="insertMention()">@</div>
+          </div>
+          <div class="input-row">
+            <button class="tb-btn" title="Attach File" onclick="triggerFileAttach()">➕</button>
+            <textarea id="msgInput" placeholder="Message #general" rows="1"
+              onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }"></textarea>
+            <button class="send-btn" onclick="sendMessage()">🚀</button>
+          </div>
+        </div>
+        <input type="file" id="fileInput" style="display:none" onchange="handleFileAttach(this)" />
+      </div>
+
+      <!-- Pinned Panel (Absolute) -->
+      <div id="pinnedPanel" class="pinned-panel">
+        <div class="pinned-panel-header">
+          <span>📌 Pinned Messages</span>
+          <button class="pinned-panel-close" onclick="togglePinnedPanel()">✕</button>
+        </div>
+        <div class="pinned-panel-list" id="pinnedList">
+          <div id="pinnedEmpty" class="pinned-empty">No pinned messages yet.</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ─── RIGHT: MEMBER SIDEBAR ─── -->
+    <aside class="mem-sidebar" id="memberSidebar">
+      <div class="mem-header">
+        <div class="mem-title">
+          <span class="mem-title-text">Members</span>
+          <div class="mem-toggle-area">
+            <span class="online-count">3</span>
+            <button class="mem-toggle-btn" onclick="toggleMemberSidebar()" title="Toggle Sidebar">
+              <span class="toggle-icon">❯</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mem-list">
+        <div class="mem-group-title">Online — 3</div>
+        <div class="mem-row">
+          <div class="m-av grad-purple user-avatar"><span class="m-stat" style="background:var(--success)"></span></div>
+          <div class="m-info">
+            <div class="m-name">Rahul Kumar</div>
+            <div class="m-role-tag owner-c">Owner</div>
+          </div>
+        </div>
+        <div class="mem-row">
+          <div class="m-av grad-orange">AK <span class="m-stat" style="background:var(--success)"></span></div>
+          <div class="m-info">
+            <div class="m-name">Arjun Kumar</div>
+            <div class="m-role-tag moderator-c">Moderator</div>
+          </div>
+        </div>
+        <div class="mem-row">
+          <div class="m-av grad-cyan">JD <span class="m-stat" style="background:var(--success)"></span></div>
+          <div class="m-info">
+            <div class="m-name">Jane Doe</div>
+            <div class="m-role-tag">Member</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Emoji Picker (Absolute) -->
+  <div id="emojiPicker" class="emoji-picker">
+    <div class="emoji-picker-header">SELECT EMOJI</div>
+    <div class="emoji-picker-grid" id="emojiPickerGrid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <script src="../js/core/utils.js"></script>
+  <script src="../js/core/auth.js"></script>
+  <script src="../js/core/apiClient.js"></script>
+  <script src="../js/pages/chat.js"></script>
+  <script src="../js/components/notifications.js"></script>
+</body>
+
 </html>
