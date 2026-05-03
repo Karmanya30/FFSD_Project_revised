@@ -10,16 +10,70 @@ let selectedEventType = 'Online';
 let _events      = [];
 let _communities = [];
 
+const EVENTS_STORAGE_KEY = 'events';
+
+function readStoredEvents() {
+    try {
+        const events = JSON.parse(localStorage.getItem(EVENTS_STORAGE_KEY)) || [];
+        return Array.isArray(events) ? events : [];
+    } catch (e) {}
+
+    localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify([]));
+    return [];
+}
+
+function writeStoredEvents(events) {
+    localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events));
+}
+
+function createEvent(data) {
+    const events = readStoredEvents();
+    const currentUser = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+    const event = {
+        ...data,
+        id: Date.now(),
+        createdBy: currentUser?.username || currentUser?.name || data.createdBy || 'user1',
+        attendees: 0,
+        status: 'pending'
+    };
+
+    events.push(event);
+    writeStoredEvents(events);
+    alert('Event request sent for approval');
+    return event;
+}
+
+function isApprovedEvent(event) {
+    return event.status === 'approved';
+}
+
+function canApproveEvents() {
+    const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+    const role = typeof normalizeRole === 'function' ? normalizeRole(user?.role) : user?.role;
+    return role === 'community_manager' || role === 'manager' || role === 'admin';
+}
+
+function isSystemAdmin() {
+    const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+    return user?.role === 'admin';
+}
+
 // ── Load ─────────────────────────────────────────────────────────────────────
 async function loadData() {
     try {
-        [_events, _communities] = await Promise.all([
-            window.API.events.getAll(),
-            window.API.communities.getAll(),
-        ]);
+        _events = readStoredEvents();
+        _communities = await window.API.communities.getAll();
     } catch (err) {
         console.error('[Events] Backend error:', err);
-        _events = []; _communities = [];
+        _events = readStoredEvents();
+        _communities = [];
+    }
+
+    if (!_communities.length) {
+        _communities = [
+            { id: 'pro-gamers', slug: 'pro-gamers', name: 'Pro Gamers', icon: '⚡' },
+            { id: 'gameunity', slug: 'gameunity', name: 'Gameunity', icon: '◇' }
+        ];
     }
 }
 
@@ -27,6 +81,7 @@ async function loadData() {
 function renderAll() {
     const userRegistrations = JSON.parse(localStorage.getItem('nexus_registered_events') || '[]');
     updateTabCounts(userRegistrations);
+    renderRoleControls();
 
     if (currentActiveTab === 'upcoming') {
         renderUpcomingGrid(userRegistrations);
@@ -37,7 +92,7 @@ function renderAll() {
 }
 
 function updateTabCounts(registrations) {
-    const upcomingCount = _events.filter(e => e.status === 'upcoming').length;
+    const upcomingCount = _events.filter(isApprovedEvent).length;
     const tabUpcoming   = document.querySelector('.tab-btn[onclick*="upcoming"] .tab-count');
     const tabReg        = document.querySelector('.tab-btn[onclick*="registered"] .tab-count');
     if (tabUpcoming) tabUpcoming.textContent = upcomingCount;
@@ -49,7 +104,7 @@ function renderUpcomingGrid(registrations) {
     if (!grid) return;
 
     const filtered = _events.filter(e => {
-        if (e.status !== 'upcoming') return false;
+        if (!isApprovedEvent(e)) return false;
         if (activeFilter === 'all events') return true;
         return (e.type || '').toLowerCase().includes(activeFilter.toLowerCase());
     });
@@ -88,11 +143,18 @@ function renderRegisteredGrid(registrations) {
 }
 
 function renderFeaturedEvent(registrations) {
-    const featured = _events.find(e => e.isFeatured) || _events[0];
-    if (!featured) return;
+    const featured = _events.find(e => e.isFeatured && isApprovedEvent(e)) || _events.find(isApprovedEvent);
+    const featuredEl = document.querySelector('.featured-event');
+    if (!featured) {
+        if (featuredEl) featuredEl.style.display = 'none';
+        return;
+    }
+    if (featuredEl) featuredEl.style.display = '';
 
     const isRegistered = registrations.includes(String(featured.id));
-    const isFull = featured.maxAttendees && featured.attendees >= featured.maxAttendees;
+    const featuredAttendees = featured.attendees || 0;
+    const featuredCapacity = featured.maxAttendees || featured.capacity || null;
+    const isFull = featuredCapacity && featuredAttendees >= featuredCapacity;
 
     const featTitle    = document.querySelector('.feat-title');
     const featDesc     = document.querySelector('.feat-desc');
@@ -102,8 +164,12 @@ function renderFeaturedEvent(registrations) {
 
     if (featTitle)     featTitle.textContent     = featured.title;
     if (featDesc)      featDesc.textContent       = featured.description;
-    if (seatsLeft)     seatsLeft.textContent      = isFull ? 'Event Full' : `⚡ ${featured.maxAttendees - featured.attendees} seats left`;
-    if (attendeeCount) attendeeCount.textContent  = `${featured.attendees} people registered`;
+    if (seatsLeft) {
+        seatsLeft.textContent = featuredCapacity
+            ? (isFull ? 'Event Full' : `⚡ ${featuredCapacity - featuredAttendees} seats left`)
+            : 'Open registration';
+    }
+    if (attendeeCount) attendeeCount.textContent  = `${featuredAttendees} people registered`;
 
     if (featBtn) {
         featBtn.textContent = isRegistered ? '✓ Registered' : (isFull ? 'Event Full' : 'Register Now');
@@ -114,6 +180,11 @@ function renderFeaturedEvent(registrations) {
 }
 
 function getComm(communityId) {
+    const key = String(communityId || '');
+    const found = _communities.find(c =>
+        String(c.id) === key || String(c.slug || '') === key || String(c.name || '').toLowerCase() === key.toLowerCase()
+    );
+    if (found) return found;
     return _communities.find(c => c.id === communityId) || { name: 'Unknown', icon: '🎮' };
 }
 
@@ -123,7 +194,12 @@ function generateEventCard(ev, registrations, index) {
     const date       = new Date(ev.date);
     const day        = date.getDate().toString().padStart(2, '0');
     const month      = date.toLocaleString('en-US', { month: 'short' });
-    const isFull     = ev.maxAttendees && ev.attendees >= ev.maxAttendees;
+    const attendees  = ev.attendees || 0;
+    const capacity   = ev.maxAttendees || ev.capacity || null;
+    const isFull     = capacity && attendees >= capacity;
+    const seatsLabel = capacity ? `âš¡ ${capacity - attendees} seats left` : 'Open registration';
+    ev.attendees = attendees;
+    ev.maxAttendees = capacity || attendees;
 
     return `
         <div class="ev-card delay-${(index % 10) * 5}">
@@ -149,16 +225,17 @@ function generateEventCard(ev, registrations, index) {
                 </div>
                 <div class="ev-card-meta">
                     <div class="ev-meta-tag">⏰ ${ev.time || '—'}</div>
-                    <div class="ev-meta-tag">👤 ${ev.attendees || 0} / ${ev.maxAttendees || '∞'}</div>
+                    <div class="ev-meta-tag">👤 ${attendees} / ${capacity || '∞'}</div>
                     <div class="ev-meta-tag">${ev.type || 'Event'}</div>
                 </div>
                 <div class="ev-card-footer">
-                    <div class="ev-attendees">${isFull ? '🚫 Event Full' : `⚡ ${ev.maxAttendees - ev.attendees} seats left`}</div>
+                    <div class="ev-attendees">${isFull ? '🚫 Event Full' : seatsLabel}</div>
                     <div class="ev-actions">
+                        <button class="btn-ev" onclick="viewEvent(${ev.id})">View</button>
                         <button class="btn-register ${isRegistered ? 'registered' : ''}" onclick="handleRegistrationToggle(${ev.id})">
                             ${isRegistered ? 'Registered' : 'Register Now'}
                         </button>
-                        <button class="btn-delete-event" onclick="deleteEvent(${ev.id})" title="Delete">🗑️</button>
+                        ${isSystemAdmin() ? `<button class="btn-delete-event" onclick="deleteEvent(${ev.id})" title="Delete">🗑️</button>` : ''}
                     </div>
                 </div>
             </div>
@@ -218,10 +295,7 @@ window.handleRegistrationToggle = async function (eventId) {
 
     if (isRegistered) {
         const newAttendees = Math.max(0, (event.attendees || 0) - 1);
-        try {
-            await window.API.events.update(eventId, { attendees: newAttendees });
-            event.attendees = newAttendees;
-        } catch (e) { /* ignore */ }
+        event.attendees = newAttendees;
         registrations = registrations.filter(r => r !== id);
         if (window.toast) window.toast(`Unregistered from ${event.title}`);
     } else {
@@ -230,14 +304,12 @@ window.handleRegistrationToggle = async function (eventId) {
             return;
         }
         const newAttendees = (event.attendees || 0) + 1;
-        try {
-            await window.API.events.update(eventId, { attendees: newAttendees });
-            event.attendees = newAttendees;
-        } catch (e) { /* ignore */ }
+        event.attendees = newAttendees;
         registrations.push(id);
         if (window.toast) window.toast(`Registered for ${event.title}! 🎟`);
     }
 
+    writeStoredEvents(_events);
     localStorage.setItem('nexus_registered_events', JSON.stringify(registrations));
     renderAll();
 };
@@ -245,8 +317,8 @@ window.handleRegistrationToggle = async function (eventId) {
 window.deleteEvent = async function (eventId) {
     if (!confirm('Are you sure you want to delete this event?')) return;
     try {
-        await window.API.events.delete(eventId);
         _events = _events.filter(e => e.id !== eventId);
+        writeStoredEvents(_events);
         if (window.toast) window.toast('Event deleted. 🗑️');
         renderAll();
     } catch (err) {
@@ -259,7 +331,10 @@ function initForm() {
     const form = document.getElementById('createEventForm');
     if (!form) return;
 
-    form.addEventListener('submit', e => { e.preventDefault(); validateAndSubmit(); });
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        handleEventSubmit();
+    });
 
     form.querySelectorAll('input, textarea, select').forEach(field => {
         field.addEventListener('input', () => {
@@ -270,20 +345,22 @@ function initForm() {
     });
 }
 
-async function validateAndSubmit() {
+function validateForm() {
     const titleEl = document.getElementById('evTitle');
     const descEl  = document.getElementById('evDesc');
     const dateEl  = document.getElementById('evDate');
     const timeEl  = document.getElementById('evTime');
     const maxEl   = document.getElementById('evMax');
     const commEl  = document.getElementById('evCommunity');
+    const categoryEl = document.getElementById('evCategory');
 
     const title   = titleEl.value.trim();
     const desc    = descEl.value.trim();
     const date    = dateEl.value;
     const time    = timeEl.value;
     const max     = parseInt(maxEl.value);
-    const commId  = parseInt(commEl.value);
+    const commId  = commEl.value;
+    const category = categoryEl.value;
 
     let isValid   = true;
 
@@ -297,38 +374,57 @@ async function validateAndSubmit() {
         isValid = false;
     };
 
-    if (title.length < 3)  showError(titleEl, 'Title must be at least 3 characters', 'err-title');
-    if (desc.length < 10)  showError(descEl,  'Description must be at least 10 characters', 'err-desc');
-    if (!date)             showError(dateEl,  'Date is required', 'err-date');
+    if (!title) showError(titleEl, 'Title is required', 'err-title');
+    if (!desc || desc.length < 10) showError(descEl, 'Minimum 10 characters required', 'err-desc');
+    if (!date) showError(dateEl, 'Date required', 'err-date');
     else {
         const sel = new Date(date);
         const today = new Date(); today.setHours(0,0,0,0);
         if (sel < today) showError(dateEl, 'Select a valid future date', 'err-date');
     }
-    if (!time) showError(timeEl, 'Time is required', 'err-time');
-    if (!max || max <= 0) showError(maxEl, 'Capacity must be greater than 0', 'err-max');
-    if (!commId) { if (window.toast) window.toast('Community is required', 'error'); isValid = false; }
+    if (!time) showError(timeEl, 'Time required', 'err-time');
+    if (!max || max < 1) showError(maxEl, 'Invalid capacity', 'err-max');
+    if (!commId) showError(commEl, 'Community is required', 'err-community');
+    if (!category) showError(categoryEl, 'Category is required', 'err-category');
 
     if (!isValid) {
         if (window.toast) window.toast('Please correct the highlighted fields.', 'error');
         document.querySelector('.field-error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
+        return false;
     }
 
+    return true;
+}
+
+function handleEventSubmit() {
+    if (!validateForm()) return;
+
+    const titleEl = document.getElementById('evTitle');
+    const descEl  = document.getElementById('evDesc');
+    const dateEl  = document.getElementById('evDate');
+    const timeEl  = document.getElementById('evTime');
+    const maxEl   = document.getElementById('evMax');
+    const commEl  = document.getElementById('evCommunity');
+    const categoryEl = document.getElementById('evCategory');
+
     try {
-        const newEvent = await window.API.events.create({
-            title,
-            description: desc,
-            communityId: commId,
-            date,
-            time,
+        createEvent({
+            title: titleEl.value.trim(),
+            description: descEl.value.trim(),
+            date: dateEl.value,
+            time: timeEl.value,
+            communityId: commEl.value,
+            capacity: Number(maxEl.value),
+            maxAttendees: Number(maxEl.value),
+            category: categoryEl.value,
             type: selectedEventType,
-            attendees: 0,
-            maxAttendees: max,
-            status: 'upcoming',
+            coverImage: window.currentEventCover || ''
         });
-        _events.unshift(newEvent);
-        if (window.toast) window.toast(`"${title}" created successfully! 🚀`);
+        _events = readStoredEvents();
+        if (window.toast) {
+            window.toast(`"${titleEl.value.trim()}" submitted for manager approval.`);
+        }
+        else alert('Event sent for approval');
         resetForm();
         const btn = document.querySelector('.tab-btn[onclick*="upcoming"]');
         switchTab('upcoming', btn || document.querySelector('.tab-btn'));
@@ -341,11 +437,123 @@ async function validateAndSubmit() {
 function resetForm() {
     const form = document.getElementById('createEventForm');
     if (form) form.reset();
+    window.currentEventCover = '';
+    const uploadPreview = document.getElementById('uploadPreview');
+    const uploadDefault = document.getElementById('uploadDefault');
+    if (uploadPreview) {
+        uploadPreview.style.display = 'none';
+        uploadPreview.innerHTML = '';
+    }
+    if (uploadDefault) uploadDefault.style.display = '';
+    updatePreview();
 }
+
+window.handleImageUpload = function (input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = event => {
+        window.currentEventCover = event.target.result;
+        const uploadPreview = document.getElementById('uploadPreview');
+        const uploadDefault = document.getElementById('uploadDefault');
+        if (uploadPreview) {
+            uploadPreview.innerHTML = `<img src="${event.target.result}" alt="Event cover preview">`;
+            uploadPreview.style.display = 'block';
+        }
+        if (uploadDefault) uploadDefault.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+};
+
+window.saveDraft = function () {
+    const drafts = JSON.parse(localStorage.getItem('eventDrafts') || '[]');
+    drafts.push({
+        id: Date.now(),
+        title: document.getElementById('evTitle')?.value.trim() || '',
+        description: document.getElementById('evDesc')?.value.trim() || '',
+        date: document.getElementById('evDate')?.value || '',
+        time: document.getElementById('evTime')?.value || '',
+        communityId: document.getElementById('evCommunity')?.value || '',
+        capacity: Number(document.getElementById('evMax')?.value || 0),
+        category: document.getElementById('evCategory')?.value || '',
+        type: selectedEventType,
+        coverImage: window.currentEventCover || '',
+        status: 'draft'
+    });
+    localStorage.setItem('eventDrafts', JSON.stringify(drafts));
+    if (window.toast) window.toast('Draft saved locally.');
+};
+
+function renderRoleControls() {
+    const publishBtn = document.getElementById('publishEventBtn');
+    if (publishBtn) publishBtn.textContent = 'Request Event';
+}
+
+function renderLegacyApprovalPanel() {
+    const panel = null;
+    const list = null;
+    if (!panel || !list) return;
+
+    panel.style.display = canApproveEvents() ? 'block' : 'none';
+    if (!canApproveEvents()) return;
+
+    const pending = _events.filter(event => event.status === 'pending');
+    if (!pending.length) {
+        list.innerHTML = `<div class="empty-state">No pending event requests.</div>`;
+        return;
+    }
+
+    list.innerHTML = pending.map(event => {
+        const comm = getComm(event.communityId);
+        return `
+            <div class="approval-item">
+                <div>
+                    <div class="approval-title">${event.title}</div>
+                    <div class="approval-meta">${comm.name} · ${event.date} ${event.time || ''} · requested by ${event.createdBy || 'User'}</div>
+                    <div class="approval-meta">${event.description || ''}</div>
+                </div>
+                <div class="approval-actions">
+                    <button class="btn-approve" onclick="approveEvent(${event.id})">Approve</button>
+                    <button class="btn-reject" onclick="rejectEvent(${event.id})">Reject</button>
+                </div>
+            </div>`;
+    }).join('');
+}
+
+async function updateEventStatus(eventId, status) {
+    if (!canApproveEvents()) {
+        if (window.toast) window.toast('Only Community Managers or Admins can approve events.', 'error');
+        return;
+    }
+
+    const event = _events.find(item => Number(item.id) === Number(eventId));
+    if (!event) return;
+
+    event.status = status;
+    writeStoredEvents(_events);
+    if (window.toast) window.toast(`Event ${status}.`);
+    renderAll();
+}
+
+async function validateAndSubmit() {
+    handleEventSubmit();
+}
+
+window.approveEvent = function (eventId) {
+    updateEventStatus(eventId, 'approved');
+};
+
+window.rejectEvent = function (eventId) {
+    updateEventStatus(eventId, 'rejected');
+};
 
 function populateCommunityDropdown() {
     const dropdown = document.getElementById('evCommunity');
     if (!dropdown) return;
+    if (!_communities.length) {
+        _communities = [{ id: 'pro-gamers', name: 'Pro Gamers', icon: '⚡' }];
+    }
     dropdown.innerHTML = _communities.map(c =>
         `<option value="${c.id}">${c.icon || '🏘️'} ${c.name}</option>`
     ).join('');
@@ -378,7 +586,7 @@ window.updatePreview = function () {
     const title   = document.getElementById('evTitle')?.value   || 'Your event title';
     const date    = document.getElementById('evDate')?.value    || 'Select a date';
     const time    = document.getElementById('evTime')?.value    || 'time';
-    const commId  = parseInt(document.getElementById('evCommunity')?.value);
+    const commId  = document.getElementById('evCommunity')?.value;
     const comm    = _communities.find(c => c.id === commId) || { name: 'Community', icon: '🎮' };
 
     const prevTitle = document.getElementById('prevTitle');
@@ -388,6 +596,28 @@ window.updatePreview = function () {
 };
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+window.viewEvent = function (id) {
+    const events = readStoredEvents();
+    const event = events.find(ev => Number(ev.id) === Number(id));
+    if (!event) return;
+
+    const comm = getComm(event.communityId);
+    const capacity = event.maxAttendees || event.capacity || 'Open';
+
+    document.getElementById('modalStatus').textContent = event.status || 'approved';
+    document.getElementById('modalTitle').textContent = event.title || 'Untitled Event';
+    document.getElementById('modalDesc').textContent = event.description || 'No description';
+    document.getElementById('modalDate').textContent = `Date: ${event.date || 'Not set'} ${event.time || ''}`;
+    document.getElementById('modalCommunity').textContent = `Community: ${comm.name}`;
+    document.getElementById('modalCapacity').textContent = `Capacity: ${capacity}`;
+    document.getElementById('modalCategory').textContent = `Category: ${event.category || event.type || 'Event'}`;
+    document.getElementById('eventModal').classList.remove('hidden');
+};
+
+window.closeModal = function () {
+    document.getElementById('eventModal')?.classList.add('hidden');
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
     await loadData();
     populateCommunityDropdown();

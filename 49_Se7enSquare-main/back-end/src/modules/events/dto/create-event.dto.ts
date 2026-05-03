@@ -54,9 +54,14 @@ export class CreateEventDto {
   @Min(1)
   maxAttendees?: number;
 
-  @ApiPropertyOptional({ example: 'upcoming', enum: ['upcoming', 'past', 'cancelled'] })
+  @ApiPropertyOptional({ example: 'pending', enum: ['pending', 'approved', 'rejected', 'cancelled'] })
   @IsOptional()
   @IsString()
   status?: string;
+
+  @ApiPropertyOptional({ example: 'Rajat' })
+  @IsOptional()
+  @IsString()
+  createdBy?: string;
 }
 

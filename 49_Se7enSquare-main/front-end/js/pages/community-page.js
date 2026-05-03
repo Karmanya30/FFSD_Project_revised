@@ -6,6 +6,10 @@
 let _comm   = null;
 let _events = [];
 
+function getCommunityPageId() {
+    return new URLSearchParams(window.location.search).get('id');
+}
+
 // ── Load from URL param ───────────────────────────────────────────────────────
 async function loadCommunityData() {
     const params = new URLSearchParams(window.location.search);
@@ -29,7 +33,10 @@ async function loadCommunityData() {
     if (_comm) {
         try {
             const all = await window.API.events.getAll();
-            _events = all.filter(e => String(e.communityId) === String(_comm.id));
+            _events = all.filter(e =>
+                String(e.communityId) === String(_comm.id) &&
+                e.status === 'approved'
+            );
         } catch (e) { _events = []; }
     }
 }
@@ -45,6 +52,7 @@ function renderCommunityData() {
 
     set('comm-icon',         _comm.icon  || '🏘️');
     set('comm-name-title',   _comm.name);
+    set('breadcrumbCommunityName', _comm.name);
     set('comm-online-count', (_comm.onlineCount  || 0).toLocaleString());
     set('comm-member-count', (_comm.memberCount  || 0).toLocaleString());
     set('comm-category',     `💻 ${_comm.category || 'Gaming'} · Community`);
@@ -71,6 +79,7 @@ function renderCommunityData() {
     renderChannelsFromTags(_comm.tags || []);
     renderCommunityEvents();
     initJoinState(_comm.id);
+    initCommunityNavigation(_comm.id);
 }
 
 function renderChannelsFromTags(tags) {
@@ -181,6 +190,27 @@ window.switchTab = function (tabName, btn) {
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     if (btn) btn.classList.add('active');
     document.getElementById('tab-' + tabName)?.classList.add('active');
+};
+
+function initCommunityNavigation(communityId) {
+    const manageBtn = document.getElementById('rbacManageBtn');
+    if (manageBtn && communityId) {
+        manageBtn.href = `community-settings.html?id=${encodeURIComponent(communityId)}`;
+    }
+}
+
+window.goBackFromCommunity = function () {
+    const referrerPage = document.referrer.split('/').pop();
+    const internalReferrer = ['discovery.html', 'dashboard.html', 'events.html'].some(page =>
+        referrerPage.startsWith(page)
+    );
+
+    if (internalReferrer && window.history.length > 1) {
+        window.history.back();
+        return;
+    }
+
+    window.location.href = 'discovery.html';
 };
 
 // ── Init ──────────────────────────────────────────────────────────────────────

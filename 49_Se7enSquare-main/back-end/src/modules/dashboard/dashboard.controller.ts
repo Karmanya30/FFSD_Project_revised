@@ -16,7 +16,7 @@ export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Get('stats')
-  @Roles(AppRole.ADMIN, AppRole.MODERATOR, AppRole.USER)
+  @Roles(AppRole.ADMIN, AppRole.COMMUNITY_MANAGER, AppRole.MODERATOR, AppRole.USER)
   @ApiOperation({ summary: 'Get dashboard stats' })
   @ApiOkResponse({ type: DashboardStatsDto })
   getStats() {

@@ -28,14 +28,14 @@ import { PostsService } from './posts.service';
 @ApiHeader({
   name: 'x-role',
   required: true,
-  description: 'Role for RBAC: admin | moderator | user',
+  description: 'Role for RBAC: admin | community_manager | moderator | user',
 })
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get()
-  @Roles(AppRole.ADMIN, AppRole.MODERATOR, AppRole.USER)
+  @Roles(AppRole.ADMIN, AppRole.COMMUNITY_MANAGER, AppRole.MODERATOR, AppRole.USER)
   @ApiOperation({ summary: 'Get all posts' })
   @ApiOkResponse({ type: PostDto, isArray: true })
   findAll() {
@@ -43,7 +43,7 @@ export class PostsController {
   }
 
   @Get(':id')
-  @Roles(AppRole.ADMIN, AppRole.MODERATOR, AppRole.USER)
+  @Roles(AppRole.ADMIN, AppRole.COMMUNITY_MANAGER, AppRole.MODERATOR, AppRole.USER)
   @ApiOperation({ summary: 'Get post by id' })
   @ApiParam({ name: 'id', type: Number })
   @ApiOkResponse({ type: PostDto })
@@ -52,7 +52,7 @@ export class PostsController {
   }
 
   @Post()
-  @Roles(AppRole.ADMIN, AppRole.MODERATOR, AppRole.USER)
+  @Roles(AppRole.ADMIN, AppRole.COMMUNITY_MANAGER, AppRole.MODERATOR, AppRole.USER)
   @ApiOperation({ summary: 'Create post' })
   @ApiBody({ type: CreatePostDto })
   @ApiCreatedResponse({ type: PostDto })
@@ -61,7 +61,7 @@ export class PostsController {
   }
 
   @Patch(':id')
-  @Roles(AppRole.ADMIN, AppRole.MODERATOR, AppRole.USER)
+  @Roles(AppRole.ADMIN, AppRole.COMMUNITY_MANAGER, AppRole.MODERATOR, AppRole.USER)
   @ApiOperation({ summary: 'Update post' })
   @ApiParam({ name: 'id', type: Number })
   @ApiBody({ type: UpdatePostDto })

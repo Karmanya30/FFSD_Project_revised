@@ -22,16 +22,16 @@
       <div class="header-title">Events</div>
       <div class="header-actions">
         <div class="icon-btn" onclick="toggleNotifications(event)">🔔<div class="notif-dot"></div></div>
-        <div class="header-avatar" onclick="window.location.href='profile-settings.html'">RK</div>
+        <div class="header-avatar user-avatar" onclick="window.location.href='profile-settings.html'"></div>
       </div>
     </header>
     <!-- Tab Bar -->
     <div class="tab-bar">
       <button class="tab-btn active" onclick="switchTab('upcoming',this)">📅 Upcoming <span class="tab-count">2</span></button>
       <button class="tab-btn" onclick="switchTab('registered',this)">🎟 My Registrations <span class="tab-count">1</span></button>
-      <button class="tab-btn" onclick="switchTab('create',this)">✦ Create Event</button>
+      <button class="tab-btn" id="createTabButton" onclick="switchTab('create',this)">✦ Create Event</button>
       <div class="tab-cta"></div>
-      <button class="btn-create" onclick="switchTab('create',document.querySelectorAll('.tab-btn')[2])">+ Create
+      <button class="btn-create" onclick="switchTab('create',document.getElementById('createTabButton'))">+ Create
         Event</button>
     </div>
     <!-- ── UPCOMING EVENTS TAB ── -->
@@ -39,13 +39,6 @@
       <!-- Filters -->
       <div class="filters-row">
         <div class="filter-chip on" onclick="toggleChip(this)">✦ All Events</div>
-        <div class="filter-chip" onclick="toggleChip(this)">🌐 Online</div>
-        <div class="filter-chip" onclick="toggleChip(this)">🆓 Free</div>
-        <div class="filter-chip" onclick="toggleChip(this)">🏆 Tournament</div>
-        <div class="filter-chip" onclick="toggleChip(this)">⚔️ Esports</div>
-        <div class="filter-chip" onclick="toggleChip(this)">🕹️ Game Night</div>
-        <div class="filter-chip" onclick="toggleChip(this)">🎯 Scrims</div>
-        <div class="filter-chip" onclick="toggleChip(this)">📺 Streaming</div>
       </div>
       <!-- Featured Event -->
       <div class="featured-event">
@@ -75,7 +68,7 @@
         <div class="feat-actions">
           <div class="attendee-stack">
             <div class="avatar-stack">
-              <div class="av grad-purple">RK</div>
+              <div class="av grad-purple user-avatar"></div>
               <div class="av grad-green">AK</div>
               <div class="av u-extracted-254">+246</div>
             </div>
@@ -108,7 +101,7 @@
         <div class="section-sub" id="reg-sub-header">0 upcoming events you're registered for</div>
       </div>
     </div>
-    <div class="reg-list" id="regGrid">
+  <div class="reg-list" id="regGrid">
       <!-- Dynamic Cards Injected by events.js -->
     </div>
   </div>
@@ -154,6 +147,7 @@
             <select id="evCommunity" name="community">
               <!-- Populated dynamically -->
             </select>
+            <div class="error-msg" id="err-community"></div>
           </div>
           <div class="field">
             <label>Max Attendees *</label>
@@ -171,6 +165,7 @@
             <option value="Discussion">📖 Discussion</option>
             <option value="Social">🎉 Social / Meetup</option>
           </select>
+          <div class="error-msg" id="err-category"></div>
         </div>
         <div class="field">
           <label>Cover Image (Optional)</label>
@@ -189,7 +184,7 @@
         </div>
         <div class="form-actions">
           <button type="button" id="saveDraftBtn" class="btn-draft" onclick="saveDraft()">Save Draft</button>
-          <button type="submit" id="publishEventBtn" class="btn-publish">Publish Event</button>
+          <button type="submit" id="publishEventBtn" class="btn-publish">Request Approval</button>
         </div>
       </div>
       <!-- Preview + Tips -->
@@ -225,6 +220,20 @@
     </div>
   </div>
   </div><!-- end main -->
+  <div id="eventModal" class="event-modal hidden" onclick="if(event.target===this)closeModal()">
+    <div class="event-modal-content">
+      <button class="event-modal-close" onclick="closeModal()" aria-label="Close event details">×</button>
+      <div class="modal-status" id="modalStatus"></div>
+      <h2 id="modalTitle"></h2>
+      <p id="modalDesc"></p>
+      <div class="modal-detail-grid">
+        <p id="modalDate"></p>
+        <p id="modalCommunity"></p>
+        <p id="modalCapacity"></p>
+        <p id="modalCategory"></p>
+      </div>
+    </div>
+  </div>
   <script src="../js/core/auth.js"></script>
   <script src="../js/core/utils.js"></script>
   <script src="../js/core/apiClient.js"></script>

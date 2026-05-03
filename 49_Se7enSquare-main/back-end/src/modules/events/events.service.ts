@@ -26,9 +26,15 @@ export class EventsService {
       throw new BadRequestException('communityId must reference an existing community');
     }
 
+    const status = payload.status || 'pending';
+    if (status === 'approved') {
+      this.assertNoEventClash(payload.communityId, payload.date, payload.time);
+    }
+
     const created: EventRecord = {
       id: nextId('event'),
       ...payload,
+      status,
     };
 
     db.events.push(created);
@@ -45,8 +51,31 @@ export class EventsService {
       }
     }
 
+    const nextCommunityId = payload.communityId || event.communityId;
+    const nextDate = payload.date || event.date;
+    const nextTime = payload.time ?? event.time;
+    const nextStatus = payload.status || event.status;
+
+    if (nextStatus === 'approved') {
+      this.assertNoEventClash(nextCommunityId, nextDate, nextTime, id);
+    }
+
     Object.assign(event, payload);
     return event;
+  }
+
+  private assertNoEventClash(communityId: number, date: string, time?: string, ignoreId?: number): void {
+    const clash = db.events.find((item) =>
+      item.id !== ignoreId &&
+      item.communityId === communityId &&
+      item.status === 'approved' &&
+      item.date === date &&
+      (item.time || '') === (time || ''),
+    );
+
+    if (clash) {
+      throw new BadRequestException('An approved event already exists for this community at the selected date and time');
+    }
   }
 
   remove(id: number): { message: string } {

@@ -28,10 +28,10 @@ export class EventDto {
   @ApiPropertyOptional({ example: 100 })
   maxAttendees?: number;
 
-  @ApiPropertyOptional({ example: 'upcoming' })
+  @ApiPropertyOptional({ example: 'approved' })
   status?: string;
 
-  @ApiPropertyOptional({ example: 1 })
-  createdBy?: number;
+  @ApiPropertyOptional({ example: 'Rajat' })
+  createdBy?: string;
 }
 

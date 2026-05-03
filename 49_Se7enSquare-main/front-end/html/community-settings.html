@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Gameunity - Community Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <link href="../css/global.css" rel="stylesheet">
+  <link href="../css/pages/community-settings.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="brand">
+          <div class="brand-mark">G</div>
+          <div class="brand-name">Gameunity</div>
+        </div>
+
+        <div class="community-title">
+          <div class="community-mark">P</div>
+          <span id="topBarCommunityName">Pro Gamers</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="back-btn" onclick="goToCommunity()">
+          &larr; Back to Community
+        </button>
+        <button class="btn btn-primary" onclick="switchSettingsTab('channels', document.querySelector('[data-settings-tab=channels]'))">Add Channel</button>
+        <div class="profile-avatar user-avatar" id="topBarProfileAvatar" onclick="window.location.href='profile-settings.html'" title="Profile Settings"></div>
+      </div>
+    </header>
+
+    <div class="main-container">
+      <aside class="sidebar">
+        <div class="sidebar-heading">Community Settings</div>
+        <nav class="settings-nav" aria-label="Community settings sections">
+          <button class="settings-nav-item tab active" data-settings-tab="basic" data-target="settings-basic">Basic Info</button>
+          <button class="settings-nav-item tab" data-settings-tab="members" data-target="settings-members">Members</button>
+          <button class="settings-nav-item tab" data-settings-tab="channels" data-target="settings-channels">Channels</button>
+          <button class="settings-nav-item tab" data-settings-tab="permissions" data-target="settings-permissions">Roles</button>
+        </nav>
+      </aside>
+
+      <main class="content" id="view-settings">
+        <div class="content-inner">
+          <div class="page-heading">
+            <p class="eyebrow">Settings</p>
+            <h1>Community Settings</h1>
+          </div>
+
+          <section class="settings-tab section active" id="settings-basic">
+            <div class="settings-card">
+              <div class="settings-card-title">Basic Information</div>
+              <div id="basicSettingsError" class="settings-error"></div>
+
+              <div class="settings-field">
+                <label>Community Name *</label>
+                <input type="text" id="communityName" class="settings-input" required>
+              </div>
+
+              <div class="settings-field">
+                <label>Community Description *</label>
+                <textarea id="communityDesc" class="settings-textarea" rows="4" required></textarea>
+              </div>
+
+              <div class="settings-field">
+                <label>Community Banner</label>
+                <div class="banner-upload">
+                  <div id="bannerPreview" class="current-banner">No Banner Uploaded</div>
+                  <input type="file" id="bannerUploadInput" accept=".png,.jpg,.jpeg,.webp" hidden onchange="uploadBanner(event)">
+                  <button class="btn btn-muted" onclick="document.getElementById('bannerUploadInput').click()">Upload Banner</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="settings-tab section" id="settings-members">
+            <div class="settings-card">
+              <div class="settings-card-title">Members</div>
+              <div class="member-list" id="settingsMemberList"></div>
+            </div>
+          </section>
+
+          <section class="settings-tab section" id="settings-channels">
+            <div class="settings-card">
+              <div class="settings-card-head">
+                <div class="settings-card-title">Channels</div>
+                <button class="btn btn-primary" onclick="showModal('modalBg')">Create Channel</button>
+              </div>
+              <div class="channel-list" id="settingsChannelList"></div>
+            </div>
+          </section>
+
+          <section class="settings-tab section" id="settings-permissions">
+            <div class="settings-card">
+              <div class="settings-card-title">Role Management</div>
+              <div class="role-list-settings" id="settingsRolesList"></div>
+            </div>
+          </section>
+
+          <div class="settings-actions" id="settingsActions">
+            <button class="btn btn-muted" onclick="discardSettings()">Discard Changes</button>
+            <button class="save-btn btn btn-primary" onclick="saveCommunitySettings()">Save Changes</button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal('modalBg')">
+    <div class="modal">
+      <div class="modal-title">Create New Channel</div>
+      <div class="modal-field">
+        <label>Channel Name *</label>
+        <input id="chNameInput" placeholder="e.g. resources" type="text">
+      </div>
+      <div class="modal-field">
+        <label>Channel Type</label>
+        <select id="chTypeInput">
+          <option value="Text">Text</option>
+          <option value="Voice">Voice</option>
+          <option value="Announcement">Announcement</option>
+        </select>
+      </div>
+      <div class="modal-btns">
+        <button class="btn btn-muted" onclick="closeModal('modalBg')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitCreateChannel()">Create Channel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"><span id="toastMsg">Done</span></div>
+
+  <script src="../js/core/auth.js"></script>
+  <script src="../js/core/apiClient.js"></script>
+  <script src="../js/pages/community-settings.js"></script>
+  <script src="../js/components/notifications.js"></script>
+</body>
+</html>

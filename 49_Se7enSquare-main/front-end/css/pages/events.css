@@ -1277,3 +1277,138 @@ textarea {
     color: #fff;
     transform: translateY(-1px)
 }
+
+.approval-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.approval-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.approval-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: center;
+    border: 1px solid var(--border-2);
+    border-radius: 10px;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.approval-title {
+    font-family: "Syne", sans-serif;
+    font-weight: 700;
+    color: var(--text-1);
+}
+
+.approval-meta {
+    color: var(--text-3);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.approval-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-approve,
+.btn-reject {
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    color: #fff;
+    font-family: "DM Sans", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.btn-approve {
+    background: #059669;
+}
+
+.btn-reject {
+    background: #dc2626;
+}
+
+.event-modal.hidden {
+    display: none;
+}
+
+.event-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.68);
+    backdrop-filter: blur(6px);
+}
+
+.event-modal-content {
+    width: min(560px, 100%);
+    position: relative;
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--bg-card);
+    color: var(--text-1);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+
+.event-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-1);
+    cursor: pointer;
+}
+
+.event-modal-content h2 {
+    margin: 12px 0 10px;
+    font: 800 24px "Syne", sans-serif;
+}
+
+.event-modal-content p {
+    color: var(--text-2);
+    line-height: 1.6;
+}
+
+.modal-status {
+    display: inline-flex;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(52, 211, 153, 0.12);
+    color: var(--success);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.modal-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+    margin-top: 14px;
+}
+
+@media (max-width: 640px) {
+    .modal-detail-grid {
+        grid-template-columns: 1fr;
+    }
+}

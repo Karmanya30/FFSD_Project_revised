@@ -26,7 +26,7 @@ async function bootstrap() {
         type: 'apiKey',
         in: 'header',
         name: 'x-role',
-        description: 'RBAC role header: admin | moderator | user | gamer',
+        description: 'RBAC role header: admin | community_manager | moderator | user',
       },
       'x-role',
     )

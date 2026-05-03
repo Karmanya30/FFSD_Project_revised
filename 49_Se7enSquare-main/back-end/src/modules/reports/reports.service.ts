@@ -41,17 +41,24 @@ export class ReportsService {
     const allowedTransitions: Record<ReportStatus, ReportStatus | null> = {
       [ReportStatus.PENDING]: ReportStatus.REVIEWED,
       [ReportStatus.REVIEWED]: ReportStatus.RESOLVED,
+      [ReportStatus.ESCALATED]: ReportStatus.RESOLVED,
       [ReportStatus.RESOLVED]: null,
     };
 
     const next = allowedTransitions[report.status as ReportStatus];
-    if (next !== status) {
+    const canEscalate = status === ReportStatus.ESCALATED &&
+      (report.status === ReportStatus.PENDING || report.status === ReportStatus.REVIEWED);
+
+    if (next !== status && !canEscalate) {
       throw new BadRequestException(
-        `Invalid status transition. Allowed: ${report.status} -> ${next ?? 'none'}`,
+        `Invalid status transition. Allowed: ${report.status} -> ${next ?? 'none'}${canEscalate ? ' or escalated' : ''}`,
       );
     }
 
     report.status = status;
+    if (status === ReportStatus.ESCALATED) {
+      report.escalatedTo = 'admin';
+    }
     return report;
   }
 

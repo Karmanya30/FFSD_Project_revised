@@ -9,6 +9,7 @@
     
   </head>
   <body>
+    <div id="loader" aria-live="polite" aria-busy="true">Loading...</div>
     
 
     <!-- ─── APP SHELL ─── -->
@@ -28,7 +29,7 @@
           <button class="tb-btn save" id="btnSaveAll" onclick="saveAllChanges()" disabled="">
             Save Changes
           </button>
-          <div class="tb-av" id="topBarAvatar">Loading</div>
+          <div class="tb-av user-avatar" id="topBarAvatar"></div>
           <button type="button" class="logout-btn" onclick="logoutUser()" aria-label="Log out">
             Logout
           </button>
@@ -39,14 +40,14 @@
         <nav class="left-nav">
           <div class="nav-profile" onclick="switchView('profile', document.querySelector('.ln-item'))">
             <div class="profile-av-wrap">
-              <div class="profile-av" id="navMainAvatar">Loading</div>
+              <div class="profile-av user-avatar" id="navMainAvatar"></div>
               <div class="profile-av-edit" onclick="openPhotoModal(event)">
                 📷
               </div>
             </div>
             <div style="text-align: center">
-              <div class="profile-name" id="navName">Loading...</div>
-              <div class="profile-handle" id="navHandle">@loading</div>
+              <div class="profile-name user-name" id="navName"></div>
+              <div class="profile-handle" id="navHandle"></div>
               <div class="profile-status" style="justify-content: center; margin-top: 4px">
                 Online
               </div>
@@ -92,7 +93,7 @@
               </div>
 
               <div class="avatar-picker" style="margin-bottom: 24px">
-                <div class="av-preview" id="mainAvatarPreview">Loading</div>
+                <div class="av-preview user-avatar" id="mainAvatarPreview"></div>
                 <div class="av-actions">
                   <div class="btn-sm accent" onclick="openPhotoModal()">
                     📷 Upload Photo

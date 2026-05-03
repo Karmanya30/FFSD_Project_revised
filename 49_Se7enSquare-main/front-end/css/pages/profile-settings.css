@@ -39,6 +39,24 @@ body {
   flex-direction: row;
 }
 
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 11, 18, 0.88);
+  color: var(--text-1);
+  font-family: "Syne", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.loading #loader {
+  display: flex;
+}
+
 .main-column-wrapper {
   flex: 1;
   display: flex;

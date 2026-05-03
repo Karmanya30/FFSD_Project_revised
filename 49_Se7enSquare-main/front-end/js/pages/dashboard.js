@@ -29,24 +29,20 @@ function renderDashboard() {
 }
 
 function renderGreeting() {
-    const user = JSON.parse(localStorage.getItem('nexus_user') || '{}');
+    const user = typeof getCurrentUser === 'function' ? getCurrentUser() : JSON.parse(localStorage.getItem('currentUser') || '{}');
     const greetingNameEl = document.querySelector('.greeting-name');
-    const headerAvatarEl = document.getElementById('headerProfile');
 
-    if (user && user.username) {
-        if (greetingNameEl) {
-            const hour = new Date().getHours();
-            let prefix = 'Good morning';
-            if (hour >= 12) prefix = 'Good afternoon';
-            if (hour >= 18) prefix = 'Good evening';
-            greetingNameEl.textContent = `${prefix}, ${user.username} 👋`;
-        }
-        if (headerAvatarEl) {
-            headerAvatarEl.textContent = user.username.slice(0, 2).toUpperCase() || '??';
-        }
+    if (user && greetingNameEl) {
+        const hour = new Date().getHours();
+        let prefix = 'Good morning';
+        if (hour >= 12) prefix = 'Good afternoon';
+        if (hour >= 18) prefix = 'Good evening';
+        const name = typeof getUserFullName === 'function' ? getUserFullName(user) : user.username;
+        greetingNameEl.innerHTML = `${prefix}, <span class="user-name">${name}</span> ??`;
     }
-}
 
+    if (typeof renderUserUI === 'function') renderUserUI();
+}
 function renderJoinedCommunities() {
     const container = document.querySelector('.communities-scroll');
     if (!container) return;
@@ -90,7 +86,7 @@ function renderUpcomingEvents() {
     const container = document.querySelector('.event-list');
     if (!container) return;
 
-    const upcoming = _events.filter(e => e.status === 'upcoming').slice(0, 3);
+    const upcoming = _events.filter(e => e.status === 'approved').slice(0, 3);
 
     if (upcoming.length === 0) {
         container.innerHTML = '<div style="padding:20px; color:var(--text-3);">No upcoming events.</div>';

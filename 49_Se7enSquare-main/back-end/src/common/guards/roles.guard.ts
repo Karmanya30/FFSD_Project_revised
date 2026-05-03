@@ -28,8 +28,11 @@ export class RolesGuard implements CanActivate {
     const roleValue = Array.isArray(rawRole) ? rawRole[0] : rawRole;
     let role = typeof roleValue === 'string' ? roleValue.trim().toLowerCase() : undefined;
 
-    // normalise frontend alias: 'gamer' is treated as 'user'
+    // normalise frontend aliases
     if (role === 'gamer') role = 'user';
+    if (role === 'community-manager' || role === 'community manager' || role === 'cm') {
+      role = 'community_manager';
+    }
 
     if (!role || !ALL_ROLES.includes(role)) {
       throw new ForbiddenException('Missing or invalid x-role header');

@@ -11,15 +11,18 @@ let toastTimeout;
 
 const ROLE_REDIRECTS = {
     admin: 'admin-dashboard.html',
+    community_manager: 'events.html',
     moderator: 'dashboard.html',
+    user: 'dashboard.html',
     gamer: 'dashboard.html'
 };
 
 // Default users for the first-time load
 const DEFAULT_USERS = [
-    { email: 'rajat@gameunity.com', username: 'rajat', password: 'Rajat@123', role: 'admin' },
-    { email: 'karmanya@gameunity.com', username: 'karmanya', password: 'Karmanya@123', role: 'moderator' },
-    { email: 'awadhesh@gameunity.com', username: 'awadhesh', password: 'Demo@123', role: 'gamer' }
+    { email: 'rajat@gameunity.com', username: 'rajat', firstName: 'Rajat', lastName: 'Jain', password: 'Rajat@123', role: 'admin', avatar: null },
+    { email: 'karmanya@gameunity.com', username: 'karmanya', firstName: 'Karmanya', lastName: 'Bansal', password: 'Karmanya@123', role: 'moderator', avatar: null },
+    { email: 'anant@gameunity.com', username: 'anant', firstName: 'Anant', lastName: 'Gupta', password: 'Demo@123', role: 'community_manager', avatar: null },
+    { email: 'awadhesh@gameunity.com', username: 'awadhesh', firstName: 'Awadhesh', lastName: 'Kumar', password: 'Demo@123', role: 'user', avatar: null }
 ];
 
 /** * Persistent Mock Database Helpers 
@@ -35,10 +38,14 @@ function getAllUsers() {
             users.push(defUser);
         } else {
             // Update existing record to match the default (in case of stale data)
-            users[index].password = defUser.password;
-            users[index].role = defUser.role;
+            users[index] = { ...users[index], ...defUser };
         }
     });
+
+    users = users.map(user => ({
+        ...user,
+        role: typeof normalizeRole === 'function' ? normalizeRole(user.role) : (user.role === 'gamer' ? 'user' : user.role)
+    }));
     
     localStorage.setItem('gameunity_accounts', JSON.stringify(users));
     return users;
@@ -114,7 +121,9 @@ window.handleLogin = function(e) {
 
     const inputVal = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value;
-    const role = document.getElementById('login-role').value;
+    const role = typeof normalizeRole === 'function'
+        ? normalizeRole(document.getElementById('login-role').value)
+        : document.getElementById('login-role').value;
 
     if (!inputVal || !password || !role) {
         showToast('⚠️', 'Please fill all login fields.');
@@ -132,7 +141,7 @@ window.handleLogin = function(e) {
         const matchedUser = users.find(u => 
             (u.email.toLowerCase() === inputVal.toLowerCase() || u.username.toLowerCase() === inputVal.toLowerCase()) && 
             u.password === password && 
-            u.role === role
+            (typeof normalizeRole === 'function' ? normalizeRole(u.role) : u.role) === role
         );
 
         if (!matchedUser) {
@@ -145,11 +154,20 @@ window.handleLogin = function(e) {
         }
 
         localStorage.setItem('nexus_user', JSON.stringify({
+            firstName: matchedUser.firstName || (matchedUser.fullname || matchedUser.username).split(' ')[0] || matchedUser.username,
+            lastName: matchedUser.lastName || (matchedUser.fullname || '').split(' ').slice(1).join(' '),
+            name: matchedUser.fullname || `${matchedUser.firstName || ''} ${matchedUser.lastName || ''}`.trim() || matchedUser.username,
             username: matchedUser.username,
             role: matchedUser.role,
+            avatar: matchedUser.avatar || null,
             loginTime: new Date().toISOString()
         }));
-        localStorage.setItem('role', matchedUser.role);
+        if (typeof persistCurrentUser === 'function') {
+            persistCurrentUser(JSON.parse(localStorage.getItem('nexus_user')));
+        } else {
+            localStorage.setItem('currentUser', localStorage.getItem('nexus_user'));
+            localStorage.setItem('role', matchedUser.role);
+        }
 
         showToast('✅', 'Login successful!');
         setTimeout(() => { window.location.href = ROLE_REDIRECTS[role] || 'dashboard.html'; }, 800);
@@ -169,7 +187,9 @@ window.handleRegister = function(e) {
     const handle = document.getElementById('reg-handle').value.trim();
     const password = document.getElementById('reg-password').value;
     const confirm = document.getElementById('reg-confirm').value;
-    const role = document.getElementById('reg-role').value;
+    const role = typeof normalizeRole === 'function'
+        ? normalizeRole(document.getElementById('reg-role').value)
+        : document.getElementById('reg-role').value;
     const terms = document.getElementById('reg-terms').checked;
 
     let valid = true;
@@ -192,8 +212,22 @@ window.handleRegister = function(e) {
         if (saveNewUser(newUser)) {
             showToast('🎉', 'Account ready!');
             // Auto-login
-            localStorage.setItem('nexus_user', JSON.stringify({ username: handle, role, loginTime: new Date().toISOString() }));
-            localStorage.setItem('role', role);
+            const nameParts = fullname.split(' ').filter(Boolean);
+            const user = {
+                firstName: nameParts[0] || '',
+                lastName: nameParts.slice(1).join(' '),
+                name: fullname,
+                username: handle,
+                role,
+                avatar: null,
+                loginTime: new Date().toISOString()
+            };
+            if (typeof persistCurrentUser === 'function') persistCurrentUser(user);
+            else {
+                localStorage.setItem('nexus_user', JSON.stringify(user));
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                localStorage.setItem('role', role);
+            }
             setTimeout(() => { window.location.href = ROLE_REDIRECTS[role] || 'dashboard.html'; }, 1000);
         } else {
             btn.classList.remove('loading');

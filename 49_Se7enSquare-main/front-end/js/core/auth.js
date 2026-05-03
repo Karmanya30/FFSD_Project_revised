@@ -1,91 +1,158 @@
 /**
- * Gameunity — Authentication & RBAC Logic
- * Handles session persistence via localStorage and Role-Based Access Control (RBAC).
- * 
- * ROLES (3 total):
- *   admin     — System Admin, full platform access
- *   moderator — System Moderator, end-user + mod panel
- *   gamer     — Regular user, can create/own communities
- * 
- * COMMUNITY OWNERSHIP:
- *   A gamer who creates a community becomes its Owner.
- *   Ownership is stored in localStorage as `nexus_owned_communities`.
- *   Owners see the Community Manager panel for that community only.
- *   Admin can manage ANY community.
- *
- * Store final role in: localStorage.getItem("role")
+ * Se7enSquare - Authentication & RBAC Logic
+ * Centralizes session persistence, role normalization, and client-side access checks.
  */
 
-// ==========================================
-// 1. ROLE HIERARCHY
-// ==========================================
+const ROLES = {
+    USER: "user",
+    MODERATOR: "moderator",
+    COMMUNITY_MANAGER: "community_manager",
+    ADMIN: "admin"
+};
 
-/**
- * Role power levels — higher number = more access
- */
+const ROLE_HIERARCHY = [
+    ROLES.USER,
+    ROLES.MODERATOR,
+    ROLES.COMMUNITY_MANAGER,
+    ROLES.ADMIN
+];
+
 const ROLE_LEVELS = {
-    gamer:     1,
-    moderator: 2,
-    admin:     3
+    [ROLES.USER]: 1,
+    [ROLES.MODERATOR]: 2,
+    [ROLES.COMMUNITY_MANAGER]: 3,
+    [ROLES.ADMIN]: 4
 };
 
-/**
- * Page-level access rules — which roles can access each page
- */
 const PAGE_ACCESS = {
-    'dashboard.html':           ['gamer', 'moderator', 'admin'],
-    'discovery.html':           ['gamer', 'moderator', 'admin'],
-    'events.html':              ['gamer', 'moderator', 'admin'],
-    'chat.html':                ['gamer', 'moderator', 'admin'],
-    'profile-settings.html':    ['gamer', 'moderator', 'admin'],
-    'community-page.html':      ['gamer', 'moderator', 'admin'],
-    'create-community.html':    ['gamer', 'moderator', 'admin'],
-    'community-manager.html':   ['gamer', 'admin'],  // gamer only if they own the community
-    'mod-panel.html':           ['moderator', 'admin'],
-    'admin-dashboard.html':     ['admin'],
-    'report.html':              ['gamer', 'moderator', 'admin'],
-    'appeal.html':              ['gamer', 'moderator', 'admin'],
+    'dashboard.html': [ROLES.USER, ROLES.MODERATOR, ROLES.COMMUNITY_MANAGER, ROLES.ADMIN],
+    'discovery.html': [ROLES.USER, ROLES.MODERATOR, ROLES.COMMUNITY_MANAGER, ROLES.ADMIN],
+    'events.html': [ROLES.USER, ROLES.MODERATOR, ROLES.COMMUNITY_MANAGER, ROLES.ADMIN],
+    'chat.html': [ROLES.USER, ROLES.MODERATOR, ROLES.COMMUNITY_MANAGER, ROLES.ADMIN],
+    'profile-settings.html': [ROLES.USER, ROLES.MODERATOR, ROLES.COMMUNITY_MANAGER, ROLES.ADMIN],
+    'community-page.html': [ROLES.USER, ROLES.MODERATOR, ROLES.COMMUNITY_MANAGER, ROLES.ADMIN],
+    'create-community.html': [ROLES.USER, ROLES.MODERATOR, ROLES.COMMUNITY_MANAGER, ROLES.ADMIN],
+    'community-settings.html': [ROLES.COMMUNITY_MANAGER, ROLES.ADMIN],
+    'event-approval.html': [ROLES.COMMUNITY_MANAGER, ROLES.ADMIN],
+    'mod-panel.html': [ROLES.MODERATOR, ROLES.ADMIN],
+    'admin-dashboard.html': [ROLES.ADMIN],
+    'report.html': [ROLES.USER, ROLES.MODERATOR, ROLES.COMMUNITY_MANAGER, ROLES.ADMIN],
+    'appeal.html': [ROLES.USER, ROLES.MODERATOR, ROLES.COMMUNITY_MANAGER, ROLES.ADMIN],
 };
 
-// ==========================================
-// 2. SESSION MANAGEMENT
-// ==========================================
-
-/**
- * Initializes a user session
- * @param {string} username 
- * @param {string} role - 'admin', 'moderator', or 'gamer'
- */
-function loginUser(username, role) {
-    // Assign role directly
-    const normalizedRole = role;
-
-    const user = { 
-        username, 
-        role: normalizedRole, 
-        loginTime: new Date().toISOString(),
-        token: `mock_token_${Math.random().toString(36).substr(2)}`
-    };
-    
-    localStorage.setItem('nexus_user', JSON.stringify(user));
-    localStorage.setItem('role', normalizedRole);
-    
-    console.log(`%c[AUTH] %cLogged in as: ${username} (${normalizedRole})`, "color: #10B981; font-weight: bold;", "color: #fff;");
-    return user;
+function normalizeRole(role) {
+    if (!role) return ROLES.USER;
+    const value = String(role).trim().toLowerCase();
+    if (value === 'gamer' || value === 'audience') return ROLES.USER;
+    if (value === 'community-manager' || value === 'community manager' || value === 'manager' || value === 'cm') {
+        return ROLES.COMMUNITY_MANAGER;
+    }
+    return ROLE_HIERARCHY.includes(value) ? value : ROLES.USER;
 }
 
-/**
- * Retrieves the currently logged-in user object and normalizes the role
- * @returns {Object|null}
- */
+function splitNameParts(user = {}) {
+    const full = user.fullName || user.fullname || user.name || user.username || "";
+    const parts = String(full).trim().split(/\s+/).filter(Boolean);
+    return {
+        firstName: user.firstName || parts[0] || "",
+        lastName: user.lastName || parts.slice(1).join(" ") || ""
+    };
+}
+
+function normalizeUser(rawUser) {
+    if (!rawUser) return null;
+    const names = splitNameParts(rawUser);
+    const username = rawUser.username || rawUser.handle || [names.firstName, names.lastName].filter(Boolean).join("").toLowerCase() || "user";
+    return {
+        ...rawUser,
+        firstName: names.firstName,
+        lastName: names.lastName,
+        username,
+        role: normalizeRole(rawUser.role),
+        avatar: rawUser.avatar ?? rawUser.avatarUrl ?? null,
+    };
+}
+
+function persistCurrentUser(user) {
+    const normalized = normalizeUser(user);
+    if (!normalized) return null;
+    localStorage.setItem("currentUser", JSON.stringify(normalized));
+    localStorage.setItem("nexus_user", JSON.stringify(normalized));
+    localStorage.setItem("role", normalized.role);
+    window.currentUser = normalized;
+    return normalized;
+}
+
+function getUserInitials(user) {
+    if (!user) return "U";
+    const normalized = normalizeUser(user);
+    const first = normalized.firstName?.[0] || "";
+    const last = normalized.lastName?.[0] || "";
+    const initials = (first + last).toUpperCase();
+    return initials || "U";
+}
+
+function getUserFullName(user) {
+    if (!user) return "";
+    const normalized = normalizeUser(user);
+    return `${normalized.firstName || ""} ${normalized.lastName || ""}`.trim() || normalized.name || normalized.username || "";
+}
+
+function renderAvatarElement(el, user) {
+    const avatar = user?.avatar ?? user?.avatarUrl;
+    const preservedChildren = Array.from(el.children).filter(child =>
+        child.classList.contains("m-stat") ||
+        child.classList.contains("m-status") ||
+        child.classList.contains("rail-dot")
+    );
+    el.innerHTML = "";
+    el.style.backgroundImage = "none";
+    if (avatar) {
+        const img = document.createElement("img");
+        img.src = avatar;
+        img.alt = getUserFullName(user) || "User avatar";
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.objectFit = "cover";
+        img.style.borderRadius = "inherit";
+        el.appendChild(img);
+    } else {
+        el.textContent = getUserInitials(user);
+    }
+    preservedChildren.forEach(child => el.appendChild(child));
+}
+
+function renderUserUI() {
+    const user = getCurrentUser();
+    if (!user) return;
+
+    document.querySelectorAll(".user-avatar").forEach(el => renderAvatarElement(el, user));
+    document.querySelectorAll(".user-name").forEach(el => {
+        el.textContent = getUserFullName(user);
+    });
+    document.querySelectorAll(".user-role").forEach(el => {
+        el.textContent = user.role;
+    });
+}
+
+function loginUser(username, role) {
+    const normalizedRole = normalizeRole(role);
+    return persistCurrentUser({
+        firstName: username,
+        lastName: "",
+        username,
+        role: normalizedRole,
+        loginTime: new Date().toISOString(),
+        token: `mock_token_${Math.random().toString(36).substr(2)}`
+    });
+}
+
 function getCurrentUser() {
-    const session = localStorage.getItem('nexus_user');
+    const session = localStorage.getItem('currentUser') || localStorage.getItem('nexus_user');
     if (!session) return null;
-    
+
     try {
-        const user = JSON.parse(session);
-        localStorage.setItem('role', user.role); // Sync to global role
-        return user;
+        return persistCurrentUser(JSON.parse(session));
     } catch (e) {
         console.error("Malformed session data. Clearing storage.");
         localStorage.removeItem('nexus_user');
@@ -94,46 +161,30 @@ function getCurrentUser() {
     }
 }
 
-/**
- * Clears the session and redirects to the landing page
- */
 function logoutUser() {
+    localStorage.removeItem('currentUser');
     localStorage.removeItem('nexus_user');
     localStorage.removeItem('role');
-    
     if (window.toast) window.toast("Logging out...");
-    
     setTimeout(() => {
         window.location.href = 'landing.html';
     }, 500);
 }
 
-// ==========================================
-// 3. ROUTE PROTECTION (RBAC)
-// ==========================================
-
-/**
- * Acts as a Gatekeeper for protected pages.
- * Use this at the top of your page-specific JS files.
- * @param {Array} allowedRoles - e.g., ['moderator', 'admin']
- * @returns {boolean}
- */
 function requireRole(allowedRoles) {
     const user = getCurrentUser();
 
-    // 1. No user found
     if (!user) {
         console.warn("[AUTH] Unauthenticated access attempt.");
         window.location.href = 'login.html?error=unauthorized';
         return false;
     }
 
-    // 2. Admin bypasses all role checks
-    if (user.role === 'admin') return true;
+    if (user.role === ROLES.ADMIN) return true;
 
-    // 3. Role check
-    if (allowedRoles && !allowedRoles.includes(user.role)) {
-        console.error(`[AUTH] Access Denied. User role: ${user.role}. Required: ${allowedRoles}`);
+    const normalizedAllowedRoles = (allowedRoles || []).map(normalizeRole);
+    if (allowedRoles && !normalizedAllowedRoles.includes(user.role)) {
+        console.error(`[AUTH] Access denied. User role: ${user.role}. Required: ${normalizedAllowedRoles.join(', ')}`);
         window.location.href = 'dashboard.html?error=forbidden';
         return false;
     }
@@ -141,47 +192,32 @@ function requireRole(allowedRoles) {
     return true;
 }
 
-/**
- * Non-blocking check for UI elements (e.g., showing/hiding buttons)
- * Admin always has permission.
- * @param {string|Array} roles - single role string or array of roles
- */
 function hasPermission(roles) {
     const user = getCurrentUser();
     if (!user) return false;
-    if (user.role === 'admin') return true;
-    if (Array.isArray(roles)) return roles.includes(user.role);
-    return user.role === roles;
+    if (user.role === ROLES.ADMIN) return true;
+    if (Array.isArray(roles)) return roles.map(normalizeRole).includes(user.role);
+    return user.role === normalizeRole(roles);
 }
 
-/**
- * Get the numeric power level for a role
- * @param {string} role
- * @returns {number}
- */
+function hasAccess(requiredRole) {
+    const user = getCurrentUser();
+    if (!user) return false;
+    const requiredIndex = ROLE_HIERARCHY.indexOf(normalizeRole(requiredRole));
+    const currentIndex = ROLE_HIERARCHY.indexOf(user.role);
+    return requiredIndex !== -1 && currentIndex >= requiredIndex;
+}
+
 function getRoleLevel(role) {
-    return ROLE_LEVELS[role] || 0;
+    return ROLE_LEVELS[normalizeRole(role)] || 0;
 }
 
-/**
- * Check if the current user's role is at least the given level
- * @param {string} minimumRole
- * @returns {boolean}
- */
 function hasMinimumRole(minimumRole) {
     const user = getCurrentUser();
     if (!user) return false;
     return getRoleLevel(user.role) >= getRoleLevel(minimumRole);
 }
 
-// ==========================================
-// 4. COMMUNITY OWNERSHIP
-// ==========================================
-
-/**
- * Get list of community names the current user owns
- * @returns {Array<string>}
- */
 function getOwnedCommunities() {
     try {
         const data = localStorage.getItem('nexus_owned_communities');
@@ -191,64 +227,54 @@ function getOwnedCommunities() {
     }
 }
 
-/**
- * Check if the current user is the owner of a specific community
- * @param {string} communityName - e.g., 'pro-gamers'
- * @returns {boolean}
- */
 function isOwnerOfCommunity(communityName) {
     const user = getCurrentUser();
     if (!user) return false;
-
-    // Admin can manage any community
-    if (user.role === 'admin') return true;
-
-    // Only gamers can own communities
-    if (user.role !== 'gamer') return false;
+    if (user.role === ROLES.ADMIN || user.role === ROLES.COMMUNITY_MANAGER) return true;
 
     const owned = getOwnedCommunities();
-    return owned.includes(communityName.toLowerCase());
+    return owned.includes(String(communityName).toLowerCase());
 }
 
-/**
- * Register a community as owned by the current user
- * @param {string} communityName
- */
 function addOwnedCommunity(communityName) {
     const owned = getOwnedCommunities();
-    const name = communityName.toLowerCase();
+    const name = String(communityName).toLowerCase();
     if (!owned.includes(name)) {
         owned.push(name);
         localStorage.setItem('nexus_owned_communities', JSON.stringify(owned));
     }
 }
 
-/**
- * Get the panels the current user can access based on their role
- * @returns {Array<Object>} - [{id, label, icon, href}]
- */
 function getAccessiblePanels() {
     const user = getCurrentUser();
     if (!user) return [];
 
     const panels = [];
 
-    // Mod Panel — moderator only
-    if (user.role === 'moderator' || user.role === 'admin') {
+    if (user.role === ROLES.MODERATOR || user.role === ROLES.ADMIN) {
         panels.push({
             id: 'mod-panel',
-            label: 'Mod Panel',
+            label: 'Moderator Panel',
             icon: '🛡️',
             href: 'mod-panel.html',
             badgeClass: 'rbac-badge-mod'
         });
     }
 
-    // Admin Dashboard — admin only
-    if (user.role === 'admin') {
+    if (user.role === ROLES.COMMUNITY_MANAGER || user.role === ROLES.ADMIN) {
+        panels.push({
+            id: 'event-approval',
+            label: 'Event Approval',
+            icon: '📅',
+            href: 'event-approval.html',
+            badgeClass: 'rbac-badge-cm'
+        });
+    }
+
+    if (user.role === ROLES.ADMIN) {
         panels.push({
             id: 'admin-dashboard',
-            label: 'System Admin',
+            label: 'Admin Panel',
             icon: '🔴',
             href: 'admin-dashboard.html',
             badgeClass: 'rbac-badge-admin'
@@ -258,40 +284,47 @@ function getAccessiblePanels() {
     return panels;
 }
 
-/**
- * Get role display info
- * @param {string} role
- * @returns {Object} - {label, icon, color}
- */
 function getRoleDisplay(role) {
     const displays = {
-        admin:     { label: 'ADMIN',      icon: '🛡️', color: '#ef4444' },
-        moderator: { label: 'MODERATOR',  icon: '🔍', color: '#f59e0b' },
-        gamer:     { label: 'GAMER',      icon: '🎮', color: '#8b5cf6' }
+        [ROLES.ADMIN]: { label: 'SYSTEM ADMIN', icon: '🛡️', color: '#ef4444' },
+        [ROLES.COMMUNITY_MANAGER]: { label: 'COMMUNITY MANAGER', icon: '📅', color: '#06b6d4' },
+        [ROLES.MODERATOR]: { label: 'MODERATOR', icon: '🔍', color: '#f59e0b' },
+        [ROLES.USER]: { label: 'USER', icon: '🎮', color: '#8b5cf6' }
     };
-    return displays[role] || displays.gamer;
+    return displays[normalizeRole(role)] || displays[ROLES.USER];
 }
 
-// ==========================================
-// 5. AUTO-INITIALIZATION
-// ==========================================
-
-// This runs on every page that imports this module
 (function initAuth() {
     const params = new URLSearchParams(window.location.search);
     if (params.has('error') && window.toast) {
         const err = params.get('error');
-        if (err === 'forbidden') window.toast("🚫 You don't have permission to access that.");
-        if (err === 'unauthorized') window.toast("🔒 Please log in to continue.");
+        if (err === 'forbidden') window.toast("You don't have permission to access that.");
+        if (err === 'unauthorized') window.toast("Please log in to continue.");
     }
 })();
 
-// Make functions globally available (non-module script usage)
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", renderUserUI);
+} else {
+    renderUserUI();
+}
+
+window.ROLES = ROLES;
+window.ROLE_HIERARCHY = ROLE_HIERARCHY;
+window.ROLE_LEVELS = ROLE_LEVELS;
+window.PAGE_ACCESS = PAGE_ACCESS;
+window.currentUser = window.currentUser || null;
+window.persistCurrentUser = persistCurrentUser;
+window.getUserInitials = getUserInitials;
+window.getUserFullName = getUserFullName;
+window.renderUserUI = renderUserUI;
+window.normalizeRole = normalizeRole;
 window.loginUser = loginUser;
 window.getCurrentUser = getCurrentUser;
 window.logoutUser = logoutUser;
 window.requireRole = requireRole;
 window.hasPermission = hasPermission;
+window.hasAccess = hasAccess;
 window.hasMinimumRole = hasMinimumRole;
 window.getRoleLevel = getRoleLevel;
 window.getOwnedCommunities = getOwnedCommunities;
@@ -299,4 +332,3 @@ window.isOwnerOfCommunity = isOwnerOfCommunity;
 window.addOwnedCommunity = addOwnedCommunity;
 window.getAccessiblePanels = getAccessiblePanels;
 window.getRoleDisplay = getRoleDisplay;
-window.ROLE_LEVELS = ROLE_LEVELS;

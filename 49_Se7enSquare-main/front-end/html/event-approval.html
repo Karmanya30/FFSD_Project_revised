@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Gameunity - Event Approval</title>
+  <meta name="description" content="Review and approve pending community event requests.">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="../css/global.css" rel="stylesheet">
+  <link href="../css/components/sidebar.css" rel="stylesheet">
+  <link href="../css/pages/event-approval.css" rel="stylesheet">
+</head>
+<body>
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+
+    <main class="approval-main">
+      <header class="approval-header">
+        <div>
+          <p class="approval-kicker">Community Operations</p>
+          <h1>Event Requests</h1>
+        </div>
+        <button class="approval-secondary-btn" onclick="window.location.href='events.html'">View Events</button>
+      </header>
+
+      <section class="approval-summary" aria-label="Event approval summary">
+        <div>
+          <span class="summary-label">Pending</span>
+          <strong id="pendingCount">0</strong>
+        </div>
+        <div>
+          <span class="summary-label">Approved</span>
+          <strong id="approvedCount">0</strong>
+        </div>
+        <div>
+          <span class="summary-label">Rejected</span>
+          <strong id="rejectedCount">0</strong>
+        </div>
+      </section>
+
+      <section class="approval-list-section">
+        <div class="approval-section-head">
+          <div>
+            <h2>Pending Events</h2>
+            <p>Approve requests to make them visible on the events page.</p>
+          </div>
+        </div>
+        <div id="pendingList" class="approval-list"></div>
+      </section>
+
+      <section class="approval-list-section">
+        <div class="approval-section-head">
+          <div>
+            <h2>Approved Events</h2>
+            <p>Live events currently visible to members.</p>
+          </div>
+        </div>
+        <div id="approvedList" class="approval-list"></div>
+      </section>
+
+      <section class="approval-list-section">
+        <div class="approval-section-head">
+          <div>
+            <h2>Rejected Events</h2>
+            <p>Requests that were declined by the management team.</p>
+          </div>
+        </div>
+        <div id="rejectedList" class="approval-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="eventModal" class="modal hidden" onclick="if(event.target===this)closeModal()">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()" aria-label="Close event details">×</button>
+      <span id="modalStatus" class="status-badge"></span>
+      <h2 id="modalTitle"></h2>
+      <p id="modalDesc"></p>
+      <p id="modalDate"></p>
+      <p id="modalCommunity"></p>
+      <p id="modalCapacity"></p>
+      <p id="modalCategory"></p>
+    </div>
+  </div>
+
+  <script src="../js/core/auth.js"></script>
+  <script src="../js/core/apiClient.js"></script>
+  <script src="../js/pages/event-approval.js"></script>
+  <script src="../js/components/sidebar.js"></script>
+  <script src="../js/components/notifications.js"></script>
+</body>
+</html>

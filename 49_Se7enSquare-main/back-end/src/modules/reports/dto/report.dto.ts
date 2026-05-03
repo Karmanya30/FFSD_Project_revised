@@ -9,6 +9,7 @@ export enum ReportTargetType {
 export enum ReportStatus {
   PENDING = 'pending',
   REVIEWED = 'reviewed',
+  ESCALATED = 'escalated',
   RESOLVED = 'resolved',
 }
 
@@ -30,4 +31,7 @@ export class ReportDto {
 
   @ApiProperty({ enum: ReportStatus, example: ReportStatus.PENDING })
   status!: ReportStatus;
+
+  @ApiProperty({ example: 'admin', required: false })
+  escalatedTo?: string;
 }

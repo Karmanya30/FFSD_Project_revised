@@ -15,19 +15,22 @@
     <div class="main">
       <!-- Header -->
       <header class="header">
+        <button class="page-back-btn" onclick="goBackFromCommunity()" title="Back to communities">
+          &larr; Back
+        </button>
         <div class="breadcrumb">
-          <span>Discover</span>
+          <button class="breadcrumb-link" onclick="window.location.href='discovery.html'">Discover</button>
           <span class="sep">›</span>
-          <span>Gaming</span>
+          <button class="breadcrumb-link" onclick="window.location.href='dashboard.html'">Dashboard</button>
           <span class="sep">›</span>
-          <span class="current">Pro Gamers</span>
+          <span class="current" id="breadcrumbCommunityName">Pro Gamers</span>
         </div>
         <div class="header-actions">
           <div class="icon-btn">
             🔔
             <div class="notif-dot"></div>
           </div>
-          <div class="header-avatar" onclick="window.location.href='profile-settings.html'">RK</div>
+          <div class="header-avatar user-avatar" onclick="window.location.href='profile-settings.html'"></div>
         </div>
       </header>
       <!-- Banner -->
@@ -56,7 +59,7 @@
             <button class="btn-joined-main" id="joinMainBtn" onclick="toggleMainJoin()">
               ✓ Joined
             </button>
-            <a href="community-manager.html" class="rbac-manage-btn hidden" id="rbacManageBtn" title="Manage this community">⚙️ Manage Community</a>
+            <a href="community-settings.html" class="rbac-manage-btn hidden" id="rbacManageBtn" title="Open community settings">⚙️ Community Settings</a>
             <button class="hidden" id="rbacDeleteBtn" onclick="requestDeleteCommunity()" style="
                 background: rgba(255, 68, 68, 0.1);
                 color: var(--danger);
@@ -104,7 +107,7 @@
             </div>
             <div class="pin-footer">
               <div class="pin-author">
-                <div class="pin-av">RK</div>
+                <div class="pin-av user-avatar"></div>
                 <span>Rahul Kumar (Owner) · 2 days ago</span>
               </div>
             </div>
@@ -217,7 +220,7 @@
                 </div>
               </div>
               <div class="msg-group">
-                <div class="msg-av grad-purple">RK</div>
+                <div class="msg-av grad-purple user-avatar"></div>
                 <div class="msg-body">
                   <div class="msg-header">
                     <span class="msg-uname">Rahul Kumar</span>
@@ -280,7 +283,7 @@
               <span class="sc-title-icon">👤</span> Created By
             </div>
             <div class="created-by-card">
-              <div class="created-by-avatar grad-orange">RK</div>
+              <div class="created-by-avatar grad-orange user-avatar"></div>
               <div>
                 <div class="created-by-name">Rahul Kumar</div>
                 <div class="created-by-meta">Owner · Since Mar 2022</div>
@@ -308,8 +311,7 @@
               <div class="member-group-title">👑 Owner — 1</div>
               <div class="member-grid">
                 <div class="member-card">
-                  <div class="m-avatar grad-gold">
-                    RK
+                  <div class="m-avatar grad-gold user-avatar">
                     <div class="m-status bg-dot-green"></div>
                   </div>
                   <div class="m-name">Rahul Kumar</div>
@@ -334,8 +336,7 @@
               <div class="member-group-title">🟢 Online — 8</div>
               <div class="member-grid">
                 <div class="member-card">
-                  <div class="m-avatar grad-violet">
-                    RK
+                  <div class="m-avatar grad-violet user-avatar">
                     <div class="m-status bg-dot-green"></div>
                   </div>
                   <div class="m-name">Rahul Kumar</div>
@@ -471,27 +472,10 @@
         </div>
       </div>
     </div>
+    <script src="../js/core/auth.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        // C3 FIX: Use the correct storage key 'nexus_user' (not 'nexus_current_user')
-        const storedUser = localStorage.getItem("nexus_user");
-
-        if (storedUser) {
-          const user = JSON.parse(storedUser);
-
-          const railAv = document.querySelector(".rail-avatar");
-          const headerAv = document.querySelector(".header-avatar");
-
-          if (railAv && user.initials) {
-            railAv.innerHTML = `${user.initials}<div class="rail-dot bg-dot-green" style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-sidebar);"></div>`;
-            if (user.bgClass) railAv.className = `rail-avatar ${user.bgClass}`;
-          }
-
-          if (headerAv && user.initials) {
-            headerAv.innerText = user.initials;
-            if (user.bgClass) headerAv.className = `header-avatar ${user.bgClass}`;
-          }
-        }
+        if (window.renderUserUI) window.renderUserUI();
 
         // Show/hide Manage & Delete buttons based on ownership and admin role
         const userObj = window.getCurrentUser ? window.getCurrentUser() : null;
@@ -500,7 +484,8 @@
 
         if (userObj) {
           const params = new URLSearchParams(window.location.search);
-          const communityName = params.get("name") || "pro-gamers";
+          const communityId = params.get("id") || params.get("name") || "pro-gamers";
+          const communityName = params.get("name") || communityId;
           const isOwner = window.isOwnerOfCommunity
             ? window.isOwnerOfCommunity(communityName)
             : false;
@@ -508,7 +493,7 @@
 
           if (manageBtn && (isOwner || isAdmin)) {
             manageBtn.classList.remove("hidden");
-            manageBtn.href = `community-manager.html?name=${communityName}`;
+            manageBtn.href = `community-settings.html?id=${encodeURIComponent(communityId)}`;
           }
           if (deleteBtn && (isOwner || isAdmin)) {
             deleteBtn.classList.remove("hidden");
@@ -522,7 +507,7 @@
         );
         if (conf) {
           const params = new URLSearchParams(window.location.search);
-          const communityName = params.get("name") || "pro-gamers";
+          const communityName = params.get("id") || params.get("name") || "pro-gamers";
 
           // C4 FIX: auth.js stores owned communities as an ARRAY, not an object
           let owned = JSON.parse(

@@ -24,12 +24,12 @@ async function loadReports() {
 
 // ── Map backend status to UI badge ────────────────────────────────────────────
 function mapStatus(backendStatus) {
-    const map = { pending: 'pending', reviewed: 'review', resolved: 'resolved' };
+    const map = { pending: 'pending', reviewed: 'review', resolved: 'resolved', escalated: 'escalated' };
     return map[backendStatus] || 'pending';
 }
 
 function mapBackendStatus(uiBadge) {
-    const map = { pending: 'pending', review: 'reviewed', resolved: 'resolved', escalated: 'reviewed' };
+    const map = { pending: 'pending', review: 'reviewed', resolved: 'resolved', escalated: 'escalated' };
     return map[uiBadge] || 'pending';
 }
 
@@ -171,7 +171,7 @@ const ACTION_FEEDBACK = {
     ban7:    { icon: '🚫',  msg: '7-day ban applied',       newStatus: 'reviewed' },
     banperm: { icon: '⛔',  msg: 'Permanent ban applied',   newStatus: 'reviewed' },
     dismiss: { icon: '✅',  msg: 'Report dismissed',        newStatus: 'resolved' },
-    escalate:{ icon: '🔺',  msg: 'Report escalated',        newStatus: 'reviewed' },
+    escalate:{ icon: '🔺',  msg: 'Report escalated to Admin', newStatus: 'escalated' },
 };
 
 window.takeAction = async function (type) {
@@ -184,7 +184,10 @@ window.takeAction = async function (type) {
 
     // Only transition if it's a valid move (backend enforces pending → reviewed → resolved)
     try {
-        if (report.status === 'pending' && backendStatus === 'reviewed') {
+        if (backendStatus === 'escalated') {
+            await window.API.reports.updateStatus(report.id, 'escalated');
+            report.status = 'escalated';
+        } else if (report.status === 'pending' && backendStatus === 'reviewed') {
             await window.API.reports.updateStatus(report.id, 'reviewed');
             report.status = 'reviewed';
         } else if (report.status === 'reviewed' && backendStatus === 'resolved') {
@@ -276,6 +279,7 @@ document.addEventListener('keydown', e => {
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
+    if (typeof requireRole === 'function' && !requireRole(['moderator', 'admin'])) return;
     await loadReports();
     window.renderQueue();
 

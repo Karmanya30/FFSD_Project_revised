@@ -31,10 +31,10 @@ import { ReportsService } from './reports.service';
   name: 'x-role',
   required: true,
   description:
-    'RBAC role header. Accepted values: admin | moderator | user. ' +
+    'RBAC role header. Accepted values: admin | community_manager | moderator | user. ' +
     'GET requires admin or moderator. POST requires any valid role. ' +
     'PATCH status requires admin or moderator. DELETE requires admin.',
-  schema: { type: 'string', enum: ['admin', 'moderator', 'user'] },
+  schema: { type: 'string', enum: ['admin', 'community_manager', 'moderator', 'user'] },
 })
 @Controller('reports')
 export class ReportsController {
@@ -53,7 +53,7 @@ export class ReportsController {
   }
 
   @Post()
-  @Roles(AppRole.USER, AppRole.MODERATOR, AppRole.ADMIN)
+  @Roles(AppRole.USER, AppRole.MODERATOR, AppRole.COMMUNITY_MANAGER, AppRole.ADMIN)
   @ApiOperation({
     summary: 'Submit a report',
     description: 'Creates a new report (content or user report). Any authenticated role may submit a report. Status defaults to "pending".',
@@ -70,13 +70,13 @@ export class ReportsController {
   @ApiOperation({
     summary: 'Update report status',
     description:
-      'Advances a report through the status lifecycle: pending → reviewed → resolved. ' +
+      'Advances a report through the status lifecycle: pending -> reviewed -> resolved, or escalates to admin. ' +
       'Requires x-role: admin or moderator.',
   })
   @ApiParam({ name: 'id', type: Number, description: 'Numeric report ID' })
   @ApiBody({
     type: UpdateReportStatusDto,
-    description: 'New status value. Allowed: pending | reviewed | resolved',
+    description: 'New status value. Allowed: reviewed | escalated | resolved',
   })
   @ApiOkResponse({ type: ReportDto, description: 'The report with updated status' })
   @ApiNotFoundResponse({ description: 'Report not found' })

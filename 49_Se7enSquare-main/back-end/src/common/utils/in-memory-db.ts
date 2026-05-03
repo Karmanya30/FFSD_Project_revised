@@ -1,6 +1,6 @@
 import { AppRole } from '../../modules/rbac/role.enum';
 
-export type ReportStatus = 'pending' | 'reviewed' | 'resolved';
+export type ReportStatus = 'pending' | 'reviewed' | 'resolved' | 'escalated';
 
 export interface UserRecord {
   id: number;
@@ -43,7 +43,7 @@ export interface EventRecord {
   attendees?: number;
   maxAttendees?: number;
   status?: string;
-  createdBy?: number;
+  createdBy?: string;
 }
 
 export interface PostRecord {
@@ -64,10 +64,11 @@ export interface ReportRecord {
   targetId: number;
   reason: string;
   status: ReportStatus;
+  escalatedTo?: string;
 }
 
 const counters = {
-  user: 4,
+  user: 5,
   community: 3,
   membership: 5,
   event: 4,
@@ -79,14 +80,15 @@ export const db = {
   users: [
     { id: 1, username: 'admin01', email: 'admin@gameunity.local', role: AppRole.ADMIN, bio: 'Platform administrator' },
     { id: 2, username: 'mod01', email: 'mod@gameunity.local', role: AppRole.MODERATOR, bio: 'Community moderator' },
-    { id: 3, username: 'player01', email: 'player@gameunity.local', role: AppRole.USER, bio: 'Loves FPS and RPG games' },
+    { id: 3, username: 'cm01', email: 'cm@gameunity.local', role: AppRole.COMMUNITY_MANAGER, bio: 'Community event manager' },
+    { id: 4, username: 'player01', email: 'player@gameunity.local', role: AppRole.USER, bio: 'Loves FPS and RPG games' },
   ] as UserRecord[],
   communities: [
     {
       id: 1,
       name: 'FPS Arena',
       description: 'Competitive FPS players and tournaments',
-      ownerId: 3,
+      ownerId: 4,
       tags: ['fps', 'esports'],
       icon: '⚡',
       category: 'Gaming',
@@ -109,7 +111,7 @@ export const db = {
   ] as CommunityRecord[],
   memberships: [
     { id: 1, userId: 2, communityId: 1, joinedAt: '2026-01-10T09:00:00.000Z' },
-    { id: 2, userId: 3, communityId: 1, joinedAt: '2026-01-15T11:30:00.000Z' },
+    { id: 2, userId: 4, communityId: 1, joinedAt: '2026-01-15T11:30:00.000Z' },
     { id: 3, userId: 3, communityId: 2, joinedAt: '2026-02-01T08:00:00.000Z' },
     { id: 4, userId: 1, communityId: 2, joinedAt: '2026-02-05T10:00:00.000Z' },
   ] as MembershipRecord[],
@@ -124,8 +126,8 @@ export const db = {
       type: 'tournament',
       attendees: 48,
       maxAttendees: 100,
-      status: 'upcoming',
-      createdBy: 1,
+      status: 'approved',
+      createdBy: 'admin01',
     },
     {
       id: 2,
@@ -137,8 +139,8 @@ export const db = {
       type: 'hackathon',
       attendees: 120,
       maxAttendees: 200,
-      status: 'upcoming',
-      createdBy: 2,
+      status: 'approved',
+      createdBy: 'cm01',
     },
     {
       id: 3,
@@ -150,8 +152,8 @@ export const db = {
       type: 'workshop',
       attendees: 35,
       maxAttendees: 50,
-      status: 'upcoming',
-      createdBy: 2,
+      status: 'pending',
+      createdBy: 'player01',
     },
   ] as EventRecord[],
   posts: [
@@ -160,7 +162,7 @@ export const db = {
       title: 'Looking for squad',
       content: 'Need two players for ranked grind',
       communityId: 1,
-      authorId: 3,
+      authorId: 4,
       upvotes: 14,
       commentCount: 5,
       createdAt: '2026-04-28T10:00:00.000Z',
@@ -189,7 +191,7 @@ export const db = {
   reports: [
     {
       id: 1,
-      reporterId: 3,
+      reporterId: 4,
       targetType: 'post',
       targetId: 1,
       reason: 'Potential abusive language in replies',
@@ -199,7 +201,7 @@ export const db = {
       id: 2,
       reporterId: 2,
       targetType: 'user',
-      targetId: 3,
+      targetId: 4,
       reason: 'Spam-like behavior',
       status: 'reviewed',
     },

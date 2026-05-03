@@ -3,10 +3,30 @@
  * Integrated with NexusData & NexusCRUD for full data synchronization.
  */
 
-// --- 1. SESSION HELPERS ---
-window.getCurrentUser = function() {
-    const userStr = localStorage.getItem('nexus_user');
+// --- 1. SESSION & LOADER HELPERS ---
+function showLoader() {
+    document.body.classList.add("loading");
+}
+
+function hideLoader() {
+    document.body.classList.remove("loading");
+}
+
+window.showLoader = showLoader;
+window.hideLoader = hideLoader;
+
+function readStoredUser() {
+    const userStr = localStorage.getItem("currentUser") || localStorage.getItem("nexus_user");
     return userStr ? JSON.parse(userStr) : null;
+}
+
+window.getCurrentUser = function() {
+    try {
+        return readStoredUser();
+    } catch (err) {
+        console.error("Stored user data is invalid:", err);
+        return null;
+    }
 };
 
 // --- 2. UI NAVIGATION ---
@@ -32,21 +52,31 @@ window.toggleSwitch = function(el) {
 };
 
 // --- 3. DATA LOADING ---
-function loadUserData() {
-    const sessionUser = window.getCurrentUser();
-    if (!sessionUser) return;
+function setFieldValue(id, value) {
+    const el = document.getElementById(id) || document.querySelector(`#${id}`);
+    if (el) el.value = value || "";
+}
 
-    // Fetch full data from store to ensure consistency
-    const allUsers = window.NexusCRUD.getAll('users');
-    const user = allUsers.find(u => u.username === sessionUser.username) || sessionUser;
+function loadProfileData() {
+    const user = readStoredUser();
+    console.log("User Data:", user);
+
+    if (!user) {
+        console.warn("No user found");
+        return;
+    }
 
     // Update Sidebar & Topbar
     const sidebarName = document.getElementById('navName');
     const sidebarHandle = document.getElementById('navHandle');
-    const initials = (user.firstName?.[0] || "") + (user.lastName?.[0] || "");
+    const firstName = user.firstName || "";
+    const lastName = user.lastName || "";
+    const username = user.username || user.handle || "";
+    const fullName = user.fullName || user.fullname || `${firstName} ${lastName}`.trim() || user.name || username;
+    const initials = typeof getUserInitials === "function" ? getUserInitials(user) : ((firstName?.[0] || "") + (lastName?.[0] || "")).toUpperCase();
 
-    if (sidebarName) sidebarName.innerText = user.fullName || `${user.firstName} ${user.lastName}`.trim() || user.username;
-    if (sidebarHandle) sidebarHandle.innerText = `@${user.handle || user.username}`;
+    if (sidebarName) sidebarName.innerText = fullName;
+    if (sidebarHandle) sidebarHandle.innerText = username ? `@${username}` : "";
 
     // Update Avatars
     const avatarIds = ['topBarAvatar', 'navMainAvatar', 'mainAvatarPreview'];
@@ -59,27 +89,29 @@ function loadUserData() {
                 el.style.backgroundPosition = 'center';
                 el.innerText = '';
             } else {
-                el.innerText = initials || user.username.substring(0, 2).toUpperCase();
+                el.innerText = initials || "U";
                 el.style.backgroundImage = 'none';
             }
         }
     });
+    if (typeof renderUserUI === "function") renderUserUI();
 
     // Populate Inputs
-    const fieldMap = {
-        'inpFirstName': user.firstName || "",
-        'inpLastName': user.lastName || "",
-        'inpFullName': user.fullName || `${user.firstName} ${user.lastName}`.trim() || "",
-        'inpHandle': user.handle || user.username || "",
-        'inpEmail': user.email || "",
-        'inpPhone': user.phone || ""
-    };
+    setFieldValue("firstName", firstName);
+    setFieldValue("lastName", lastName);
+    setFieldValue("username", username);
 
-    for (const [id, val] of Object.entries(fieldMap)) {
-        const el = document.getElementById(id);
-        if (el) el.value = val;
-    }
+    setFieldValue("inpFirstName", firstName);
+    setFieldValue("inpLastName", lastName);
+    setFieldValue("inpFullName", fullName);
+    setFieldValue("inpHandle", user.handle || username);
+    setFieldValue("inpEmail", user.email);
+    setFieldValue("inpPhone", user.phone);
+    setFieldValue("inpBio", user.bio);
 }
+
+window.loadProfileData = loadProfileData;
+window.loadUserData = loadProfileData;
 
 // --- 4. FORM LOGIC ---
 let hasUnsavedChanges = false;
@@ -160,15 +192,10 @@ window.saveAllChanges = function () {
         delete updatedUser.avatar;
     }
 
-    // Update Local Storage
-    localStorage.setItem('nexus_user', JSON.stringify(updatedUser));
-
-    // Update Store (Mock)
-    const allUsers = window.NexusCRUD.getAll('users');
-    const index = allUsers.findIndex(u => u.username === updatedUser.username);
-    if (index !== -1) {
-        allUsers[index] = updatedUser;
-        // In a real app, we'd call an API here
+    if (typeof persistCurrentUser === "function") persistCurrentUser(updatedUser);
+    else {
+        localStorage.setItem('nexus_user', JSON.stringify(updatedUser));
+        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
     }
 
     setTimeout(() => {
@@ -177,7 +204,7 @@ window.saveAllChanges = function () {
         saveBtn.classList.remove('pulse');
         hasUnsavedChanges = false;
         window.toast("✅ Profile settings updated.");
-        loadUserData();
+        loadProfileData();
         if (window.SidebarComponent) window.SidebarComponent.init();
     }, 800);
 };
@@ -229,12 +256,11 @@ window.removePhoto = function() {
     const sessionUser = window.getCurrentUser() || {};
     const displayName = document.getElementById('inpFullName')?.value.trim() || sessionUser.fullName || `${sessionUser.firstName || ''} ${sessionUser.lastName || ''}`.trim() || sessionUser.username;
     
-    let initials = "U";
-    if (document.getElementById('inpFirstName')?.value.trim() || document.getElementById('inpLastName')?.value.trim()) {
-        initials = (document.getElementById('inpFirstName').value.trim()?.[0] || "") + (document.getElementById('inpLastName').value.trim()?.[0] || "");
-    } else if (displayName && displayName !== 'Guest') {
-        initials = displayName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || displayName.slice(0, 2).toUpperCase();
-    }
+    const initials = typeof getUserInitials === "function" ? getUserInitials({
+        ...sessionUser,
+        firstName: document.getElementById('inpFirstName')?.value.trim() || sessionUser.firstName,
+        lastName: document.getElementById('inpLastName')?.value.trim() || sessionUser.lastName,
+    }) : "U";
     
     const avatars = ['topBarAvatar', 'navMainAvatar', 'mainAvatarPreview'];
     avatars.forEach(id => {
@@ -269,10 +295,7 @@ window.updateAccessibility = function() {
 };
 
 // --- 6. INITIALIZATION ---
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.NexusData) window.NexusData.getStore();
-    loadUserData();
-
+document.addEventListener("DOMContentLoaded", () => {
     // Minimalist Toast
     window.toast = function (msg) {
         const t = document.getElementById('toast');
@@ -283,5 +306,14 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => t.classList.remove('show'), 3000);
     };
 
-    console.log("%c[Profile] %cReady and synced.", "color: #5B6EF5; font-weight: bold;", "color: #10B981;");
+    showLoader();
+    console.log("Page Loaded");
+
+    try {
+        loadProfileData();
+    } catch (err) {
+        console.error("Profile load failed:", err);
+    } finally {
+        hideLoader();
+    }
 });

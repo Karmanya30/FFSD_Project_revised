@@ -111,7 +111,7 @@ function renderUsers() {
     tbody.innerHTML = users.map(u => `
         <tr>
             <td><div class="row-cell">
-                <div class="row-avatar" style="background:linear-gradient(135deg,#5B6EF5,#8B5CF6)">${esc(u.username.slice(0,2).toUpperCase())}</div>
+                <div class="row-avatar" style="background:linear-gradient(135deg,#5B6EF5,#8B5CF6)">${esc(typeof getUserInitials === 'function' ? getUserInitials(u) : 'U')}</div>
                 <div><div class="row-name">${esc(u.username)}</div><div class="row-sub">${esc(u.email)}</div></div>
             </div></td>
             <td>${esc(u.email)}</td>

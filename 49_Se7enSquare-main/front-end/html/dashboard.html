@@ -32,7 +32,7 @@
       <div class="icon-btn" id="headerNotif" data-tooltip="Notifications">
         🔔<div class="notif-dot"></div>
       </div>
-      <div class="header-avatar" id="headerProfile" data-tooltip="Profile">RK</div>
+      <div class="header-avatar user-avatar" id="headerProfile" data-tooltip="Profile"></div>
     </div>
   </header>
 
@@ -42,7 +42,7 @@
     <!-- Greeting Banner -->
     <div class="greeting">
       <div class="greeting-text">
-        <div class="greeting-name">Good afternoon, Rahul 👋</div>
+        <div class="greeting-name">Good afternoon, <span class="user-name"></span> 👋</div>
         <div class="greeting-sub">You have 2 unread messages and 2 upcoming events today.</div>
       </div>
       <div class="greeting-stats">
@@ -99,7 +99,7 @@
 <script src="../js/core/apiClient.js"></script>
 <script src="../js/pages/dashboard.js"></script>
 <script src="../js/components/notifications.js"></script>
-<script>if(!localStorage.getItem("nexus_user")){localStorage.setItem("nexus_user",JSON.stringify({username:"Rajat Jain",role:"admin",loginTime:new Date().toISOString()}));localStorage.setItem("role","admin");}</script>
+<script>if(!localStorage.getItem("currentUser")){persistCurrentUser({firstName:"Rajat",lastName:"Jain",username:"rajatjain",role:"admin",avatar:null,loginTime:new Date().toISOString()});}</script>
 <script src="../js/components/sidebar.js"></script>
 
 </body></html>

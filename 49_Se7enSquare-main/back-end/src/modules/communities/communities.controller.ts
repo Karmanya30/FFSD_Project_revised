@@ -31,16 +31,16 @@ import { UpdateCommunityDto } from './dto/update-community.dto';
   name: 'x-role',
   required: true,
   description:
-    'RBAC role header. Accepted values: admin | moderator | user. ' +
+    'RBAC role header. Accepted values: admin | community_manager | moderator | user. ' +
     'GET endpoints require any valid role. DELETE requires admin.',
-  schema: { type: 'string', enum: ['admin', 'moderator', 'user'] },
+  schema: { type: 'string', enum: ['admin', 'community_manager', 'moderator', 'user'] },
 })
 @Controller('communities')
 export class CommunitiesController {
   constructor(private readonly communitiesService: CommunitiesService) {}
 
   @Get()
-  @Roles(AppRole.ADMIN, AppRole.MODERATOR, AppRole.USER)
+  @Roles(AppRole.ADMIN, AppRole.COMMUNITY_MANAGER, AppRole.MODERATOR, AppRole.USER)
   @ApiOperation({
     summary: 'List all communities',
     description: 'Returns all communities including enriched UI fields (icon, category, slug, memberCount, onlineCount).',
@@ -52,7 +52,7 @@ export class CommunitiesController {
   }
 
   @Get(':id')
-  @Roles(AppRole.ADMIN, AppRole.MODERATOR, AppRole.USER)
+  @Roles(AppRole.ADMIN, AppRole.COMMUNITY_MANAGER, AppRole.MODERATOR, AppRole.USER)
   @ApiOperation({
     summary: 'Get a single community by ID',
     description: 'Fetches one community by its numeric ID, including all display fields.',
@@ -66,7 +66,7 @@ export class CommunitiesController {
   }
 
   @Post()
-  @Roles(AppRole.ADMIN, AppRole.USER)
+  @Roles(AppRole.ADMIN, AppRole.COMMUNITY_MANAGER, AppRole.USER)
   @ApiOperation({
     summary: 'Create a community',
     description: 'Creates a new community. Any authenticated role may create a community.',
@@ -79,7 +79,7 @@ export class CommunitiesController {
   }
 
   @Patch(':id')
-  @Roles(AppRole.ADMIN, AppRole.USER)
+  @Roles(AppRole.ADMIN, AppRole.COMMUNITY_MANAGER, AppRole.USER)
   @ApiOperation({
     summary: 'Update a community',
     description: 'Partially updates a community. All fields are optional.',
