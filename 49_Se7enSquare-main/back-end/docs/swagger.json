@@ -10,12 +10,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET endpoints require any valid role. POST / PATCH / DELETE require admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET endpoints require any valid role. POST / PATCH / DELETE require admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -52,12 +53,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET endpoints require any valid role. POST / PATCH / DELETE require admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET endpoints require any valid role. POST / PATCH / DELETE require admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -104,12 +106,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET endpoints require any valid role. POST / PATCH / DELETE require admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET endpoints require any valid role. POST / PATCH / DELETE require admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -155,12 +158,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET endpoints require any valid role. POST / PATCH / DELETE require admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET endpoints require any valid role. POST / PATCH / DELETE require admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -217,12 +221,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET endpoints require any valid role. POST / PATCH / DELETE require admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET endpoints require any valid role. POST / PATCH / DELETE require admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -272,12 +277,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET endpoints require any valid role. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET endpoints require any valid role. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -314,12 +320,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET endpoints require any valid role. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET endpoints require any valid role. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -366,12 +373,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET endpoints require any valid role. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET endpoints require any valid role. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -417,12 +425,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET endpoints require any valid role. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET endpoints require any valid role. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -479,12 +488,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET endpoints require any valid role. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET endpoints require any valid role. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -529,17 +539,18 @@
       "get": {
         "operationId": "EventsController_findAll",
         "summary": "List all events",
-        "description": "Returns all events. Optionally filter by status query param (upcoming | past | cancelled).",
+        "description": "Returns all events. Public clients should render only approved events.",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET / POST require any valid role. PATCH requires admin or moderator. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET / POST require any valid role. PATCH requires community_manager or admin. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -552,8 +563,9 @@
             "description": "Filter events by status",
             "schema": {
               "enum": [
-                "upcoming",
-                "past",
+                "pending",
+                "approved",
+                "rejected",
                 "cancelled"
               ],
               "type": "string"
@@ -585,17 +597,18 @@
       "post": {
         "operationId": "EventsController_create",
         "summary": "Create an event",
-        "description": "Creates a new event linked to a community. Any authenticated role may create events.",
+        "description": "Creates an event request. Users submit pending events; Community Managers/Admins can publish approved events.",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET / POST require any valid role. PATCH requires admin or moderator. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET / POST require any valid role. PATCH requires community_manager or admin. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -642,12 +655,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET / POST require any valid role. PATCH requires admin or moderator. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET / POST require any valid role. PATCH requires community_manager or admin. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -688,17 +702,18 @@
       "patch": {
         "operationId": "EventsController_update",
         "summary": "Update an event",
-        "description": "Partially updates an event (all fields optional). Requires x-role: admin or moderator.",
+        "description": "Partially updates an event and supports approve/reject status changes. Requires community_manager or admin.",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET / POST require any valid role. PATCH requires admin or moderator. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET / POST require any valid role. PATCH requires community_manager or admin. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -737,7 +752,7 @@
             }
           },
           "403": {
-            "description": "Only admin or moderator can update events"
+            "description": "Only community_manager or admin can update events"
           },
           "404": {
             "description": "Event not found"
@@ -755,12 +770,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET / POST require any valid role. PATCH requires admin or moderator. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET / POST require any valid role. PATCH requires community_manager or admin. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -810,12 +826,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET requires admin or moderator. POST requires any valid role. PATCH status requires admin or moderator. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET requires admin or moderator. POST requires any valid role. PATCH status requires admin or moderator. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -852,12 +869,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET requires admin or moderator. POST requires any valid role. PATCH status requires admin or moderator. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET requires admin or moderator. POST requires any valid role. PATCH status requires admin or moderator. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -899,17 +917,18 @@
       "patch": {
         "operationId": "ReportsController_updateStatus",
         "summary": "Update report status",
-        "description": "Advances a report through the status lifecycle: pending → reviewed → resolved. Requires x-role: admin or moderator.",
+        "description": "Advances a report through the status lifecycle: pending -> reviewed -> resolved, or escalates to admin. Requires x-role: admin or moderator.",
         "parameters": [
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET requires admin or moderator. POST requires any valid role. PATCH status requires admin or moderator. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET requires admin or moderator. POST requires any valid role. PATCH status requires admin or moderator. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -927,7 +946,7 @@
         ],
         "requestBody": {
           "required": true,
-          "description": "New status value. Allowed: pending | reviewed | resolved",
+          "description": "New status value. Allowed: reviewed | escalated | resolved",
           "content": {
             "application/json": {
               "schema": {
@@ -968,12 +987,13 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "RBAC role header. Accepted values: admin | moderator | user. GET requires admin or moderator. POST requires any valid role. PATCH status requires admin or moderator. DELETE requires admin.",
+            "description": "RBAC role header. Accepted values: admin | community_manager | moderator | user. GET requires admin or moderator. POST requires any valid role. PATCH status requires admin or moderator. DELETE requires admin.",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "admin",
+                "community_manager",
                 "moderator",
                 "user"
               ]
@@ -1022,7 +1042,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "Role for RBAC: admin | moderator | user",
+            "description": "Role for RBAC: admin | community_manager | moderator | user",
             "required": true,
             "schema": {
               "type": "string"
@@ -1055,7 +1075,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "Role for RBAC: admin | moderator | user",
+            "description": "Role for RBAC: admin | community_manager | moderator | user",
             "required": true,
             "schema": {
               "type": "string"
@@ -1097,7 +1117,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "Role for RBAC: admin | moderator | user",
+            "description": "Role for RBAC: admin | community_manager | moderator | user",
             "required": true,
             "schema": {
               "type": "string"
@@ -1135,7 +1155,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "Role for RBAC: admin | moderator | user",
+            "description": "Role for RBAC: admin | community_manager | moderator | user",
             "required": true,
             "schema": {
               "type": "string"
@@ -1183,7 +1203,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "Role for RBAC: admin | moderator | user",
+            "description": "Role for RBAC: admin | community_manager | moderator | user",
             "required": true,
             "schema": {
               "type": "string"
@@ -1257,7 +1277,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "Role for RBAC: admin | moderator | user",
+            "description": "Role for RBAC: admin | community_manager | moderator | user",
             "required": true,
             "schema": {
               "type": "string"
@@ -1310,7 +1330,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "Role for RBAC: admin | moderator | user",
+            "description": "Role for RBAC: admin | community_manager | moderator | user",
             "required": true,
             "schema": {
               "type": "string"
@@ -1357,7 +1377,7 @@
           {
             "name": "x-role",
             "in": "header",
-            "description": "Role for RBAC: admin | moderator | user",
+            "description": "Role for RBAC: admin | community_manager | moderator | user",
             "required": true,
             "schema": {
               "type": "string"
@@ -1411,7 +1431,7 @@
         "type": "apiKey",
         "in": "header",
         "name": "x-role",
-        "description": "RBAC role header: admin | moderator | user | gamer"
+        "description": "RBAC role header: admin | community_manager | moderator | user"
       }
     },
     "schemas": {
@@ -1434,6 +1454,7 @@
             "type": "string",
             "enum": [
               "admin",
+              "community_manager",
               "moderator",
               "user",
               "gamer"
@@ -1469,6 +1490,7 @@
             "type": "string",
             "enum": [
               "admin",
+              "community_manager",
               "moderator",
               "user",
               "gamer"
@@ -1505,6 +1527,7 @@
             "type": "string",
             "enum": [
               "admin",
+              "community_manager",
               "moderator",
               "user",
               "gamer"
@@ -1696,11 +1719,11 @@
           },
           "status": {
             "type": "string",
-            "example": "upcoming"
+            "example": "approved"
           },
           "createdBy": {
-            "type": "number",
-            "example": 1
+            "type": "string",
+            "example": "Rajat"
           }
         },
         "required": [
@@ -1759,12 +1782,17 @@
           },
           "status": {
             "type": "string",
-            "example": "upcoming",
+            "example": "pending",
             "enum": [
-              "upcoming",
-              "past",
+              "pending",
+              "approved",
+              "rejected",
               "cancelled"
             ]
+          },
+          "createdBy": {
+            "type": "string",
+            "example": "Rajat"
           }
         },
         "required": [
@@ -1822,12 +1850,17 @@
           },
           "status": {
             "type": "string",
-            "example": "upcoming",
+            "example": "pending",
             "enum": [
-              "upcoming",
-              "past",
+              "pending",
+              "approved",
+              "rejected",
               "cancelled"
             ]
+          },
+          "createdBy": {
+            "type": "string",
+            "example": "Rajat"
           }
         }
       },
@@ -1864,9 +1897,14 @@
             "enum": [
               "pending",
               "reviewed",
+              "escalated",
               "resolved"
             ],
             "example": "pending"
+          },
+          "escalatedTo": {
+            "type": "string",
+            "example": "admin"
           }
         },
         "required": [
@@ -1920,6 +1958,7 @@
             "enum": [
               "pending",
               "reviewed",
+              "escalated",
               "resolved"
             ],
             "example": "reviewed"
